@@ -1,12 +1,51 @@
-(load-and-use SDL)
+(load "SDL.carp")
+(load "SDL_image.carp")
+
+(use SDL)
+
+(deftype Art
+    [corvette (Ptr SDL_Texture)])
+
+(def art (Art.init NULL))
+(def img-dir "./img")
+
+(deftype Vec2
+  [x Float
+   y Float])
+
+(deftype Obj
+    [pos Vec2
+     radius Float])
+
+(defmodule Obj
+  (defn draw [rend o]
+    (let [img @(Art.corvette &art)]
+      (SDL.render-copy-ex rend
+                          img
+                          (address (SDL.dimensions img))
+                          (address (SDL.rect 100 100 300 300))
+                          (* 0.1 (Double.from-int (SDL.get-ticks)))
+                          (address (SDL.point 150 150))
+                          SDL.flip-none))))
 
 (defn tick [state]
-  (+ state 10))
+  state)
 
-(defn draw [app rend state]
-  (bg rend &(rgb (/ @state 2) (/ @state 3) (/ @state 4))))
+(defn-do draw [app rend state]
+  (bg rend &(rgb 30 40 50))
+  (SDL.render-clear rend)
+  (foreach [o state] (Obj.draw rend o)))
+
+;; (sig make-state (Fn [] (Array Obj)))
+(defn make-state []
+  [(Obj.init (Vec2.init 100.0f 200.0f) 10.0f)])
+
+(defn-do load-assets [rend]
+  (set! art (Art.init (IMG.load-texture rend (cstr &(str* img-dir "/Corvette.png"))))))
 
 (defn main []
-  (let [app (SDLApp.create "Dependency Day" 1024 768)
-        state 0]
+  (let-do [app (SDLApp.create "Dependency Day" 1024 768)
+           state (make-state)
+           rend @(SDLApp.renderer &app)]
+    (load-assets rend)
     (SDLApp.run-with-callbacks &app SDLApp.quit-on-esc tick draw state)))
