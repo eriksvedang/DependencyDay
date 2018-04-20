@@ -1,5 +1,8 @@
 (Debug.sanitize-addresses)
 
+(Project.config "title" "DependencyDay")
+(Project.config "output-directory" "./out")
+
 (load "SDL.carp")
 (load "SDL_image.carp")
 (load "Geometry.carp")
