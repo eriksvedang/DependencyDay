@@ -6,6 +6,7 @@
 (load "SDL.carp")
 (load "SDL_image.carp")
 (load "Geometry.carp")
+(load "Pattern.carp")
 
 (use Array)
 (use SDL)
@@ -14,7 +15,6 @@
     [corvette (Ptr SDL_Texture)])
 
 (def art (Art.init NULL))
-(def img-dir "./img")
 
 (deftype Vec2
   [x Float
@@ -66,12 +66,23 @@
 (defn make-state []
   [(Obj.init (Vec2.init 0.0f 0.0f) 10.0f (* pi 1.75f))])
 
-(defn-do load-assets [rend]
+(defn-do load-assets [rend img-dir]
   (set! art (Art.init (IMG.load-texture rend (cstr &(str* img-dir "/Corvette.png"))))))
+
+(defn append-slash [s]
+  (str* s "/"))
+
+(doc dir-from-path "Removes the file-name part of a path to a file.")
+(defn dir-from-path [path]
+  (let [segments (split-by path &[\/])
+        n (dec (count &segments))
+        without-last (prefix-array &segments n)]
+    (join &(copy-map append-slash &without-last))))
 
 (defn main []
   (let-do [app (SDLApp.create "Dependency Day" 300 200)
            state (make-state)
-           rend @(SDLApp.renderer &app)]
-    (load-assets rend)
+           rend @(SDLApp.renderer &app)
+           img-dir (str* &(dir-from-path (System.get-arg 0)) "/img/")]
+    (load-assets rend &img-dir)
     (SDLApp.run-with-callbacks &app SDLApp.quit-on-esc tick draw state)))

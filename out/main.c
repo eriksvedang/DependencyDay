@@ -146,6 +146,9 @@ typedef int(*Fn__int_MUL__int_MUL__int)(int*, int*);
 typedef String(*Fn__int_String)(int);
 
 // Depth 101
+typedef String*(*Fn__int_String_MUL_)(int);
+
+// Depth 101
 typedef bool(*Fn__int_bool)(int);
 
 // Depth 101
@@ -213,10 +216,22 @@ typedef SDL_Event*(*Fn__Array__SDL_Event_MUL__int_SDL_Event_MUL_)(Array__SDL_Eve
 typedef Array__SDL_Event(*Fn__Array__SDL_Event_SDL_Event_Array__SDL_Event)(Array__SDL_Event, SDL_Event);
 
 // Depth 102
+typedef String(*Fn__Array__String_MUL__String)(Array__String*);
+
+// Depth 102
 typedef int(*Fn__Array__String_MUL__int)(Array__String*);
 
 // Depth 102
+typedef Array__String(*Fn__Array__String_MUL__int_Array__String)(Array__String*, int);
+
+// Depth 102
 typedef String*(*Fn__Array__String_MUL__int_String_MUL_)(Array__String*, int);
+
+// Depth 102
+typedef void(*Fn__Array__String_MUL__int_String_void)(Array__String*, int, String);
+
+// Depth 102
+typedef Array__String(*Fn__Array__String_MUL__int_int_Array__String)(Array__String*, int, int);
 
 // Depth 102
 typedef Array__String(*Fn__Array__String_String_Array__String)(Array__String, String);
@@ -256,6 +271,9 @@ typedef char(*Fn__FILE_MUL__char)(FILE*);
 
 // Depth 102
 typedef void(*Fn__FILE_MUL__void)(FILE*);
+
+// Depth 102
+typedef Array__String(*Fn__Fn__String_MUL__String_Array__String_MUL__Array__String)(Fn__String_MUL__String, Array__String*);
 
 // Depth 102
 typedef int(*Fn__SDL_Color_MUL__int)(SDL_Color*);
@@ -298,6 +316,9 @@ typedef void(*Fn__SDL_Renderer_MUL__SDL_Texture_MUL__SDL_Rect_MUL__SDL_Rect_MUL_
 
 // Depth 102
 typedef void(*Fn__SDL_Renderer_MUL__SDL_Texture_MUL__SDL_Rect_MUL__SDL_Rect_MUL__void)(SDL_Renderer*, SDL_Texture*, SDL_Rect*, SDL_Rect*);
+
+// Depth 102
+typedef void(*Fn__SDL_Renderer_MUL__String_MUL__void)(SDL_Renderer*, String*);
 
 // Depth 102
 typedef SDL_Texture*(*Fn__SDL_Renderer_MUL__char_MUL__SDL_Texture_MUL_)(SDL_Renderer*, char*);
@@ -349,6 +370,9 @@ typedef Array__SDL_Event(*Fn___Array__SDL_Event)();
 
 // Depth 102
 typedef SDL_Event(*Fn___SDL_Event)();
+
+// Depth 102
+typedef Array__String(*Fn__int_Array__String)(int);
 
 // Depth 102
 typedef Array__char(*Fn__int_Array__char)(int);
@@ -470,16 +494,19 @@ bool _LT__EQ___int(int a, int b);
 bool _GT__EQ___int(int a, int b);
 
 // Depth 500
+String append_MINUS_slash__String_MUL_(String* s);
+
+// Depth 500
 Art art;
+
+// Depth 500
+String dir_MINUS_from_MINUS_path(String* path);
 
 // Depth 500
 void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state);
 
 // Depth 500
-String* img_MINUS_dir;
-
-// Depth 500
-void load_MINUS_assets(SDL_Renderer* rend);
+void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir);
 
 // Depth 500
 int main(int argc, char** argv);
@@ -499,6 +526,9 @@ Array__Obj tick(Array__Obj state);
 // Depth 1000
 
 // Depth 500
+Array Array_allocate__String (int n);
+
+// Depth 500
 Array Array_allocate__char (int n);
 
 // Depth 500
@@ -511,7 +541,13 @@ void Array_aset_BANG___char (Array *aRef, int n, char newValue);
 void Array_aset_BANG___int (Array *aRef, int n, int newValue);
 
 // Depth 500
+void Array_aset_MINUS_uninitialized_BANG___String (Array *aRef, int n, String newValue);
+
+// Depth 500
 void Array_aset_MINUS_uninitialized_BANG___char (Array *aRef, int n, char newValue);
+
+// Depth 500
+Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Array__String* a);
 
 // Depth 500
 int Array_count__Obj (Array *a);
@@ -556,6 +592,9 @@ String* Array_nth__String (Array *aRef, int n);
 char* Array_nth__char (Array *aRef, int n);
 
 // Depth 500
+Array__String Array_prefix_MINUS_array__String(Array__String* xs, int end_MINUS_index);
+
+// Depth 500
 Array__char Array_prefix_MINUS_array__char(Array__char* xs, int end_MINUS_index);
 
 // Depth 500
@@ -578,6 +617,9 @@ Array__char Array_replicate__char(int n, char* e);
 
 // Depth 500
 Array__char Array_reverse__char(Array__char a);
+
+// Depth 500
+Array__String Array_subarray__String(Array__String* xs, int start_MINUS_index, int end_MINUS_index);
 
 // Depth 500
 Array__char Array_subarray__char(Array__char* xs, int start_MINUS_index, int end_MINUS_index);
@@ -1285,13 +1327,6 @@ void carp_init_globals(int argc, char** argv) {
         Float_pi = 3.1415926536f;
     }
 
-    // Depth 0
-    {
-        static String _2 = "./img";
-        String *_2_ref = &_2;
-        img_MINUS_dir = _2_ref;
-    }
-
     // Depth 1
     {
         Art _4 = Art_init(NULL);
@@ -1322,6 +1357,14 @@ bool _GT__EQ___int(int a, int b) {
         _14 = _13;
     }
     return _14;
+}
+
+Array Array_allocate__String (int n) {
+    Array a;
+    a.len = n;
+    a.capacity = n;
+    a.data = CARP_MALLOC(n*sizeof(String));
+    return a;
 }
 
 Array Array_allocate__char (int n) {
@@ -1362,6 +1405,15 @@ void Array_aset_BANG___int (Array *aRef, int n, int newValue) {
     ((int*)a.data)[n] = newValue;
 }
 
+void Array_aset_MINUS_uninitialized_BANG___String (Array *aRef, int n, String newValue) {
+    Array a = *aRef;
+    #ifndef OPTIMIZE
+    assert(n >= 0);
+    assert(n < a.len);
+    #endif
+    ((String*)a.data)[n] = newValue;
+}
+
 void Array_aset_MINUS_uninitialized_BANG___char (Array *aRef, int n, char newValue) {
     Array a = *aRef;
     #ifndef OPTIMIZE
@@ -1369,6 +1421,35 @@ void Array_aset_MINUS_uninitialized_BANG___char (Array *aRef, int n, char newVal
     assert(n < a.len);
     #endif
     ((char*)a.data)[n] = newValue;
+}
+
+Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Array__String* a) {
+    Array__String _50;
+    /* let */ {
+        int _10 = Array_count__String(a);
+        Array__String _11 = Array_allocate__String(_10);
+        Array__String na = _11;
+        /* let */ {
+            int i = 0;
+            int _23 = Array_count__String(a);
+            bool _24 = Int__LT_(i, _23);
+            bool _46 = _24;
+            while (_46) {
+                Array__String* _29 = &na; // ref
+                String* _35 = Array_nth__String(a, i);
+                String _36 = f(_35);
+                Array_aset_MINUS_uninitialized_BANG___String(_29, i, _36);
+                int _43 = Int__PLUS_(i, 1);
+                i = _43;  // Int = Int
+                int _23 = Array_count__String(a);
+                bool _24 = Int__LT_(i, _23);
+                _46 = _24;
+            }
+        }
+        Array__String _49 = na;
+        _50 = _49;
+    }
+    return _50;
 }
 
 int Array_count__Obj (Array *a) { return (*a).len; }
@@ -1451,6 +1532,11 @@ char* Array_nth__char (Array *aRef, int n) {
     assert(n < a.len);
     #endif
     return &(((char*)a.data)[n]);
+}
+
+Array__String Array_prefix_MINUS_array__String(Array__String* xs, int end_MINUS_index) {
+    Array__String _9 = Array_subarray__String(xs, 0, end_MINUS_index);
+    return _9;
 }
 
 Array__char Array_prefix_MINUS_array__char(Array__char* xs, int end_MINUS_index) {
@@ -1612,6 +1698,32 @@ Array__char Array_reverse__char(Array__char a) {
         _72 = _71;
     }
     return _72;
+}
+
+Array__String Array_subarray__String(Array__String* xs, int start_MINUS_index, int end_MINUS_index) {
+    Array__String _45;
+    /* let */ {
+        Array _8 = { .len = 0, .capacity = 0, .data = CARP_MALLOC(sizeof(String) * 0) };
+        Array__String result = _8;
+        /* let */ {
+            int i = start_MINUS_index;
+            bool _19 = Int__LT_(i, end_MINUS_index);
+            bool _41 = _19;
+            while (_41) {
+                String* _29 = Array_nth__String(xs, i);
+                String _30 = String_copy(_29);
+                Array__String _31 = Array_push_MINUS_back__String(result, _30);
+                result = _31;  // (Array String) = (Array String)
+                int _38 = Int__PLUS_(i, 1);
+                i = _38;  // Int = Int
+                bool _19 = Int__LT_(i, end_MINUS_index);
+                _41 = _19;
+            }
+        }
+        Array__String _44 = result;
+        _45 = _44;
+    }
+    return _45;
 }
 
 Array__char Array_subarray__char(Array__char* xs, int start_MINUS_index, int end_MINUS_index) {
@@ -3934,6 +4046,43 @@ float* Vec2_x(Vec2* p) { return (&(p->x)); }
 
 float* Vec2_y(Vec2* p) { return (&(p->y)); }
 
+String append_MINUS_slash__String_MUL_(String* s) {
+    String _7 = String_str(s);
+    static String _9 = "/";
+    String *_9_ref = &_9;
+    String _10 = String_str(_9_ref);
+    String _11 = String_append(_7, _10);
+    return _11;
+}
+
+String dir_MINUS_from_MINUS_path(String* path) {
+    String _39;
+    /* let */ {
+        Array _10 = { .len = 1, .capacity = 1, .data = CARP_MALLOC(sizeof(char) * 1) };
+        ((char*)_10.data)[0] = '/';
+        Array__char* _11 = &_10; // ref
+        Array__String _12 = String_split_MINUS_by(path, _11);
+        Array__String segments = _12;
+        Array__String* _18 = &segments; // ref
+        int _19 = Array_count__String(_18);
+        int _20 = Int_dec(_19);
+        int n = _20;
+        Array__String* _25 = &segments; // ref
+        Array__String _27 = Array_prefix_MINUS_array__String(_25, n);
+        Array__String without_MINUS_last = _27;
+        Array__String* _35 = &without_MINUS_last; // ref
+        Array__String _36 = Array_copy_MINUS_map__String_String(append_MINUS_slash__String_MUL_, _35);
+        Array__String* _37 = &_36; // ref
+        String _38 = String_join(_37);
+        _39 = _38;
+        Array_delete__String(_36);
+        Array_delete__String(segments);
+        Array_delete__String(without_MINUS_last);
+        Array_delete__char(_10);
+    }
+    return _39;
+}
+
 void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state) {
     SDL_Color _14 = SDL_rgb(30, 40, 50);
     SDL_Color* _15 = &_14; // ref
@@ -3962,19 +4111,19 @@ void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state) {
     }
 }
 
-void load_MINUS_assets(SDL_Renderer* rend) {
-    String _15 = String_str(img_MINUS_dir);
-    static String _17 = "/Corvette.png";
-    String *_17_ref = &_17;
-    String _18 = String_str(_17_ref);
-    String _19 = String_append(_15, _18);
-    String* _20 = &_19; // ref
-    char* _21 = String_cstr(_20);
-    SDL_Texture* _22 = IMG_LoadTexture(rend, _21);
-    Art _23 = Art_init(_22);
+void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir) {
+    String _16 = String_str(img_MINUS_dir);
+    static String _18 = "/Corvette.png";
+    String *_18_ref = &_18;
+    String _19 = String_str(_18_ref);
+    String _20 = String_append(_16, _19);
+    String* _21 = &_20; // ref
+    char* _22 = String_cstr(_21);
+    SDL_Texture* _23 = IMG_LoadTexture(rend, _22);
+    Art _24 = Art_init(_23);
     Art_delete(art);
-    art = _23;  // Art = Art
-    String_delete(_19);
+    art = _24;  // Art = Art
+    String_delete(_20);
 }
 
 int main(int argc, char** argv) {
@@ -3990,10 +4139,22 @@ int main(int argc, char** argv) {
         SDL_Renderer** _19 = SDLApp_renderer(_18);
         SDL_Renderer* _20 = Pointer_copy__SDL_Renderer(_19);
         SDL_Renderer* rend = _20;
-        load_MINUS_assets(rend);
-        SDLApp* _29 = &app; // ref
-        SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(_29, SDLApp_quit_MINUS_on_MINUS_esc, tick, draw__SDLApp_MUL_, state);
+        String* _28 = System_get_MINUS_arg(0);
+        String _29 = dir_MINUS_from_MINUS_path(_28);
+        String* _30 = &_29; // ref
+        String _31 = String_str(_30);
+        static String _33 = "/img/";
+        String *_33_ref = &_33;
+        String _34 = String_str(_33_ref);
+        String _35 = String_append(_31, _34);
+        String img_MINUS_dir = _35;
+        String* _42 = &img_MINUS_dir; // ref
+        load_MINUS_assets__String_MUL_(rend, _42);
+        SDLApp* _47 = &app; // ref
+        SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(_47, SDLApp_quit_MINUS_on_MINUS_esc, tick, draw__SDLApp_MUL_, state);
         SDLApp_delete(app);
+        String_delete(_29);
+        String_delete(img_MINUS_dir);
     }
 }
 
