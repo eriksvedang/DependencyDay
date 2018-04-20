@@ -23,6 +23,9 @@ typedef Array Array__Obj;
 typedef Array Array__SDL_Event;
 
 // Depth 50
+typedef Array Array__Smoke;
+
+// Depth 50
 typedef Array Array__String;
 
 // Depth 50
@@ -201,6 +204,7 @@ typedef struct {
 // Depth 102
 typedef struct {
     SDL_Texture* corvette;
+    SDL_Texture* smoke;
 } Art;
 
 // Depth 102
@@ -217,6 +221,9 @@ typedef SDL_Event*(*Fn__Array__SDL_Event_MUL__int_SDL_Event_MUL_)(Array__SDL_Eve
 
 // Depth 102
 typedef Array__SDL_Event(*Fn__Array__SDL_Event_SDL_Event_Array__SDL_Event)(Array__SDL_Event, SDL_Event);
+
+// Depth 102
+typedef int(*Fn__Array__Smoke_MUL__int)(Array__Smoke*);
 
 // Depth 102
 typedef String(*Fn__Array__String_MUL__String)(Array__String*);
@@ -309,6 +316,9 @@ typedef int*(*Fn__SDL_Rect_MUL__int_MUL_)(SDL_Rect*);
 typedef SDL_Renderer*(*Fn__SDL_Renderer_MUL__MUL__SDL_Renderer_MUL_)(SDL_Renderer**);
 
 // Depth 102
+typedef void(*Fn__SDL_Renderer_MUL__SDL_BlendMode_void)(SDL_Renderer*, SDL_BlendMode);
+
+// Depth 102
 typedef void(*Fn__SDL_Renderer_MUL__SDL_Color_MUL__void)(SDL_Renderer*, SDL_Color*);
 
 // Depth 102
@@ -319,6 +329,9 @@ typedef void(*Fn__SDL_Renderer_MUL__SDL_Texture_MUL__SDL_Rect_MUL__SDL_Rect_MUL_
 
 // Depth 102
 typedef void(*Fn__SDL_Renderer_MUL__SDL_Texture_MUL__SDL_Rect_MUL__SDL_Rect_MUL__void)(SDL_Renderer*, SDL_Texture*, SDL_Rect*, SDL_Rect*);
+
+// Depth 102
+typedef SDL_Texture*(*Fn__SDL_Renderer_MUL__String_MUL__String_MUL__SDL_Texture_MUL_)(SDL_Renderer*, String*, String*);
 
 // Depth 102
 typedef void(*Fn__SDL_Renderer_MUL__String_MUL__void)(SDL_Renderer*, String*);
@@ -378,6 +391,9 @@ typedef SDL_Event(*Fn___SDL_Event)();
 typedef Array__Obj(*Fn__int_Array__Obj)(int);
 
 // Depth 102
+typedef Array__Smoke(*Fn__int_Array__Smoke)(int);
+
+// Depth 102
 typedef Array__String(*Fn__int_Array__String)(int);
 
 // Depth 102
@@ -424,6 +440,9 @@ typedef float*(*Fn__Vec2_MUL__float_MUL_)(Vec2*);
 typedef Vec2(*Fn__Vec2_Vec2)(Vec2);
 
 // Depth 103
+typedef void(*Fn__Vec2_void)(Vec2);
+
+// Depth 103
 typedef Vec2(*Fn__float_float_Vec2)(float, float);
 
 // Depth 103
@@ -435,6 +454,12 @@ typedef struct {
     float radius;
     float dir;
 } Obj;
+
+// Depth 103
+typedef struct {
+    Vec2 pos;
+    float age;
+} Smoke;
 
 // Depth 104
 typedef SDL_Texture**(*Fn__Art_MUL__SDL_Texture_MUL__MUL_)(Art*);
@@ -455,7 +480,7 @@ typedef int*(*Fn__SDLApp_MUL__int_MUL_)(SDLApp*);
 typedef void(*Fn__SDLApp_MUL__void)(SDLApp*);
 
 // Depth 104
-typedef Art(*Fn__SDL_Texture_MUL__Art)(SDL_Texture*);
+typedef Art(*Fn__SDL_Texture_MUL__SDL_Texture_MUL__Art)(SDL_Texture*, SDL_Texture*);
 
 // Depth 104
 typedef SDLApp(*Fn__SDL_Window_MUL__SDL_Renderer_MUL__int_SDLApp)(SDL_Window*, SDL_Renderer*, int);
@@ -468,6 +493,12 @@ typedef Obj*(*Fn__Array__Obj_MUL__int_Obj_MUL_)(Array__Obj*, int);
 
 // Depth 105
 typedef void(*Fn__Array__Obj_MUL__int_Obj_void)(Array__Obj*, int, Obj);
+
+// Depth 105
+typedef Smoke*(*Fn__Array__Smoke_MUL__int_Smoke_MUL_)(Array__Smoke*, int);
+
+// Depth 105
+typedef void(*Fn__Array__Smoke_MUL__int_Smoke_void)(Array__Smoke*, int, Smoke);
 
 // Depth 105
 typedef Vec2*(*Fn__Obj_MUL__Vec2_MUL_)(Obj*);
@@ -488,10 +519,37 @@ typedef void(*Fn__SDLApp_MUL__Fn__SDLApp_MUL__void_Fn__Array__Obj_Array__Obj_Fn_
 typedef void(*Fn__SDL_Renderer_MUL__Obj_MUL__void)(SDL_Renderer*, Obj*);
 
 // Depth 105
+typedef void(*Fn__SDL_Renderer_MUL__Smoke_MUL__void)(SDL_Renderer*, Smoke*);
+
+// Depth 105
+typedef Smoke(*Fn__Smoke_MUL__Smoke)(Smoke*);
+
+// Depth 105
+typedef Vec2*(*Fn__Smoke_MUL__Vec2_MUL_)(Smoke*);
+
+// Depth 105
+typedef void(*Fn__Smoke_MUL__Vec2_void)(Smoke*, Vec2);
+
+// Depth 105
+typedef float*(*Fn__Smoke_MUL__float_MUL_)(Smoke*);
+
+// Depth 105
+typedef void(*Fn__Smoke_MUL__float_void)(Smoke*, float);
+
+// Depth 105
+typedef void(*Fn__Smoke_MUL__void)(Smoke*);
+
+// Depth 105
+typedef Smoke(*Fn__Vec2_float_Smoke)(Vec2, float);
+
+// Depth 105
 typedef Obj(*Fn__Vec2_float_float_Obj)(Vec2, float, float);
 
 // Depth 105
 typedef Obj(*Fn___Obj)();
+
+// Depth 105
+typedef Array__Smoke(*Fn__int_Smoke_MUL__Array__Smoke)(int, Smoke*);
 
 // Depth 106
 typedef Array__Obj(*Fn__Fn__Obj_Obj_Array__Obj_Array__Obj)(Fn__Obj_Obj, Array__Obj);
@@ -501,6 +559,9 @@ typedef Array__Obj(*Fn__int_Fn___Obj_Array__Obj)(int, Fn___Obj);
 
 
 //Declarations:
+
+// Depth 500
+bool _LT__EQ___float(float a, float b);
 
 // Depth 500
 bool _LT__EQ___int(int a, int b);
@@ -524,6 +585,9 @@ void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state);
 void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir);
 
 // Depth 500
+SDL_Texture* load_MINUS_img__String_MUL__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir, String* name);
+
+// Depth 500
 int main(int argc, char** argv);
 
 // Depth 500
@@ -539,10 +603,16 @@ bool pos_QMARK___int(int x);
 Obj random_MINUS_ship();
 
 // Depth 500
+void reuse_MINUS_smoke(Vec2 pos);
+
+// Depth 500
 int screen_MINUS_height;
 
 // Depth 500
 int screen_MINUS_width;
+
+// Depth 500
+Array__Smoke smokes;
 
 // Depth 500
 Array__Obj tick(Array__Obj state);
@@ -551,6 +621,9 @@ Array__Obj tick(Array__Obj state);
 
 // Depth 500
 Array Array_allocate__Obj (int n);
+
+// Depth 500
+Array Array_allocate__Smoke (int n);
 
 // Depth 500
 Array Array_allocate__String (int n);
@@ -571,6 +644,9 @@ void Array_aset_BANG___int (Array *aRef, int n, int newValue);
 void Array_aset_MINUS_uninitialized_BANG___Obj (Array *aRef, int n, Obj newValue);
 
 // Depth 500
+void Array_aset_MINUS_uninitialized_BANG___Smoke (Array *aRef, int n, Smoke newValue);
+
+// Depth 500
 void Array_aset_MINUS_uninitialized_BANG___String (Array *aRef, int n, String newValue);
 
 // Depth 500
@@ -586,6 +662,9 @@ int Array_count__Obj (Array *a);
 int Array_count__SDL_Event (Array *a);
 
 // Depth 500
+int Array_count__Smoke (Array *a);
+
+// Depth 500
 int Array_count__String (Array *a);
 
 // Depth 500
@@ -596,6 +675,9 @@ void Array_delete__Obj (Array a);
 
 // Depth 500
 void Array_delete__SDL_Event (Array a);
+
+// Depth 500
+void Array_delete__Smoke (Array a);
 
 // Depth 500
 void Array_delete__String (Array a);
@@ -614,6 +696,9 @@ Obj* Array_nth__Obj (Array *aRef, int n);
 
 // Depth 500
 SDL_Event* Array_nth__SDL_Event (Array *aRef, int n);
+
+// Depth 500
+Smoke* Array_nth__Smoke (Array *aRef, int n);
 
 // Depth 500
 String* Array_nth__String (Array *aRef, int n);
@@ -646,6 +731,9 @@ Array__Obj Array_repeat__Obj(int n, Fn___Obj f);
 Array__char Array_repeat__char(int n, Fn___char f);
 
 // Depth 500
+Array__Smoke Array_replicate__Smoke(int n, Smoke* e);
+
+// Depth 500
 Array__char Array_replicate__char(int n, char* e);
 
 // Depth 500
@@ -672,7 +760,7 @@ SDL_Texture** Art_corvette(Art* p);
 void Art_delete(Art p);
 
 // Depth 500
-Art Art_init(SDL_Texture* corvette);
+Art Art_init(SDL_Texture* corvette, SDL_Texture* smoke);
 
 // Depth 500
 String Art_prn(Art *p);
@@ -684,10 +772,22 @@ Art Art_set_MINUS_corvette(Art p, SDL_Texture* newValue);
 void Art_set_MINUS_corvette_BANG_(Art* pRef, SDL_Texture* newValue);
 
 // Depth 500
+Art Art_set_MINUS_smoke(Art p, SDL_Texture* newValue);
+
+// Depth 500
+void Art_set_MINUS_smoke_BANG_(Art* pRef, SDL_Texture* newValue);
+
+// Depth 500
+SDL_Texture** Art_smoke(Art* p);
+
+// Depth 500
 String Art_str(Art *p);
 
 // Depth 500
 Art Art_update_MINUS_corvette(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
+
+// Depth 500
+Art Art_update_MINUS_smoke(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
 
 // Depth 1000
 
@@ -1190,6 +1290,53 @@ int* SDL_Rect_y(SDL_Rect* p);
 // Depth 1000
 
 // Depth 500
+float* Smoke_age(Smoke* p);
+
+// Depth 500
+Smoke Smoke_copy(Smoke* pRef);
+
+// Depth 500
+void Smoke_delete(Smoke p);
+
+// Depth 500
+void Smoke_draw(SDL_Renderer* rend, Smoke* s);
+
+// Depth 500
+Smoke Smoke_init(Vec2 pos, float age);
+
+// Depth 500
+Vec2* Smoke_pos(Smoke* p);
+
+// Depth 500
+String Smoke_prn(Smoke *p);
+
+// Depth 500
+Smoke Smoke_set_MINUS_age(Smoke p, float newValue);
+
+// Depth 500
+void Smoke_set_MINUS_age_BANG_(Smoke* pRef, float newValue);
+
+// Depth 500
+Smoke Smoke_set_MINUS_pos(Smoke p, Vec2 newValue);
+
+// Depth 500
+void Smoke_set_MINUS_pos_BANG_(Smoke* pRef, Vec2 newValue);
+
+// Depth 500
+String Smoke_str(Smoke *p);
+
+// Depth 500
+void Smoke_tick_BANG_(Smoke* s);
+
+// Depth 500
+Smoke Smoke_update_MINUS_age(Smoke p, Fn__float_float updater);
+
+// Depth 500
+Smoke Smoke_update_MINUS_pos(Smoke p, Fn__Vec2_Vec2 updater);
+
+// Depth 1000
+
+// Depth 500
 bool String__DIV__EQ_(String* a, String* b);
 
 // Depth 500
@@ -1372,12 +1519,34 @@ void carp_init_globals(int argc, char** argv) {
 
     // Depth 1
     {
-        Art _4 = Art_init(NULL);
-        art = _4;
+        Art _5 = Art_init(NULL, NULL);
+        art = _5;
+    }
+
+    // Depth 2
+    {
+        Vec2 _9 = Vec2_init(0.0f, 0.0f);
+        Smoke _11 = Smoke_init(_9, 1.0f);
+        Smoke* _12 = &_11; // ref
+        Array__Smoke _13 = Array_replicate__Smoke(100, _12);
+        smokes = _13;
+        Smoke_delete(_11);
     }
 }
 
 //Definitions:
+bool _LT__EQ___float(float a, float b) {
+    bool _14 = false;
+    bool _9 = Float__LT_(a, b);
+    if(_9) {
+        _14 = true;
+    } else {
+        bool _13 = Float__EQ_(a, b);
+        _14 = _13;
+    }
+    return _14;
+}
+
 bool _LT__EQ___int(int a, int b) {
     bool _14 = false;
     bool _9 = Int__LT_(a, b);
@@ -1407,6 +1576,14 @@ Array Array_allocate__Obj (int n) {
     a.len = n;
     a.capacity = n;
     a.data = CARP_MALLOC(n*sizeof(Obj));
+    return a;
+}
+
+Array Array_allocate__Smoke (int n) {
+    Array a;
+    a.len = n;
+    a.capacity = n;
+    a.data = CARP_MALLOC(n*sizeof(Smoke));
     return a;
 }
 
@@ -1465,6 +1642,15 @@ void Array_aset_MINUS_uninitialized_BANG___Obj (Array *aRef, int n, Obj newValue
     ((Obj*)a.data)[n] = newValue;
 }
 
+void Array_aset_MINUS_uninitialized_BANG___Smoke (Array *aRef, int n, Smoke newValue) {
+    Array a = *aRef;
+    #ifndef OPTIMIZE
+    assert(n >= 0);
+    assert(n < a.len);
+    #endif
+    ((Smoke*)a.data)[n] = newValue;
+}
+
 void Array_aset_MINUS_uninitialized_BANG___String (Array *aRef, int n, String newValue) {
     Array a = *aRef;
     #ifndef OPTIMIZE
@@ -1514,6 +1700,7 @@ Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Arra
 
 int Array_count__Obj (Array *a) { return (*a).len; }
 int Array_count__SDL_Event (Array *a) { return (*a).len; }
+int Array_count__Smoke (Array *a) { return (*a).len; }
 int Array_count__String (Array *a) { return (*a).len; }
 int Array_count__char (Array *a) { return (*a).len; }
 void Array_delete__Obj (Array a){
@@ -1526,6 +1713,13 @@ void Array_delete__Obj (Array a){
 void Array_delete__SDL_Event (Array a){
     for(int i = 0; i < a.len; i++) {
         /* Ignore non-managed type inside Array: 'SDL_Event' */
+    }
+    CARP_FREE(a.data);
+}
+
+void Array_delete__Smoke (Array a){
+    for(int i = 0; i < a.len; i++) {
+        Smoke_delete(((Smoke*)a.data)[i]);
     }
     CARP_FREE(a.data);
 }
@@ -1574,6 +1768,15 @@ SDL_Event* Array_nth__SDL_Event (Array *aRef, int n) {
     assert(n < a.len);
     #endif
     return &(((SDL_Event*)a.data)[n]);
+}
+
+Smoke* Array_nth__Smoke (Array *aRef, int n) {
+    Array a = *aRef;
+    #ifndef OPTIMIZE
+    assert(n >= 0);
+    assert(n < a.len);
+    #endif
+    return &(((Smoke*)a.data)[n]);
 }
 
 String* Array_nth__String (Array *aRef, int n) {
@@ -1723,6 +1926,31 @@ Array__char Array_repeat__char(int n, Fn___char f) {
     return _42;
 }
 
+Array__Smoke Array_replicate__Smoke(int n, Smoke* e) {
+    Array__Smoke _43;
+    /* let */ {
+        Array__Smoke _9 = Array_allocate__Smoke(n);
+        Array__Smoke a = _9;
+        /* let */ {
+            int i = 0;
+            bool _20 = Int__LT_(i, n);
+            bool _39 = _20;
+            while (_39) {
+                Array__Smoke* _25 = &a; // ref
+                Smoke _29 = Smoke_copy(e);
+                Array_aset_MINUS_uninitialized_BANG___Smoke(_25, i, _29);
+                int _36 = Int__PLUS_(i, 1);
+                i = _36;  // Int = Int
+                bool _20 = Int__LT_(i, n);
+                _39 = _20;
+            }
+        }
+        Array__Smoke _42 = a;
+        _43 = _42;
+    }
+    return _43;
+}
+
 Array__char Array_replicate__char(int n, char* e) {
     Array__char _43;
     /* let */ {
@@ -1846,6 +2074,7 @@ Array__char Array_suffix_MINUS_array__char(Array__char* xs, int start_MINUS_inde
 Art Art_copy(Art* pRef) {
     Art copy = *pRef;
     /* Ignore non-managed member 'corvette' */
+    /* Ignore non-managed member 'smoke' */
     return copy;
 }
 
@@ -1853,11 +2082,13 @@ SDL_Texture** Art_corvette(Art* p) { return (&(p->corvette)); }
 
 void Art_delete(Art p) {
     /* Ignore non-managed member 'corvette' */
+    /* Ignore non-managed member 'smoke' */
 }
 
-Art Art_init(SDL_Texture* corvette) {
+Art Art_init(SDL_Texture* corvette, SDL_Texture* smoke) {
     Art instance;
     instance.corvette = corvette;
+    instance.smoke = smoke;
     return instance;
 }
 
@@ -1870,6 +2101,9 @@ String Art_prn(Art *p) {
   size +=  snprintf(NULL, 0, "%p ", p->corvette);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  size +=  snprintf(NULL, 0, "%p ", p->smoke);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
 
   String buffer = CARP_MALLOC(size);
   String bufferPtr = buffer;
@@ -1880,6 +2114,13 @@ String Art_prn(Art *p) {
   tempsize = snprintf(NULL, 0, "%p", p->corvette);
   temp = malloc(tempsize);
   snprintf(temp, tempsize, "%p", p->corvette);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  tempsize = snprintf(NULL, 0, "%p", p->smoke);
+  temp = malloc(tempsize);
+  snprintf(temp, tempsize, "%p", p->smoke);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -1901,6 +2142,20 @@ void Art_set_MINUS_corvette_BANG_(Art* pRef, SDL_Texture* newValue) {
 }
 
 
+Art Art_set_MINUS_smoke(Art p, SDL_Texture* newValue) {
+    /* Ignore non-managed member 'smoke' */
+    p.smoke = newValue;
+    return p;
+}
+
+
+void Art_set_MINUS_smoke_BANG_(Art* pRef, SDL_Texture* newValue) {
+    pRef->smoke = newValue;
+}
+
+
+SDL_Texture** Art_smoke(Art* p) { return (&(p->smoke)); }
+
 String Art_str(Art *p) {
   // convert members to String here:
   String temp = NULL;
@@ -1908,6 +2163,9 @@ String Art_str(Art *p) {
   (void)tempsize; // that way we remove the occasional unused warning 
   int size = snprintf(NULL, 0, "(%s )", "Art");
   size +=  snprintf(NULL, 0, "%p ", p->corvette);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  size +=  snprintf(NULL, 0, "%p ", p->smoke);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
 
@@ -1924,6 +2182,13 @@ String Art_str(Art *p) {
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  tempsize = snprintf(NULL, 0, "%p", p->smoke);
+  temp = malloc(tempsize);
+  snprintf(temp, tempsize, "%p", p->smoke);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
   bufferPtr--;
   snprintf(bufferPtr, size, ")");
   return buffer;
@@ -1931,6 +2196,12 @@ String Art_str(Art *p) {
 
 Art Art_update_MINUS_corvette(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater) {
     p.corvette = updater(p.corvette);
+    return p;
+}
+
+
+Art Art_update_MINUS_smoke(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater) {
+    p.smoke = updater(p.smoke);
     return p;
 }
 
@@ -3588,6 +3859,196 @@ int* SDL_Rect_x(SDL_Rect* p) { return (&(p->x)); }
 
 int* SDL_Rect_y(SDL_Rect* p) { return (&(p->y)); }
 
+float* Smoke_age(Smoke* p) { return (&(p->age)); }
+
+Smoke Smoke_copy(Smoke* pRef) {
+    Smoke copy = *pRef;
+    copy.pos = Vec2_copy(&(pRef->pos));
+    /* Ignore non-managed member 'age' */
+    return copy;
+}
+
+void Smoke_delete(Smoke p) {
+    Vec2_delete(p.pos);
+    /* Ignore non-managed member 'age' */
+}
+
+void Smoke_draw(SDL_Renderer* rend, Smoke* s) {
+    /* let */ {
+        Vec2* _9 = Smoke_pos(s);
+        Vec2* pos = _9;
+        Art* _15 = &art; // ref
+        SDL_Texture** _16 = Art_smoke(_15);
+        SDL_Texture* _17 = Pointer_copy__SDL_Texture(_16);
+        SDL_Texture* img = _17;
+        SDL_Rect _21 = SDL_dimensions(img);
+        SDL_Rect dims = _21;
+        float* _31 = Smoke_age(s);
+        float _32 = Float_copy(_31);
+        float _33 = Float__MINUS_(1.0f, _32);
+        float _34 = Float__MUL_(32.0f, _33);
+        int _35 = Float_to_MINUS_int(_34);
+        int sub = _35;
+        SDL_Rect* _42 = &dims; // ref
+        int* _43 = SDL_Rect_w(_42);
+        int _44 = Int_copy(_43);
+        int _46 = Int__MINUS_(_44, sub);
+        int w = _46;
+        SDL_Rect* _53 = &dims; // ref
+        int* _54 = SDL_Rect_h(_53);
+        int _55 = Int_copy(_54);
+        int _57 = Int__MINUS_(_55, sub);
+        int h = _57;
+        bool _63 = pos_QMARK___int(w);
+        if (_63) {
+            float* _78 = Vec2_x(pos);
+            float _79 = Float_copy(_78);
+            int _80 = Float_to_MINUS_int(_79);
+            int _84 = Int__DIV_(w, 2);
+            int _85 = Int__MINUS_(_80, _84);
+            float* _91 = Vec2_y(pos);
+            float _92 = Float_copy(_91);
+            int _93 = Float_to_MINUS_int(_92);
+            int _97 = Int__DIV_(h, 2);
+            int _98 = Int__MINUS_(_93, _97);
+            SDL_Rect _101 = SDL_rect(_85, _98, w, h);
+            int _109 = Int__DIV_(w, 2);
+            int _113 = Int__DIV_(h, 2);
+            SDL_Point _114 = SDL_point(_109, _113);
+            SDL_RenderCopyEx(rend, img, &dims, &_101, 0.0, &_114, SDL_FLIP_NONE);
+        } else {
+            /* () */
+        }
+    }
+}
+
+Smoke Smoke_init(Vec2 pos, float age) {
+    Smoke instance;
+    instance.pos = pos;
+    instance.age = age;
+    return instance;
+}
+
+Vec2* Smoke_pos(Smoke* p) { return (&(p->pos)); }
+
+String Smoke_prn(Smoke *p) {
+  // convert members to String here:
+  String temp = NULL;
+  int tempsize = 0;
+  (void)tempsize; // that way we remove the occasional unused warning 
+  int size = snprintf(NULL, 0, "(%s )", "Smoke");
+  temp = Vec2_prn(&p->pos); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Float_prn(p->age); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+
+  String buffer = CARP_MALLOC(size);
+  String bufferPtr = buffer;
+
+  snprintf(bufferPtr, size, "(%s ", "Smoke");
+  bufferPtr += strlen("Smoke") + 2;
+
+  temp = Vec2_prn(&p->pos);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Float_prn(p->age);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  bufferPtr--;
+  snprintf(bufferPtr, size, ")");
+  return buffer;
+}
+
+Smoke Smoke_set_MINUS_age(Smoke p, float newValue) {
+    /* Ignore non-managed member 'age' */
+    p.age = newValue;
+    return p;
+}
+
+
+void Smoke_set_MINUS_age_BANG_(Smoke* pRef, float newValue) {
+    pRef->age = newValue;
+}
+
+
+Smoke Smoke_set_MINUS_pos(Smoke p, Vec2 newValue) {
+    Vec2_delete(p.pos);
+    p.pos = newValue;
+    return p;
+}
+
+
+void Smoke_set_MINUS_pos_BANG_(Smoke* pRef, Vec2 newValue) {
+    pRef->pos = newValue;
+}
+
+
+String Smoke_str(Smoke *p) {
+  // convert members to String here:
+  String temp = NULL;
+  int tempsize = 0;
+  (void)tempsize; // that way we remove the occasional unused warning 
+  int size = snprintf(NULL, 0, "(%s )", "Smoke");
+  temp = Vec2_prn(&p->pos); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Float_prn(p->age); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+
+  String buffer = CARP_MALLOC(size);
+  String bufferPtr = buffer;
+
+  snprintf(bufferPtr, size, "(%s ", "Smoke");
+  bufferPtr += strlen("Smoke") + 2;
+
+  temp = Vec2_prn(&p->pos);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Float_prn(p->age);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  bufferPtr--;
+  snprintf(bufferPtr, size, ")");
+  return buffer;
+}
+
+void Smoke_tick_BANG_(Smoke* s) {
+    /* let */ {
+        float* _9 = Smoke_age(s);
+        float _10 = Float_copy(_9);
+        float a = _10;
+        float _17 = Float__MINUS_(a, 1.666e-2f);
+        Smoke_set_MINUS_age_BANG_(s, _17);
+    }
+}
+
+Smoke Smoke_update_MINUS_age(Smoke p, Fn__float_float updater) {
+    p.age = updater(p.age);
+    return p;
+}
+
+
+Smoke Smoke_update_MINUS_pos(Smoke p, Fn__Vec2_Vec2 updater) {
+    p.pos = updater(p.pos);
+    return p;
+}
+
+
 bool String__DIV__EQ_(String* a, String* b) {
     String* _12 = a; // From the 'the' function.
     bool _14 = String__EQ_(_12, b);
@@ -4174,41 +4635,71 @@ void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state) {
     SDL_bg(rend, _15);
     SDL_RenderClear(rend);
     /* let */ {
-        Array__Obj* xs = state;
-        int _26 = Array_count__Obj(xs);
-        int len = _26;
+        Array__Smoke* _24 = &smokes; // ref
+        Array__Smoke* xs = _24;
+        int _28 = Array_count__Smoke(xs);
+        int len = _28;
         /* let */ {
             int i = 0;
-            bool _36 = Int__LT_(i, len);
-            bool _58 = _36;
-            while (_58) {
+            bool _38 = Int__LT_(i, len);
+            bool _60 = _38;
+            while (_60) {
                 /* let */ {
-                    Obj* _43 = Array_nth__Obj(xs, i);
-                    Obj* o = _43;
+                    Smoke* _45 = Array_nth__Smoke(xs, i);
+                    Smoke* s = _45;
+                    Smoke_draw(rend, s);
+                }
+                int _57 = Int__PLUS_(i, 1);
+                i = _57;  // Int = Int
+                bool _38 = Int__LT_(i, len);
+                _60 = _38;
+            }
+        }
+    }
+    /* let */ {
+        Array__Obj* xs = state;
+        int _69 = Array_count__Obj(xs);
+        int len = _69;
+        /* let */ {
+            int i = 0;
+            bool _79 = Int__LT_(i, len);
+            bool _101 = _79;
+            while (_101) {
+                /* let */ {
+                    Obj* _86 = Array_nth__Obj(xs, i);
+                    Obj* o = _86;
                     Obj_draw(rend, o);
                 }
-                int _55 = Int__PLUS_(i, 1);
-                i = _55;  // Int = Int
-                bool _36 = Int__LT_(i, len);
-                _58 = _36;
+                int _98 = Int__PLUS_(i, 1);
+                i = _98;  // Int = Int
+                bool _79 = Int__LT_(i, len);
+                _101 = _79;
             }
         }
     }
 }
 
 void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir) {
-    String _16 = String_str(img_MINUS_dir);
-    static String _18 = "/Corvette.png";
-    String *_18_ref = &_18;
-    String _19 = String_str(_18_ref);
-    String _20 = String_append(_16, _19);
-    String* _21 = &_20; // ref
-    char* _22 = String_cstr(_21);
-    SDL_Texture* _23 = IMG_LoadTexture(rend, _22);
-    Art _24 = Art_init(_23);
+    static String _12 = "Corvette.png";
+    String *_12_ref = &_12;
+    SDL_Texture* _13 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _12_ref);
+    static String _17 = "Smoke.png";
+    String *_17_ref = &_17;
+    SDL_Texture* _18 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _17_ref);
+    Art _19 = Art_init(_13, _18);
     Art_delete(art);
-    art = _24;  // Art = Art
-    String_delete(_20);
+    art = _19;  // Art = Art
+}
+
+SDL_Texture* load_MINUS_img__String_MUL__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir, String* name) {
+    String _13 = String_str(img_MINUS_dir);
+    String _16 = String_str(name);
+    String _17 = String_append(_13, _16);
+    String* _18 = &_17; // ref
+    char* _19 = String_cstr(_18);
+    SDL_Texture* _20 = IMG_LoadTexture(rend, _19);
+    String_delete(_17);
+    return _20;
 }
 
 int main(int argc, char** argv) {
@@ -4235,8 +4726,9 @@ int main(int argc, char** argv) {
         String img_MINUS_dir = _35;
         String* _42 = &img_MINUS_dir; // ref
         load_MINUS_assets__String_MUL_(rend, _42);
-        SDLApp* _47 = &app; // ref
-        SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(_47, SDLApp_quit_MINUS_on_MINUS_esc, tick, draw__SDLApp_MUL_, state);
+        SDL_SetRenderDrawBlendMode(rend, SDL_BLENDMODE_BLEND);
+        SDLApp* _51 = &app; // ref
+        SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(_51, SDLApp_quit_MINUS_on_MINUS_esc, tick, draw__SDLApp_MUL_, state);
         SDLApp_delete(app);
         String_delete(_29);
         String_delete(img_MINUS_dir);
@@ -4244,7 +4736,7 @@ int main(int argc, char** argv) {
 }
 
 Array__Obj make_MINUS_state() {
-    Array__Obj _6 = Array_repeat__Obj(1000, random_MINUS_ship);
+    Array__Obj _6 = Array_repeat__Obj(10, random_MINUS_ship);
     return _6;
 }
 
@@ -4279,9 +4771,107 @@ Obj random_MINUS_ship() {
     return _26;
 }
 
+void reuse_MINUS_smoke(Vec2 pos) {
+    /* let */ {
+        Array__Smoke* _9 = &smokes; // ref
+        Array__Smoke* xs = _9;
+        int _13 = Array_count__Smoke(xs);
+        int len = _13;
+        /* let */ {
+            int i = 0;
+            bool _23 = Int__LT_(i, len);
+            bool _70 = _23;
+            while (_70) {
+                /* let */ {
+                    Smoke* _30 = Array_nth__Smoke(xs, i);
+                    Smoke* s = _30;
+                    float* _37 = Smoke_age(s);
+                    float _38 = Float_copy(_37);
+                    bool _40 = _LT__EQ___float(_38, 0.0f);
+                    if (_40) {
+                        Smoke_set_MINUS_age_BANG_(s, 1.0f);
+                        Vec2* _51 = &pos; // ref
+                        Vec2 _52 = Vec2_copy(_51);
+                        Smoke_set_MINUS_pos_BANG_(s, _52);
+                        break;
+                    } else {
+                        /* () */
+                    }
+                }
+                int _67 = Int__PLUS_(i, 1);
+                i = _67;  // Int = Int
+                bool _23 = Int__LT_(i, len);
+                _70 = _23;
+            }
+        }
+    }
+    /* let */ {
+        Array__Smoke* _78 = &smokes; // ref
+        Array__Smoke* _84 = &smokes; // ref
+        int _85 = Array_count__Smoke(_84);
+        int _86 = Int_random_MINUS_between(0, _85);
+        Smoke* _87 = Array_nth__Smoke(_78, _86);
+        Smoke* s = _87;
+        Smoke_set_MINUS_age_BANG_(s, 1.0f);
+        Smoke_set_MINUS_pos_BANG_(s, pos);
+    }
+}
+
 Array__Obj tick(Array__Obj state) {
-    Array__Obj _8 = Array_endo_MINUS_map__Obj(Obj_tick, state);
-    Array__Obj _9 = _8;
-    return _9;
+    /* let */ {
+        Array__Smoke* _9 = &smokes; // ref
+        Array__Smoke* xs = _9;
+        int _13 = Array_count__Smoke(xs);
+        int len = _13;
+        /* let */ {
+            int i = 0;
+            bool _23 = Int__LT_(i, len);
+            bool _44 = _23;
+            while (_44) {
+                /* let */ {
+                    Smoke* _30 = Array_nth__Smoke(xs, i);
+                    Smoke* s = _30;
+                    Smoke_tick_BANG_(s);
+                }
+                int _41 = Int__PLUS_(i, 1);
+                i = _41;  // Int = Int
+                bool _23 = Int__LT_(i, len);
+                _44 = _23;
+            }
+        }
+    }
+    /* let */ {
+        Array__Obj* _51 = &state; // ref
+        Array__Obj* xs = _51;
+        int _55 = Array_count__Obj(xs);
+        int len = _55;
+        /* let */ {
+            int i = 0;
+            bool _65 = Int__LT_(i, len);
+            bool _104 = _65;
+            while (_104) {
+                /* let */ {
+                    Obj* _72 = Array_nth__Obj(xs, i);
+                    Obj* o = _72;
+                    int _80 = Int_random_MINUS_between(0, 10);
+                    bool _81 = Int__EQ_(0, _80);
+                    if (_81) {
+                        Vec2* _87 = Obj_pos(o);
+                        Vec2 _88 = Vec2_copy(_87);
+                        reuse_MINUS_smoke(_88);
+                    } else {
+                        /* () */
+                    }
+                }
+                int _101 = Int__PLUS_(i, 1);
+                i = _101;  // Int = Int
+                bool _65 = Int__LT_(i, len);
+                _104 = _65;
+            }
+        }
+    }
+    Array__Obj _110 = Array_endo_MINUS_map__Obj(Obj_tick, state);
+    Array__Obj _111 = _110;
+    return _111;
 }
 

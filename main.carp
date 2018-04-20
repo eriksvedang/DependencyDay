@@ -12,9 +12,10 @@
 (use SDL)
 
 (deftype Art
-    [corvette (Ptr SDL_Texture)])
+    [corvette (Ptr SDL_Texture)
+     smoke (Ptr SDL_Texture)])
 
-(def art (Art.init NULL))
+(def art (Art.init NULL NULL))
 
 (deftype Vec2
   [x Float
@@ -53,13 +54,56 @@
           new-pos (Vec2.add &pos &(Vec2.init (Float.cos dir) (* -1.0f (Float.sin dir))))]
       (Obj.set-pos o new-pos))))
 
+(deftype Smoke
+    [pos Vec2
+     age Float]) ; this is the age left, should start at 1.0f
+
+(defmodule Smoke
+  (defn draw [rend s]
+    (let-do [pos (Smoke.pos s)
+             img @(Art.smoke &art)
+             dims (SDL.dimensions img)
+             sub (Float.to-int (* 32.0f (- 1.0f @(Smoke.age s))))
+             w (- @(SDL_Rect.w &dims) sub)
+             h (- @(SDL_Rect.h &dims) sub)]
+      (when (pos? w)
+        (SDL.render-copy-ex rend
+                            img
+                            (address dims)
+                            (address (SDL.rect (- (Float.to-int @(Vec2.x pos)) (/ w 2))
+                                               (- (Float.to-int @(Vec2.y pos)) (/ h 2))
+                                               w
+                                               h))
+                            0.0
+                            (address (SDL.point (/ w 2) (/ h 2)))
+                            SDL.flip-none))
+      ))
+  (defn tick! [s]
+    (let [a @(Smoke.age s)]
+      (Smoke.set-age! s (- a 0.01666f)))))
+
+(def smokes (replicate 100 &(Smoke.init (Vec2.init 0.0f 0.0f) 1.0f)))
+
+(defn-do reuse-smoke [pos]
+  (foreach [s &smokes]
+           (when (<= @(Smoke.age s) 0.0f)
+             (do (Smoke.set-age! s 1.0f)
+                 (Smoke.set-pos! s @&pos)
+                 (break))))
+  (let [s (nth &smokes (random-between 0 (count &smokes)))]
+    (do (Smoke.set-age! s 1.0f)
+        (Smoke.set-pos! s pos))))
+
 (defn-do draw [app rend state]
   (bg rend &(rgb 30 40 50))
   (SDL.render-clear rend)
+  (foreach [s &smokes] (Smoke.draw rend s))
   (foreach [o state] (Obj.draw rend o)))
 
 (defn-do tick [state]
-  ;;(println* (SDL.get-ticks))
+  (foreach [s &smokes] (Smoke.tick! s))
+  (foreach [o &state] (when (= 0 (Int.random-between 0 10))
+                        (reuse-smoke @(Obj.pos o))))
   (endo-map Obj.tick state))
 
 (def screen-width 1024)
@@ -74,11 +118,15 @@
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   ;;[(Obj.init (Vec2.init 0.0f 0.0f) 10.0f (* pi 1.75f))]
-  (repeat 1000 random-ship)
+  (repeat 10 random-ship)
   )
 
+(defn load-img [rend img-dir name]
+  (IMG.load-texture rend (cstr &(str* img-dir name))))
+
 (defn-do load-assets [rend img-dir]
-  (set! art (Art.init (IMG.load-texture rend (cstr &(str* img-dir "/Corvette.png"))))))
+  (set! art (Art.init (load-img rend img-dir "Corvette.png")
+                      (load-img rend img-dir "Smoke.png"))))
 
 (defn append-slash [s]
   (str* s "/"))
@@ -96,4 +144,5 @@
            rend @(SDLApp.renderer &app)
            img-dir (str* &(dir-from-path (System.get-arg 0)) "/img/")]
     (load-assets rend &img-dir)
+    (SDL.set-render-draw-blend-mode rend SDL.blend-mode-blend)
     (SDLApp.run-with-callbacks &app SDLApp.quit-on-esc tick draw state)))
