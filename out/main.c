@@ -205,6 +205,7 @@ typedef struct {
 typedef struct {
     SDL_Texture* corvette;
     SDL_Texture* smoke;
+    SDL_Texture* earth;
 } Art;
 
 // Depth 102
@@ -323,6 +324,9 @@ typedef void(*Fn__SDL_Renderer_MUL__SDL_Color_MUL__void)(SDL_Renderer*, SDL_Colo
 
 // Depth 102
 typedef SDL_Renderer*(*Fn__SDL_Renderer_MUL__SDL_Renderer_MUL_)(SDL_Renderer*);
+
+// Depth 102
+typedef void(*Fn__SDL_Renderer_MUL__SDL_Texture_MUL__SDL_Point_MUL__void)(SDL_Renderer*, SDL_Texture*, SDL_Point*);
 
 // Depth 102
 typedef void(*Fn__SDL_Renderer_MUL__SDL_Texture_MUL__SDL_Rect_MUL__SDL_Rect_MUL__double_SDL_Point_MUL__SDL_RendererFlip_void)(SDL_Renderer*, SDL_Texture*, SDL_Rect*, SDL_Rect*, double, SDL_Point*, SDL_RendererFlip);
@@ -480,7 +484,7 @@ typedef int*(*Fn__SDLApp_MUL__int_MUL_)(SDLApp*);
 typedef void(*Fn__SDLApp_MUL__void)(SDLApp*);
 
 // Depth 104
-typedef Art(*Fn__SDL_Texture_MUL__SDL_Texture_MUL__Art)(SDL_Texture*, SDL_Texture*);
+typedef Art(*Fn__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__Art)(SDL_Texture*, SDL_Texture*, SDL_Texture*);
 
 // Depth 104
 typedef SDLApp(*Fn__SDL_Window_MUL__SDL_Renderer_MUL__int_SDLApp)(SDL_Window*, SDL_Renderer*, int);
@@ -760,7 +764,10 @@ SDL_Texture** Art_corvette(Art* p);
 void Art_delete(Art p);
 
 // Depth 500
-Art Art_init(SDL_Texture* corvette, SDL_Texture* smoke);
+SDL_Texture** Art_earth(Art* p);
+
+// Depth 500
+Art Art_init(SDL_Texture* corvette, SDL_Texture* smoke, SDL_Texture* earth);
 
 // Depth 500
 String Art_prn(Art *p);
@@ -770,6 +777,12 @@ Art Art_set_MINUS_corvette(Art p, SDL_Texture* newValue);
 
 // Depth 500
 void Art_set_MINUS_corvette_BANG_(Art* pRef, SDL_Texture* newValue);
+
+// Depth 500
+Art Art_set_MINUS_earth(Art p, SDL_Texture* newValue);
+
+// Depth 500
+void Art_set_MINUS_earth_BANG_(Art* pRef, SDL_Texture* newValue);
 
 // Depth 500
 Art Art_set_MINUS_smoke(Art p, SDL_Texture* newValue);
@@ -785,6 +798,9 @@ String Art_str(Art *p);
 
 // Depth 500
 Art Art_update_MINUS_corvette(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
+
+// Depth 500
+Art Art_update_MINUS_earth(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
 
 // Depth 500
 Art Art_update_MINUS_smoke(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
@@ -1519,8 +1535,8 @@ void carp_init_globals(int argc, char** argv) {
 
     // Depth 1
     {
-        Art _5 = Art_init(NULL, NULL);
-        art = _5;
+        Art _6 = Art_init(NULL, NULL, NULL);
+        art = _6;
     }
 
     // Depth 2
@@ -2075,6 +2091,7 @@ Art Art_copy(Art* pRef) {
     Art copy = *pRef;
     /* Ignore non-managed member 'corvette' */
     /* Ignore non-managed member 'smoke' */
+    /* Ignore non-managed member 'earth' */
     return copy;
 }
 
@@ -2083,12 +2100,16 @@ SDL_Texture** Art_corvette(Art* p) { return (&(p->corvette)); }
 void Art_delete(Art p) {
     /* Ignore non-managed member 'corvette' */
     /* Ignore non-managed member 'smoke' */
+    /* Ignore non-managed member 'earth' */
 }
 
-Art Art_init(SDL_Texture* corvette, SDL_Texture* smoke) {
+SDL_Texture** Art_earth(Art* p) { return (&(p->earth)); }
+
+Art Art_init(SDL_Texture* corvette, SDL_Texture* smoke, SDL_Texture* earth) {
     Art instance;
     instance.corvette = corvette;
     instance.smoke = smoke;
+    instance.earth = earth;
     return instance;
 }
 
@@ -2102,6 +2123,9 @@ String Art_prn(Art *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   size +=  snprintf(NULL, 0, "%p ", p->smoke);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  size +=  snprintf(NULL, 0, "%p ", p->earth);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
 
@@ -2125,6 +2149,13 @@ String Art_prn(Art *p) {
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  tempsize = snprintf(NULL, 0, "%p", p->earth);
+  temp = malloc(tempsize);
+  snprintf(temp, tempsize, "%p", p->earth);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
   bufferPtr--;
   snprintf(bufferPtr, size, ")");
   return buffer;
@@ -2139,6 +2170,18 @@ Art Art_set_MINUS_corvette(Art p, SDL_Texture* newValue) {
 
 void Art_set_MINUS_corvette_BANG_(Art* pRef, SDL_Texture* newValue) {
     pRef->corvette = newValue;
+}
+
+
+Art Art_set_MINUS_earth(Art p, SDL_Texture* newValue) {
+    /* Ignore non-managed member 'earth' */
+    p.earth = newValue;
+    return p;
+}
+
+
+void Art_set_MINUS_earth_BANG_(Art* pRef, SDL_Texture* newValue) {
+    pRef->earth = newValue;
 }
 
 
@@ -2168,6 +2211,9 @@ String Art_str(Art *p) {
   size +=  snprintf(NULL, 0, "%p ", p->smoke);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  size +=  snprintf(NULL, 0, "%p ", p->earth);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
 
   String buffer = CARP_MALLOC(size);
   String bufferPtr = buffer;
@@ -2189,6 +2235,13 @@ String Art_str(Art *p) {
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  tempsize = snprintf(NULL, 0, "%p", p->earth);
+  temp = malloc(tempsize);
+  snprintf(temp, tempsize, "%p", p->earth);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
   bufferPtr--;
   snprintf(bufferPtr, size, ")");
   return buffer;
@@ -2196,6 +2249,12 @@ String Art_str(Art *p) {
 
 Art Art_update_MINUS_corvette(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater) {
     p.corvette = updater(p.corvette);
+    return p;
+}
+
+
+Art Art_update_MINUS_earth(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater) {
+    p.earth = updater(p.earth);
     return p;
 }
 
@@ -4634,46 +4693,53 @@ void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state) {
     SDL_Color* _15 = &_14; // ref
     SDL_bg(rend, _15);
     SDL_RenderClear(rend);
+    Art* _26 = &art; // ref
+    SDL_Texture** _27 = Art_earth(_26);
+    SDL_Texture* _28 = Pointer_copy__SDL_Texture(_27);
+    int _34 = Int__MINUS_(screen_MINUS_width, 256);
+    SDL_Point _36 = SDL_point(_34, 0);
+    SDL_Point* _37 = &_36; // ref
+    SDL_draw_MINUS_texture(rend, _28, _37);
     /* let */ {
-        Array__Smoke* _24 = &smokes; // ref
-        Array__Smoke* xs = _24;
-        int _28 = Array_count__Smoke(xs);
-        int len = _28;
+        Array__Smoke* _43 = &smokes; // ref
+        Array__Smoke* xs = _43;
+        int _47 = Array_count__Smoke(xs);
+        int len = _47;
         /* let */ {
             int i = 0;
-            bool _38 = Int__LT_(i, len);
-            bool _60 = _38;
-            while (_60) {
+            bool _57 = Int__LT_(i, len);
+            bool _79 = _57;
+            while (_79) {
                 /* let */ {
-                    Smoke* _45 = Array_nth__Smoke(xs, i);
-                    Smoke* s = _45;
+                    Smoke* _64 = Array_nth__Smoke(xs, i);
+                    Smoke* s = _64;
                     Smoke_draw(rend, s);
                 }
-                int _57 = Int__PLUS_(i, 1);
-                i = _57;  // Int = Int
-                bool _38 = Int__LT_(i, len);
-                _60 = _38;
+                int _76 = Int__PLUS_(i, 1);
+                i = _76;  // Int = Int
+                bool _57 = Int__LT_(i, len);
+                _79 = _57;
             }
         }
     }
     /* let */ {
         Array__Obj* xs = state;
-        int _69 = Array_count__Obj(xs);
-        int len = _69;
+        int _88 = Array_count__Obj(xs);
+        int len = _88;
         /* let */ {
             int i = 0;
-            bool _79 = Int__LT_(i, len);
-            bool _101 = _79;
-            while (_101) {
+            bool _98 = Int__LT_(i, len);
+            bool _120 = _98;
+            while (_120) {
                 /* let */ {
-                    Obj* _86 = Array_nth__Obj(xs, i);
-                    Obj* o = _86;
+                    Obj* _105 = Array_nth__Obj(xs, i);
+                    Obj* o = _105;
                     Obj_draw(rend, o);
                 }
-                int _98 = Int__PLUS_(i, 1);
-                i = _98;  // Int = Int
-                bool _79 = Int__LT_(i, len);
-                _101 = _79;
+                int _117 = Int__PLUS_(i, 1);
+                i = _117;  // Int = Int
+                bool _98 = Int__LT_(i, len);
+                _120 = _98;
             }
         }
     }
@@ -4686,9 +4752,12 @@ void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir) {
     static String _17 = "Smoke.png";
     String *_17_ref = &_17;
     SDL_Texture* _18 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _17_ref);
-    Art _19 = Art_init(_13, _18);
+    static String _22 = "Earth.png";
+    String *_22_ref = &_22;
+    SDL_Texture* _23 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _22_ref);
+    Art _24 = Art_init(_13, _18, _23);
     Art_delete(art);
-    art = _19;  // Art = Art
+    art = _24;  // Art = Art
 }
 
 SDL_Texture* load_MINUS_img__String_MUL__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir, String* name) {
@@ -4736,7 +4805,7 @@ int main(int argc, char** argv) {
 }
 
 Array__Obj make_MINUS_state() {
-    Array__Obj _6 = Array_repeat__Obj(10, random_MINUS_ship);
+    Array__Obj _6 = Array_repeat__Obj(20, random_MINUS_ship);
     return _6;
 }
 
@@ -4760,15 +4829,15 @@ bool pos_QMARK___int(int x) {
 }
 
 Obj random_MINUS_ship() {
-    float _9 = Float_from_MINUS_int(screen_MINUS_width);
-    float _10 = Float_random_MINUS_between(0.0f, _9);
-    float _15 = Float_from_MINUS_int(screen_MINUS_height);
-    float _16 = Float_random_MINUS_between(0.0f, _15);
-    Vec2 _17 = Vec2_init(_10, _16);
-    float _24 = Float__MUL_(Float_pi, 2.0f);
-    float _25 = Float_random_MINUS_between(0.0f, _24);
-    Obj _26 = Obj_init(_17, 10.0f, _25);
-    return _26;
+    float _8 = Float_random_MINUS_between(0.0f, 200.0f);
+    float _13 = Float_from_MINUS_int(screen_MINUS_height);
+    float _14 = Float_random_MINUS_between(0.0f, _13);
+    Vec2 _15 = Vec2_init(_8, _14);
+    float _21 = Float__MUL_(Float_pi, -0.25f);
+    float _25 = Float__MUL_(Float_pi, 0.25f);
+    float _26 = Float_random_MINUS_between(_21, _25);
+    Obj _27 = Obj_init(_15, 10.0f, _26);
+    return _27;
 }
 
 void reuse_MINUS_smoke(Vec2 pos) {

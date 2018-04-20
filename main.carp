@@ -11,11 +11,15 @@
 (use Array)
 (use SDL)
 
+(def screen-width 1024)
+(def screen-height 768)
+
 (deftype Art
     [corvette (Ptr SDL_Texture)
-     smoke (Ptr SDL_Texture)])
+     smoke (Ptr SDL_Texture)
+     earth (Ptr (SDL_Texture))])
 
-(def art (Art.init NULL NULL))
+(def art (Art.init NULL NULL NULL))
 
 (deftype Vec2
   [x Float
@@ -96,7 +100,8 @@
 
 (defn-do draw [app rend state]
   (bg rend &(rgb 30 40 50))
-  (SDL.render-clear rend)
+  (render-clear rend)
+  (draw-texture rend @(Art.earth &art) &(point (- screen-width 256) 0))
   (foreach [s &smokes] (Smoke.draw rend s))
   (foreach [o state] (Obj.draw rend o)))
 
@@ -106,19 +111,16 @@
                         (reuse-smoke @(Obj.pos o))))
   (endo-map Obj.tick state))
 
-(def screen-width 1024)
-(def screen-height 768)
-
 (defn random-ship []
-  (Obj.init (Vec2.init (random-between 0.0f (Float.from-int screen-width))
+  (Obj.init (Vec2.init (random-between 0.0f 200.0f)
                        (random-between 0.0f (Float.from-int screen-height)))
             10.0f ;; radius
-            (random-between 0.0f (* pi 2.0f))))
+            (random-between (* pi -0.25f) (* pi 0.25f))))
 
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   ;;[(Obj.init (Vec2.init 0.0f 0.0f) 10.0f (* pi 1.75f))]
-  (repeat 10 random-ship)
+  (repeat 20 random-ship)
   )
 
 (defn load-img [rend img-dir name]
@@ -126,7 +128,8 @@
 
 (defn-do load-assets [rend img-dir]
   (set! art (Art.init (load-img rend img-dir "Corvette.png")
-                      (load-img rend img-dir "Smoke.png"))))
+                      (load-img rend img-dir "Smoke.png")
+                      (load-img rend img-dir "Earth.png"))))
 
 (defn append-slash [s]
   (str* s "/"))
