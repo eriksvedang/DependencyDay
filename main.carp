@@ -62,9 +62,20 @@
   ;;(println* (SDL.get-ticks))
   (endo-map Obj.tick state))
 
+(def screen-width 1024)
+(def screen-height 768)
+
+(defn random-ship []
+  (Obj.init (Vec2.init (random-between 0.0f (Float.from-int screen-width))
+                       (random-between 0.0f (Float.from-int screen-height)))
+            10.0f ;; radius
+            (random-between 0.0f (* pi 2.0f))))
+
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
-  [(Obj.init (Vec2.init 0.0f 0.0f) 10.0f (* pi 1.75f))])
+  ;;[(Obj.init (Vec2.init 0.0f 0.0f) 10.0f (* pi 1.75f))]
+  (repeat 1000 random-ship)
+  )
 
 (defn-do load-assets [rend img-dir]
   (set! art (Art.init (IMG.load-texture rend (cstr &(str* img-dir "/Corvette.png"))))))
@@ -80,7 +91,7 @@
     (join &(copy-map append-slash &without-last))))
 
 (defn main []
-  (let-do [app (SDLApp.create "Dependency Day" 300 200)
+  (let-do [app (SDLApp.create "Dependency Day" screen-width screen-height)
            state (make-state)
            rend @(SDLApp.renderer &app)
            img-dir (str* &(dir-from-path (System.get-arg 0)) "/img/")]

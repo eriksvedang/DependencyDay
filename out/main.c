@@ -155,6 +155,9 @@ typedef bool(*Fn__int_bool)(int);
 typedef char(*Fn__int_char)(int);
 
 // Depth 101
+typedef float(*Fn__int_float)(int);
+
+// Depth 101
 typedef int(*Fn__int_int)(int);
 
 // Depth 101
@@ -372,6 +375,9 @@ typedef Array__SDL_Event(*Fn___Array__SDL_Event)();
 typedef SDL_Event(*Fn___SDL_Event)();
 
 // Depth 102
+typedef Array__Obj(*Fn__int_Array__Obj)(int);
+
+// Depth 102
 typedef Array__String(*Fn__int_Array__String)(int);
 
 // Depth 102
@@ -461,6 +467,9 @@ typedef SDLApp(*Fn__String_MUL__int_int_SDLApp)(String*, int, int);
 typedef Obj*(*Fn__Array__Obj_MUL__int_Obj_MUL_)(Array__Obj*, int);
 
 // Depth 105
+typedef void(*Fn__Array__Obj_MUL__int_Obj_void)(Array__Obj*, int, Obj);
+
+// Depth 105
 typedef Vec2*(*Fn__Obj_MUL__Vec2_MUL_)(Obj*);
 
 // Depth 105
@@ -481,8 +490,14 @@ typedef void(*Fn__SDL_Renderer_MUL__Obj_MUL__void)(SDL_Renderer*, Obj*);
 // Depth 105
 typedef Obj(*Fn__Vec2_float_float_Obj)(Vec2, float, float);
 
+// Depth 105
+typedef Obj(*Fn___Obj)();
+
 // Depth 106
 typedef Array__Obj(*Fn__Fn__Obj_Obj_Array__Obj_Array__Obj)(Fn__Obj_Obj, Array__Obj);
+
+// Depth 106
+typedef Array__Obj(*Fn__int_Fn___Obj_Array__Obj)(int, Fn___Obj);
 
 
 //Declarations:
@@ -521,9 +536,21 @@ int max__int(int a, int b);
 bool pos_QMARK___int(int x);
 
 // Depth 500
+Obj random_MINUS_ship();
+
+// Depth 500
+int screen_MINUS_height;
+
+// Depth 500
+int screen_MINUS_width;
+
+// Depth 500
 Array__Obj tick(Array__Obj state);
 
 // Depth 1000
+
+// Depth 500
+Array Array_allocate__Obj (int n);
 
 // Depth 500
 Array Array_allocate__String (int n);
@@ -539,6 +566,9 @@ void Array_aset_BANG___char (Array *aRef, int n, char newValue);
 
 // Depth 500
 void Array_aset_BANG___int (Array *aRef, int n, int newValue);
+
+// Depth 500
+void Array_aset_MINUS_uninitialized_BANG___Obj (Array *aRef, int n, Obj newValue);
 
 // Depth 500
 void Array_aset_MINUS_uninitialized_BANG___String (Array *aRef, int n, String newValue);
@@ -608,6 +638,9 @@ Array Array_push_MINUS_back__char(Array a, char value);
 
 // Depth 500
 Array__int Array_range(int start, int end, int step);
+
+// Depth 500
+Array__Obj Array_repeat__Obj(int n, Fn___Obj f);
 
 // Depth 500
 Array__char Array_repeat__char(int n, Fn___char f);
@@ -1327,6 +1360,16 @@ void carp_init_globals(int argc, char** argv) {
         Float_pi = 3.1415926536f;
     }
 
+    // Depth 0
+    {
+        screen_MINUS_height = 768;
+    }
+
+    // Depth 0
+    {
+        screen_MINUS_width = 1024;
+    }
+
     // Depth 1
     {
         Art _4 = Art_init(NULL);
@@ -1357,6 +1400,14 @@ bool _GT__EQ___int(int a, int b) {
         _14 = _13;
     }
     return _14;
+}
+
+Array Array_allocate__Obj (int n) {
+    Array a;
+    a.len = n;
+    a.capacity = n;
+    a.data = CARP_MALLOC(n*sizeof(Obj));
+    return a;
 }
 
 Array Array_allocate__String (int n) {
@@ -1403,6 +1454,15 @@ void Array_aset_BANG___int (Array *aRef, int n, int newValue) {
     /* Ignore non-managed type inside Array: 'Int' */
 
     ((int*)a.data)[n] = newValue;
+}
+
+void Array_aset_MINUS_uninitialized_BANG___Obj (Array *aRef, int n, Obj newValue) {
+    Array a = *aRef;
+    #ifndef OPTIMIZE
+    assert(n >= 0);
+    assert(n < a.len);
+    #endif
+    ((Obj*)a.data)[n] = newValue;
 }
 
 void Array_aset_MINUS_uninitialized_BANG___String (Array *aRef, int n, String newValue) {
@@ -1611,6 +1671,31 @@ Array__int Array_range(int start, int end, int step) {
         _70 = _69;
     }
     return _70;
+}
+
+Array__Obj Array_repeat__Obj(int n, Fn___Obj f) {
+    Array__Obj _42;
+    /* let */ {
+        Array__Obj _9 = Array_allocate__Obj(n);
+        Array__Obj a = _9;
+        /* let */ {
+            int i = 0;
+            bool _20 = Int__LT_(i, n);
+            bool _38 = _20;
+            while (_38) {
+                Array__Obj* _25 = &a; // ref
+                Obj _28 = f();
+                Array_aset_MINUS_uninitialized_BANG___Obj(_25, i, _28);
+                int _35 = Int__PLUS_(i, 1);
+                i = _35;  // Int = Int
+                bool _20 = Int__LT_(i, n);
+                _38 = _20;
+            }
+        }
+        Array__Obj _41 = a;
+        _42 = _41;
+    }
+    return _42;
 }
 
 Array__char Array_repeat__char(int n, Fn___char f) {
@@ -4131,7 +4216,7 @@ int main(int argc, char** argv) {
     /* let */ {
         static String _6 = "Dependency Day";
         String *_6_ref = &_6;
-        SDLApp _9 = SDLApp_create(_6_ref, 300, 200);
+        SDLApp _9 = SDLApp_create(_6_ref, screen_MINUS_width, screen_MINUS_height);
         SDLApp app = _9;
         Array__Obj _12 = make_MINUS_state();
         Array__Obj state = _12;
@@ -4159,12 +4244,8 @@ int main(int argc, char** argv) {
 }
 
 Array__Obj make_MINUS_state() {
-    Array _14 = { .len = 1, .capacity = 1, .data = CARP_MALLOC(sizeof(Obj) * 1) };
-    Vec2 _7 = Vec2_init(0.0f, 0.0f);
-    float _12 = Float__MUL_(Float_pi, 1.75f);
-    Obj _13 = Obj_init(_7, 10.0f, _12);
-    ((Obj*)_14.data)[0] = _13;
-    return _14;
+    Array__Obj _6 = Array_repeat__Obj(1000, random_MINUS_ship);
+    return _6;
 }
 
 int max__int(int a, int b) {
@@ -4184,6 +4265,18 @@ bool pos_QMARK___int(int x) {
     int _6 = Int_zero();
     bool _8 = _LT__EQ___int(_6, x);
     return _8;
+}
+
+Obj random_MINUS_ship() {
+    float _9 = Float_from_MINUS_int(screen_MINUS_width);
+    float _10 = Float_random_MINUS_between(0.0f, _9);
+    float _15 = Float_from_MINUS_int(screen_MINUS_height);
+    float _16 = Float_random_MINUS_between(0.0f, _15);
+    Vec2 _17 = Vec2_init(_10, _16);
+    float _24 = Float__MUL_(Float_pi, 2.0f);
+    float _25 = Float_random_MINUS_between(0.0f, _24);
+    Obj _26 = Obj_init(_17, 10.0f, _25);
+    return _26;
 }
 
 Array__Obj tick(Array__Obj state) {
