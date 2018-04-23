@@ -11,8 +11,8 @@
 (use Array)
 (use SDL)
 
-(def screen-width 1024)
-(def screen-height 768)
+(def screen-width 2000)
+(def screen-height 1000)
 
 (def team-alien 0)
 (def team-human 1)
@@ -20,11 +20,12 @@
 (deftype Art
     [corvette (Ptr SDL_Texture)
      slime (Ptr (SDL_Texture))
+     shot (Ptr (SDL_Texture))
      smoke (Ptr SDL_Texture)
      earth (Ptr (SDL_Texture))
      mothership (Ptr (SDL_Texture))])
 
-(def art (Art.init NULL NULL NULL NULL NULL))
+(def art (Art.init NULL NULL NULL NULL NULL NULL))
 
 (deftype Vec2
   [x Float
@@ -39,6 +40,7 @@
     [pos Vec2
      radius Float
      dir Float
+     speed Float
      sprite (Fn [&Art] (Ref (Ptr SDL_Texture)))])
 
 (defmodule Obj
@@ -62,7 +64,8 @@
   (defn tick [o]
     (let [pos @(Obj.pos &o)
           dir @(Obj.dir &o)
-          new-pos (Vec2.add &pos &(Vec2.init (Float.cos dir) (* -1.0f (Float.sin dir))))]
+          speed @(Obj.speed &o)
+          new-pos (Vec2.add &pos &(Vec2.init (* speed (Float.cos dir)) (* speed (* -1.0f (Float.sin dir)))))]
       (Obj.set-pos o new-pos))))
 
 (deftype Smoke
@@ -93,7 +96,7 @@
     (let [a @(Smoke.age s)]
       (Smoke.set-age! s (- a 0.01666f)))))
 
-(def smokes (replicate 100 &(Smoke.init (Vec2.init 0.0f 0.0f) 1.0f)))
+(def smokes (replicate 1000 &(Smoke.init (Vec2.init 0.0f 0.0f) 1.0f)))
 
 (defn-do reuse-smoke [pos]
   (foreach [s &smokes]
@@ -105,19 +108,36 @@
     (do (Smoke.set-age! s 1.0f)
         (Smoke.set-pos! s pos))))
 
+(deftype GameState
+    [objs (Array Obj)])
+
 (defn-do draw [app rend state]
   (bg rend &(rgb 30 40 50))
   (render-clear rend)
   (draw-texture rend @(Art.earth &art) &(point (- screen-width 256) 0))
   (draw-texture rend @(Art.mothership &art) &(point 0 0))
   (foreach [s &smokes] (Smoke.draw rend s))
-  (foreach [o state] (Obj.draw rend o)))
+  (foreach [o (GameState.objs state)] (Obj.draw rend o)))
+
+(defn shoot [state pos dir]
+  ())
+
+(defn ai [state obj]
+  (when (= 0 (Int.random-between 0 10))
+    (shoot state @(Obj.pos obj) @(Obj.dir obj))))
 
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
-  (foreach [o &state] (when (= 0 (Int.random-between 0 10))
-                        (reuse-smoke @(Obj.pos o))))
-  (endo-map Obj.tick state))
+  (foreach [o (GameState.objs &state)]
+           (do
+             (when (= 0 (Int.random-between 0 10))
+               (reuse-smoke @(Obj.pos o)))
+             (let [dir @(Obj.dir o)]
+               (Obj.set-dir! o (+ dir (* 0.025f (Float.sin (* 0.005f (Float.from-int (SDL.get-ticks))))))))
+             (ai &state o)
+             ))
+  (let [new-objs (endo-map Obj.tick @(GameState.objs &state))]
+    (GameState.set-objs state new-objs)))
 
 (defn random-ship [side]
   (let [is-alien (= side team-alien)
@@ -130,16 +150,19 @@
                          (random-between 0.0f (Float.from-int screen-height)))
               10.0f ;; radius
               (random-between dir-low dir-high)
+              (random-between 1.0f 2.0f) ;; speed
               sprite)))
 
 (defn random-alien [] (random-ship team-alien))
 (defn random-human [] (random-ship team-human))
 
+(defn dead-shot []
+  (Obj.init (Vec2.init 0.0f 0.0f) 10.0f 0.0f 0.0f Art.shot))
+
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
-  ;;[(Obj.init (Vec2.init 0.0f 0.0f) 10.0f (* pi 1.75f))]
-  (concat &[(repeat 20 random-alien) (repeat 20 random-human)])
-  )
+  (GameState.init
+   (concat &[(repeat 20 random-alien) (repeat 20 random-human) (repeat 100 dead-shot)])))
 
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
@@ -147,6 +170,7 @@
 (defn-do load-assets [rend img-dir]
   (set! art (Art.init (load-img rend img-dir "Corvette.png")
                       (load-img rend img-dir "Slime.png")
+                      (load-img rend img-dir "Shot.png")
                       (load-img rend img-dir "Smoke.png")
                       (load-img rend img-dir "Earth.png")
                       (load-img rend img-dir "Mothership.png"))))

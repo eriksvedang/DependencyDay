@@ -98,6 +98,9 @@ typedef bool(*Fn__bool_bool_bool)(bool, bool);
 typedef char(*Fn__char_MUL__char)(char*);
 
 // Depth 101
+typedef void(*Fn__char_MUL__char_MUL__void)(char*, char*);
+
+// Depth 101
 typedef String(*Fn__char_String)(char);
 
 // Depth 101
@@ -208,6 +211,7 @@ typedef struct {
 typedef struct {
     SDL_Texture* corvette;
     SDL_Texture* slime;
+    SDL_Texture* shot;
     SDL_Texture* smoke;
     SDL_Texture* earth;
     SDL_Texture* mothership;
@@ -224,6 +228,12 @@ typedef Array__Obj*(*Fn__Array__Array__Obj_MUL__int_Array__Obj_MUL_)(Array__Arra
 
 // Depth 102
 typedef Array__Obj(*Fn__Array__Obj_Array__Obj)(Array__Obj);
+
+// Depth 102
+typedef Array__Obj(*Fn__Array__Obj_MUL__Array__Obj)(Array__Obj*);
+
+// Depth 102
+typedef String(*Fn__Array__Obj_MUL__String)(Array__Obj*);
 
 // Depth 102
 typedef int(*Fn__Array__Obj_MUL__int)(Array__Obj*);
@@ -397,9 +407,6 @@ typedef Array__String(*Fn__String_MUL__Array__char_MUL__Array__String)(String*, 
 typedef FILE*(*Fn__String_MUL__String_MUL__FILE_MUL_)(String*, String*);
 
 // Depth 102
-typedef Array__Obj(*Fn___Array__Obj)();
-
-// Depth 102
 typedef Array__SDL_Event(*Fn___Array__SDL_Event)();
 
 // Depth 102
@@ -440,6 +447,11 @@ typedef SDL_Rect(*Fn__int_int_int_int_SDL_Rect)(int, int, int, int);
 
 // Depth 102
 typedef struct {
+    Array__Obj objs;
+} GameState;
+
+// Depth 102
+typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
     int fps;
@@ -473,10 +485,25 @@ typedef struct {
 } Smoke;
 
 // Depth 104
+typedef GameState(*Fn__Array__Obj_GameState)(Array__Obj);
+
+// Depth 104
 typedef SDL_Texture**(*Fn__Art_MUL__SDL_Texture_MUL__MUL_)(Art*);
 
 // Depth 104
-typedef void(*Fn__SDLApp_MUL__SDL_Renderer_MUL__Array__Obj_MUL__void)(SDLApp*, SDL_Renderer*, Array__Obj*);
+typedef GameState(*Fn__GameState_Array__Obj_GameState)(GameState, Array__Obj);
+
+// Depth 104
+typedef GameState(*Fn__GameState_GameState)(GameState);
+
+// Depth 104
+typedef Array__Obj*(*Fn__GameState_MUL__Array__Obj_MUL_)(GameState*);
+
+// Depth 104
+typedef void(*Fn__GameState_MUL__Vec2_float_void)(GameState*, Vec2, float);
+
+// Depth 104
+typedef void(*Fn__SDLApp_MUL__SDL_Renderer_MUL__GameState_MUL__void)(SDLApp*, SDL_Renderer*, GameState*);
 
 // Depth 104
 typedef SDL_Renderer**(*Fn__SDLApp_MUL__SDL_Renderer_MUL__MUL_)(SDLApp*);
@@ -491,13 +518,16 @@ typedef int*(*Fn__SDLApp_MUL__int_MUL_)(SDLApp*);
 typedef void(*Fn__SDLApp_MUL__void)(SDLApp*);
 
 // Depth 104
-typedef Art(*Fn__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__Art)(SDL_Texture*, SDL_Texture*, SDL_Texture*, SDL_Texture*, SDL_Texture*);
+typedef Art(*Fn__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__Art)(SDL_Texture*, SDL_Texture*, SDL_Texture*, SDL_Texture*, SDL_Texture*, SDL_Texture*);
 
 // Depth 104
 typedef SDLApp(*Fn__SDL_Window_MUL__SDL_Renderer_MUL__int_SDLApp)(SDL_Window*, SDL_Renderer*, int);
 
 // Depth 104
 typedef SDLApp(*Fn__String_MUL__int_int_SDLApp)(String*, int, int);
+
+// Depth 104
+typedef GameState(*Fn___GameState)();
 
 // Depth 105
 typedef Smoke*(*Fn__Array__Smoke_MUL__int_Smoke_MUL_)(Array__Smoke*, int);
@@ -512,7 +542,7 @@ typedef Fn__Art_MUL__SDL_Texture_MUL__MUL_(*Fn__Fn__Art_MUL__SDL_Texture_MUL__MU
 typedef Fn__Art_MUL__SDL_Texture_MUL__MUL_(*Fn__Fn__Art_MUL__SDL_Texture_MUL__MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_)(Fn__Art_MUL__SDL_Texture_MUL__MUL_*);
 
 // Depth 105
-typedef void(*Fn__SDLApp_MUL__Fn__SDLApp_MUL__void_Fn__Array__Obj_Array__Obj_Fn__SDLApp_MUL__SDL_Renderer_MUL__Array__Obj_MUL__void_Array__Obj_void)(SDLApp*, Fn__SDLApp_MUL__void, Fn__Array__Obj_Array__Obj, Fn__SDLApp_MUL__SDL_Renderer_MUL__Array__Obj_MUL__void, Array__Obj);
+typedef void(*Fn__SDLApp_MUL__Fn__SDLApp_MUL__void_Fn__GameState_GameState_Fn__SDLApp_MUL__SDL_Renderer_MUL__GameState_MUL__void_GameState_void)(SDLApp*, Fn__SDLApp_MUL__void, Fn__GameState_GameState, Fn__SDLApp_MUL__SDL_Renderer_MUL__GameState_MUL__void, GameState);
 
 // Depth 105
 typedef void(*Fn__SDL_Renderer_MUL__Smoke_MUL__void)(SDL_Renderer*, Smoke*);
@@ -546,6 +576,7 @@ typedef struct {
     Vec2 pos;
     float radius;
     float dir;
+    float speed;
     void* sprite;
 } Obj;
 
@@ -557,6 +588,9 @@ typedef void(*Fn__Array__Obj_MUL__int_Obj_void)(Array__Obj*, int, Obj);
 
 // Depth 107
 typedef Array__Obj(*Fn__Array__Obj_Obj_Array__Obj)(Array__Obj, Obj);
+
+// Depth 107
+typedef void(*Fn__GameState_MUL__Obj_MUL__void)(GameState*, Obj*);
 
 // Depth 107
 typedef Fn__Art_MUL__SDL_Texture_MUL__MUL_*(*Fn__Obj_MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL__MUL_)(Obj*);
@@ -571,6 +605,9 @@ typedef Vec2*(*Fn__Obj_MUL__Vec2_MUL_)(Obj*);
 typedef float*(*Fn__Obj_MUL__float_MUL_)(Obj*);
 
 // Depth 107
+typedef void(*Fn__Obj_MUL__float_void)(Obj*, float);
+
+// Depth 107
 typedef Obj(*Fn__Obj_Obj)(Obj);
 
 // Depth 107
@@ -580,7 +617,7 @@ typedef Obj(*Fn__Obj_Vec2_Obj)(Obj, Vec2);
 typedef void(*Fn__SDL_Renderer_MUL__Obj_MUL__void)(SDL_Renderer*, Obj*);
 
 // Depth 107
-typedef Obj(*Fn__Vec2_float_float_Fn__Art_MUL__SDL_Texture_MUL__MUL__Obj)(Vec2, float, float, Fn__Art_MUL__SDL_Texture_MUL__MUL_);
+typedef Obj(*Fn__Vec2_float_float_float_Fn__Art_MUL__SDL_Texture_MUL__MUL__Obj)(Vec2, float, float, float, Fn__Art_MUL__SDL_Texture_MUL__MUL_);
 
 // Depth 107
 typedef Obj(*Fn___Obj)();
@@ -607,6 +644,9 @@ bool _LT__EQ___int(int a, int b);
 bool _GT__EQ___int(int a, int b);
 
 // Depth 500
+void ai__GameState_MUL_(GameState* state, Obj* obj);
+
+// Depth 500
 String append_MINUS_slash__String_MUL_(String* s);
 
 // Depth 500
@@ -616,10 +656,13 @@ Art art;
 Fn__Art_MUL__SDL_Texture_MUL__MUL_ copy__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_ (Fn__Art_MUL__SDL_Texture_MUL__MUL_* ref);
 
 // Depth 500
+Obj dead_MINUS_shot();
+
+// Depth 500
 String dir_MINUS_from_MINUS_path(String* path);
 
 // Depth 500
-void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state);
+void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, GameState* state);
 
 // Depth 500
 void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir);
@@ -631,7 +674,7 @@ SDL_Texture* load_MINUS_img__String_MUL__String_MUL_(SDL_Renderer* rend, String*
 int main(int argc, char** argv);
 
 // Depth 500
-Array__Obj make_MINUS_state();
+GameState make_MINUS_state();
 
 // Depth 500
 int max__int(int a, int b);
@@ -661,6 +704,9 @@ int screen_MINUS_height;
 int screen_MINUS_width;
 
 // Depth 500
+void shoot__GameState_MUL__Vec2_float(GameState* state, Vec2 pos, float dir);
+
+// Depth 500
 Array__Smoke smokes;
 
 // Depth 500
@@ -670,7 +716,7 @@ int team_MINUS_alien;
 int team_MINUS_human;
 
 // Depth 500
-Array__Obj tick(Array__Obj state);
+GameState tick(GameState state);
 
 // Depth 1000
 
@@ -712,6 +758,9 @@ Array__Obj Array_concat__Obj(Array__Array__Obj* xs);
 
 // Depth 500
 Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Array__String* a);
+
+// Depth 500
+Array Array_copy__Obj (Array* a);
 
 // Depth 500
 int Array_count__Array__Obj (Array *a);
@@ -780,6 +829,9 @@ Array__String Array_prefix_MINUS_array__String(Array__String* xs, int end_MINUS_
 Array__char Array_prefix_MINUS_array__char(Array__char* xs, int end_MINUS_index);
 
 // Depth 500
+String Array_prn__Obj(Array__Obj* x);
+
+// Depth 500
 Array Array_push_MINUS_back__Obj(Array a, Obj value);
 
 // Depth 500
@@ -810,6 +862,9 @@ Array__char Array_replicate__char(int n, char* e);
 Array__char Array_reverse__char(Array__char a);
 
 // Depth 500
+String Array_str__Obj (Array* a);
+
+// Depth 500
 Array__String Array_subarray__String(Array__String* xs, int start_MINUS_index, int end_MINUS_index);
 
 // Depth 500
@@ -833,7 +888,7 @@ void Art_delete(Art p);
 SDL_Texture** Art_earth(Art* p);
 
 // Depth 500
-Art Art_init(SDL_Texture* corvette, SDL_Texture* slime, SDL_Texture* smoke, SDL_Texture* earth, SDL_Texture* mothership);
+Art Art_init(SDL_Texture* corvette, SDL_Texture* slime, SDL_Texture* shot, SDL_Texture* smoke, SDL_Texture* earth, SDL_Texture* mothership);
 
 // Depth 500
 SDL_Texture** Art_mothership(Art* p);
@@ -860,6 +915,12 @@ Art Art_set_MINUS_mothership(Art p, SDL_Texture* newValue);
 void Art_set_MINUS_mothership_BANG_(Art* pRef, SDL_Texture* newValue);
 
 // Depth 500
+Art Art_set_MINUS_shot(Art p, SDL_Texture* newValue);
+
+// Depth 500
+void Art_set_MINUS_shot_BANG_(Art* pRef, SDL_Texture* newValue);
+
+// Depth 500
 Art Art_set_MINUS_slime(Art p, SDL_Texture* newValue);
 
 // Depth 500
@@ -870,6 +931,9 @@ Art Art_set_MINUS_smoke(Art p, SDL_Texture* newValue);
 
 // Depth 500
 void Art_set_MINUS_smoke_BANG_(Art* pRef, SDL_Texture* newValue);
+
+// Depth 500
+SDL_Texture** Art_shot(Art* p);
 
 // Depth 500
 SDL_Texture** Art_slime(Art* p);
@@ -888,6 +952,9 @@ Art Art_update_MINUS_earth(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater)
 
 // Depth 500
 Art Art_update_MINUS_mothership(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
+
+// Depth 500
+Art Art_update_MINUS_shot(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
 
 // Depth 500
 Art Art_update_MINUS_slime(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
@@ -990,6 +1057,35 @@ bool FloatRef__GT_(float* a, float* b);
 // Depth 1000
 
 // Depth 500
+GameState GameState_copy(GameState* pRef);
+
+// Depth 500
+void GameState_delete(GameState p);
+
+// Depth 500
+GameState GameState_init(Array__Obj objs);
+
+// Depth 500
+Array__Obj* GameState_objs(GameState* p);
+
+// Depth 500
+String GameState_prn(GameState *p);
+
+// Depth 500
+GameState GameState_set_MINUS_objs(GameState p, Array__Obj newValue);
+
+// Depth 500
+void GameState_set_MINUS_objs_BANG_(GameState* pRef, Array__Obj newValue);
+
+// Depth 500
+String GameState_str(GameState *p);
+
+// Depth 500
+GameState GameState_update_MINUS_objs(GameState p, Fn__Array__Obj_Array__Obj updater);
+
+// Depth 1000
+
+// Depth 500
 double Geometry_degree_MINUS_to_MINUS_radians(double n);
 
 // Depth 500
@@ -1071,7 +1167,7 @@ float* Obj_dir(Obj* p);
 void Obj_draw(SDL_Renderer* rend, Obj* o);
 
 // Depth 500
-Obj Obj_init(Vec2 pos, float radius, float dir, Fn__Art_MUL__SDL_Texture_MUL__MUL_ sprite);
+Obj Obj_init(Vec2 pos, float radius, float dir, float speed, Fn__Art_MUL__SDL_Texture_MUL__MUL_ sprite);
 
 // Depth 500
 Vec2* Obj_pos(Obj* p);
@@ -1101,10 +1197,19 @@ Obj Obj_set_MINUS_radius(Obj p, float newValue);
 void Obj_set_MINUS_radius_BANG_(Obj* pRef, float newValue);
 
 // Depth 500
+Obj Obj_set_MINUS_speed(Obj p, float newValue);
+
+// Depth 500
+void Obj_set_MINUS_speed_BANG_(Obj* pRef, float newValue);
+
+// Depth 500
 Obj Obj_set_MINUS_sprite(Obj p, Fn__Art_MUL__SDL_Texture_MUL__MUL_ newValue);
 
 // Depth 500
 void Obj_set_MINUS_sprite_BANG_(Obj* pRef, Fn__Art_MUL__SDL_Texture_MUL__MUL_ newValue);
+
+// Depth 500
+float* Obj_speed(Obj* p);
 
 // Depth 500
 Fn__Art_MUL__SDL_Texture_MUL__MUL_* Obj_sprite(Obj* p);
@@ -1123,6 +1228,9 @@ Obj Obj_update_MINUS_pos(Obj p, Fn__Vec2_Vec2 updater);
 
 // Depth 500
 Obj Obj_update_MINUS_radius(Obj p, Fn__float_float updater);
+
+// Depth 500
+Obj Obj_update_MINUS_speed(Obj p, Fn__float_float updater);
 
 // Depth 500
 Obj Obj_update_MINUS_sprite(Obj p, Fn__Fn__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_ updater);
@@ -1273,7 +1381,7 @@ void SDLApp_quit_MINUS_on_MINUS_esc(SDLApp* app);
 SDL_Renderer** SDLApp_renderer(SDLApp* p);
 
 // Depth 500
-void SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(SDLApp* app, Fn__SDLApp_MUL__void event_MINUS_fn, Fn__Array__Obj_Array__Obj update_MINUS_fn, Fn__SDLApp_MUL__SDL_Renderer_MUL__Array__Obj_MUL__void draw_MINUS_fn, Array__Obj initial_MINUS_state);
+void SDLApp_run_MINUS_with_MINUS_callbacks__GameState(SDLApp* app, Fn__SDLApp_MUL__void event_MINUS_fn, Fn__GameState_GameState update_MINUS_fn, Fn__SDLApp_MUL__SDL_Renderer_MUL__GameState_MUL__void draw_MINUS_fn, GameState initial_MINUS_state);
 
 // Depth 500
 SDLApp SDLApp_set_MINUS_fps(SDLApp p, int newValue);
@@ -1627,12 +1735,12 @@ void carp_init_globals(int argc, char** argv) {
 
     // Depth 0
     {
-        screen_MINUS_height = 768;
+        screen_MINUS_height = 1000;
     }
 
     // Depth 0
     {
-        screen_MINUS_width = 1024;
+        screen_MINUS_width = 2000;
     }
 
     // Depth 0
@@ -1647,8 +1755,8 @@ void carp_init_globals(int argc, char** argv) {
 
     // Depth 1
     {
-        Art _8 = Art_init(NULL, NULL, NULL, NULL, NULL);
-        art = _8;
+        Art _9 = Art_init(NULL, NULL, NULL, NULL, NULL, NULL);
+        art = _9;
     }
 
     // Depth 2
@@ -1656,7 +1764,7 @@ void carp_init_globals(int argc, char** argv) {
         Vec2 _9 = Vec2_init(0.0f, 0.0f);
         Smoke _11 = Smoke_init(_9, 1.0f);
         Smoke* _12 = &_11; // ref
-        Array__Smoke _13 = Array_replicate__Smoke(100, _12);
+        Array__Smoke _13 = Array_replicate__Smoke(1000, _12);
         smokes = _13;
         Smoke_delete(_11);
     }
@@ -1871,6 +1979,17 @@ Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Arra
     return _50;
 }
 
+Array Array_copy__Obj (Array* a){
+    Array copy;
+    copy.len = a->len;
+    copy.capacity = a->capacity;
+    copy.data = CARP_MALLOC(sizeof(Obj) * a->capacity);
+    for(int i = 0; i < a->len; i++) {
+        ((Obj*)(copy.data))[i] = Obj_copy(&(((Obj*)a->data)[i]));
+    }
+    return copy;
+}
+
 int Array_count__Array__Obj (Array *a) { return (*a).len; }
 int Array_count__Obj (Array *a) { return (*a).len; }
 int Array_count__SDL_Event (Array *a) { return (*a).len; }
@@ -1995,6 +2114,11 @@ Array__String Array_prefix_MINUS_array__String(Array__String* xs, int end_MINUS_
 Array__char Array_prefix_MINUS_array__char(Array__char* xs, int end_MINUS_index) {
     Array__char _9 = Array_subarray__char(xs, 0, end_MINUS_index);
     return _9;
+}
+
+String Array_prn__Obj(Array__Obj* x) {
+    String _6 = Array_str__Obj(x);
+    return _6;
 }
 
 Array Array_push_MINUS_back__Obj(Array a, Obj value) { 
@@ -2213,6 +2337,39 @@ Array__char Array_reverse__char(Array__char a) {
     return _72;
 }
 
+String Array_str__Obj (Array* a) {
+  String temp = NULL;
+  int size = 3; // opening and closing brackets and terminator
+  for(int i = 0; i < a->len; i++) {
+    temp = Obj_prn(&((Obj*)a->data)[i]);
+    size += snprintf(NULL, 0, "%s ", temp);
+    if(temp) {
+      CARP_FREE(temp);
+      temp = NULL;
+    }
+  }
+
+  String buffer = CARP_MALLOC(size);
+  String bufferPtr = buffer;
+
+  snprintf(buffer, size, "[");
+  bufferPtr += 1;
+
+  for(int i = 0; i < a->len; i++) {
+    temp = Obj_prn(&((Obj*)a->data)[i]);
+    snprintf(bufferPtr, size, "%s ", temp);
+    bufferPtr += strlen(temp) + 1;
+    if(temp) {
+      CARP_FREE(temp);
+      temp = NULL;
+    }
+  }
+
+  if(a->len > 0) { bufferPtr -= 1; }
+  snprintf(bufferPtr, size, "]");
+  return buffer;
+}
+
 Array__String Array_subarray__String(Array__String* xs, int start_MINUS_index, int end_MINUS_index) {
     Array__String _45;
     /* let */ {
@@ -2275,6 +2432,7 @@ Art Art_copy(Art* pRef) {
     Art copy = *pRef;
     /* Ignore non-managed member 'corvette' */
     /* Ignore non-managed member 'slime' */
+    /* Ignore non-managed member 'shot' */
     /* Ignore non-managed member 'smoke' */
     /* Ignore non-managed member 'earth' */
     /* Ignore non-managed member 'mothership' */
@@ -2286,6 +2444,7 @@ SDL_Texture** Art_corvette(Art* p) { return (&(p->corvette)); }
 void Art_delete(Art p) {
     /* Ignore non-managed member 'corvette' */
     /* Ignore non-managed member 'slime' */
+    /* Ignore non-managed member 'shot' */
     /* Ignore non-managed member 'smoke' */
     /* Ignore non-managed member 'earth' */
     /* Ignore non-managed member 'mothership' */
@@ -2293,10 +2452,11 @@ void Art_delete(Art p) {
 
 SDL_Texture** Art_earth(Art* p) { return (&(p->earth)); }
 
-Art Art_init(SDL_Texture* corvette, SDL_Texture* slime, SDL_Texture* smoke, SDL_Texture* earth, SDL_Texture* mothership) {
+Art Art_init(SDL_Texture* corvette, SDL_Texture* slime, SDL_Texture* shot, SDL_Texture* smoke, SDL_Texture* earth, SDL_Texture* mothership) {
     Art instance;
     instance.corvette = corvette;
     instance.slime = slime;
+    instance.shot = shot;
     instance.smoke = smoke;
     instance.earth = earth;
     instance.mothership = mothership;
@@ -2315,6 +2475,9 @@ String Art_prn(Art *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   size +=  snprintf(NULL, 0, "%p ", p->slime);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  size +=  snprintf(NULL, 0, "%p ", p->shot);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   size +=  snprintf(NULL, 0, "%p ", p->smoke);
@@ -2343,6 +2506,13 @@ String Art_prn(Art *p) {
   tempsize = snprintf(NULL, 0, "%p", p->slime);
   temp = malloc(tempsize);
   snprintf(temp, tempsize, "%p", p->slime);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  tempsize = snprintf(NULL, 0, "%p", p->shot);
+  temp = malloc(tempsize);
+  snprintf(temp, tempsize, "%p", p->shot);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -2409,6 +2579,18 @@ void Art_set_MINUS_mothership_BANG_(Art* pRef, SDL_Texture* newValue) {
 }
 
 
+Art Art_set_MINUS_shot(Art p, SDL_Texture* newValue) {
+    /* Ignore non-managed member 'shot' */
+    p.shot = newValue;
+    return p;
+}
+
+
+void Art_set_MINUS_shot_BANG_(Art* pRef, SDL_Texture* newValue) {
+    pRef->shot = newValue;
+}
+
+
 Art Art_set_MINUS_slime(Art p, SDL_Texture* newValue) {
     /* Ignore non-managed member 'slime' */
     p.slime = newValue;
@@ -2433,6 +2615,8 @@ void Art_set_MINUS_smoke_BANG_(Art* pRef, SDL_Texture* newValue) {
 }
 
 
+SDL_Texture** Art_shot(Art* p) { return (&(p->shot)); }
+
 SDL_Texture** Art_slime(Art* p) { return (&(p->slime)); }
 
 SDL_Texture** Art_smoke(Art* p) { return (&(p->smoke)); }
@@ -2447,6 +2631,9 @@ String Art_str(Art *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   size +=  snprintf(NULL, 0, "%p ", p->slime);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  size +=  snprintf(NULL, 0, "%p ", p->shot);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   size +=  snprintf(NULL, 0, "%p ", p->smoke);
@@ -2475,6 +2662,13 @@ String Art_str(Art *p) {
   tempsize = snprintf(NULL, 0, "%p", p->slime);
   temp = malloc(tempsize);
   snprintf(temp, tempsize, "%p", p->slime);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  tempsize = snprintf(NULL, 0, "%p", p->shot);
+  temp = malloc(tempsize);
+  snprintf(temp, tempsize, "%p", p->shot);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -2519,6 +2713,12 @@ Art Art_update_MINUS_earth(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater)
 
 Art Art_update_MINUS_mothership(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater) {
     p.mothership = updater(p.mothership);
+    return p;
+}
+
+
+Art Art_update_MINUS_shot(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater) {
+    p.shot = updater(p.shot);
     return p;
 }
 
@@ -2797,6 +2997,96 @@ bool FloatRef__GT_(float* a, float* b) {
     return _12;
 }
 
+GameState GameState_copy(GameState* pRef) {
+    GameState copy = *pRef;
+    copy.objs = Array_copy__Obj(&(pRef->objs));
+    return copy;
+}
+
+void GameState_delete(GameState p) {
+    Array_delete__Obj(p.objs);
+}
+
+GameState GameState_init(Array__Obj objs) {
+    GameState instance;
+    instance.objs = objs;
+    return instance;
+}
+
+Array__Obj* GameState_objs(GameState* p) { return (&(p->objs)); }
+
+String GameState_prn(GameState *p) {
+  // convert members to String here:
+  String temp = NULL;
+  int tempsize = 0;
+  (void)tempsize; // that way we remove the occasional unused warning 
+  int size = snprintf(NULL, 0, "(%s )", "GameState");
+  temp = Array_prn__Obj(&p->objs); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+
+  String buffer = CARP_MALLOC(size);
+  String bufferPtr = buffer;
+
+  snprintf(bufferPtr, size, "(%s ", "GameState");
+  bufferPtr += strlen("GameState") + 2;
+
+  temp = Array_prn__Obj(&p->objs);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  bufferPtr--;
+  snprintf(bufferPtr, size, ")");
+  return buffer;
+}
+
+GameState GameState_set_MINUS_objs(GameState p, Array__Obj newValue) {
+    Array_delete__Obj(p.objs);
+    p.objs = newValue;
+    return p;
+}
+
+
+void GameState_set_MINUS_objs_BANG_(GameState* pRef, Array__Obj newValue) {
+    pRef->objs = newValue;
+}
+
+
+String GameState_str(GameState *p) {
+  // convert members to String here:
+  String temp = NULL;
+  int tempsize = 0;
+  (void)tempsize; // that way we remove the occasional unused warning 
+  int size = snprintf(NULL, 0, "(%s )", "GameState");
+  temp = Array_prn__Obj(&p->objs); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+
+  String buffer = CARP_MALLOC(size);
+  String bufferPtr = buffer;
+
+  snprintf(bufferPtr, size, "(%s ", "GameState");
+  bufferPtr += strlen("GameState") + 2;
+
+  temp = Array_prn__Obj(&p->objs);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  bufferPtr--;
+  snprintf(bufferPtr, size, ")");
+  return buffer;
+}
+
+GameState GameState_update_MINUS_objs(GameState p, Fn__Array__Obj_Array__Obj updater) {
+    p.objs = updater(p.objs);
+    return p;
+}
+
+
 double Geometry_degree_MINUS_to_MINUS_radians(double n) {
     double _9 = Double__DIV_(Double_pi, 180.0);
     double _10 = Double__MUL_(n, _9);
@@ -2970,6 +3260,7 @@ Obj Obj_copy(Obj* pRef) {
     copy.pos = Vec2_copy(&(pRef->pos));
     /* Ignore non-managed member 'radius' */
     /* Ignore non-managed member 'dir' */
+    /* Ignore non-managed member 'speed' */
     /* Ignore non-managed member 'sprite' */
     return copy;
 }
@@ -2978,6 +3269,7 @@ void Obj_delete(Obj p) {
     Vec2_delete(p.pos);
     /* Ignore non-managed member 'radius' */
     /* Ignore non-managed member 'dir' */
+    /* Ignore non-managed member 'speed' */
     /* Ignore non-managed member 'sprite' */
 }
 
@@ -3027,11 +3319,12 @@ void Obj_draw(SDL_Renderer* rend, Obj* o) {
     }
 }
 
-Obj Obj_init(Vec2 pos, float radius, float dir, Fn__Art_MUL__SDL_Texture_MUL__MUL_ sprite) {
+Obj Obj_init(Vec2 pos, float radius, float dir, float speed, Fn__Art_MUL__SDL_Texture_MUL__MUL_ sprite) {
     Obj instance;
     instance.pos = pos;
     instance.radius = radius;
     instance.dir = dir;
+    instance.speed = speed;
     instance.sprite = sprite;
     return instance;
 }
@@ -3053,6 +3346,10 @@ String Obj_prn(Obj *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   temp = Float_prn(p->dir); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Float_prn(p->speed); 
   size += snprintf(NULL, 0, "%s ", temp);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
@@ -3078,6 +3375,11 @@ String Obj_prn(Obj *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   temp = Float_prn(p->dir);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Float_prn(p->speed);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -3130,6 +3432,18 @@ void Obj_set_MINUS_radius_BANG_(Obj* pRef, float newValue) {
 }
 
 
+Obj Obj_set_MINUS_speed(Obj p, float newValue) {
+    /* Ignore non-managed member 'speed' */
+    p.speed = newValue;
+    return p;
+}
+
+
+void Obj_set_MINUS_speed_BANG_(Obj* pRef, float newValue) {
+    pRef->speed = newValue;
+}
+
+
 Obj Obj_set_MINUS_sprite(Obj p, Fn__Art_MUL__SDL_Texture_MUL__MUL_ newValue) {
     /* Ignore non-managed member 'sprite' */
     p.sprite = newValue;
@@ -3141,6 +3455,8 @@ void Obj_set_MINUS_sprite_BANG_(Obj* pRef, Fn__Art_MUL__SDL_Texture_MUL__MUL_ ne
     pRef->sprite = newValue;
 }
 
+
+float* Obj_speed(Obj* p) { return (&(p->speed)); }
 
 Fn__Art_MUL__SDL_Texture_MUL__MUL_* Obj_sprite(Obj* p) { return (Fn__Art_MUL__SDL_Texture_MUL__MUL_*)(&(p->sprite)); }
 
@@ -3159,6 +3475,10 @@ String Obj_str(Obj *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   temp = Float_prn(p->dir); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Float_prn(p->speed); 
   size += snprintf(NULL, 0, "%s ", temp);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
@@ -3188,6 +3508,11 @@ String Obj_str(Obj *p) {
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  temp = Float_prn(p->speed);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
   temp = prn__Art_MUL__SDL_Texture_MUL__MUL_(p->sprite);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
@@ -3199,7 +3524,7 @@ String Obj_str(Obj *p) {
 }
 
 Obj Obj_tick(Obj o) {
-    Obj _45;
+    Obj _59;
     /* let */ {
         Obj* _10 = &o; // ref
         Vec2* _11 = Obj_pos(_10);
@@ -3209,20 +3534,26 @@ Obj Obj_tick(Obj o) {
         float* _19 = Obj_dir(_18);
         float _20 = Float_copy(_19);
         float dir = _20;
-        Vec2* _25 = &pos; // ref
-        float _30 = Float_cos(dir);
-        float _35 = Float_sin(dir);
-        float _36 = Float__MUL_(-1.0f, _35);
-        Vec2 _37 = Vec2_init(_30, _36);
-        Vec2* _38 = &_37; // ref
-        Vec2 _39 = Vec2_add(_25, _38);
-        Vec2 new_MINUS_pos = _39;
-        Obj _44 = Obj_set_MINUS_pos(o, new_MINUS_pos);
-        _45 = _44;
-        Vec2_delete(_37);
+        Obj* _26 = &o; // ref
+        float* _27 = Obj_speed(_26);
+        float _28 = Float_copy(_27);
+        float speed = _28;
+        Vec2* _33 = &pos; // ref
+        float _40 = Float_cos(dir);
+        float _41 = Float__MUL_(speed, _40);
+        float _48 = Float_sin(dir);
+        float _49 = Float__MUL_(-1.0f, _48);
+        float _50 = Float__MUL_(speed, _49);
+        Vec2 _51 = Vec2_init(_41, _50);
+        Vec2* _52 = &_51; // ref
+        Vec2 _53 = Vec2_add(_33, _52);
+        Vec2 new_MINUS_pos = _53;
+        Obj _58 = Obj_set_MINUS_pos(o, new_MINUS_pos);
+        _59 = _58;
+        Vec2_delete(_51);
         Vec2_delete(pos);
     }
-    return _45;
+    return _59;
 }
 
 Obj Obj_update_MINUS_dir(Obj p, Fn__float_float updater) {
@@ -3239,6 +3570,12 @@ Obj Obj_update_MINUS_pos(Obj p, Fn__Vec2_Vec2 updater) {
 
 Obj Obj_update_MINUS_radius(Obj p, Fn__float_float updater) {
     p.radius = updater(p.radius);
+    return p;
+}
+
+
+Obj Obj_update_MINUS_speed(Obj p, Fn__float_float updater) {
+    p.speed = updater(p.speed);
     return p;
 }
 
@@ -3636,19 +3973,23 @@ SDLApp SDLApp_copy(SDLApp* pRef) {
 }
 
 SDLApp SDLApp_create(String* title, int width, int height) {
-    SDLApp _38;
+    SDLApp _44;
     /* let */ {
         int _ = SDL_INIT_EVERYTHING;
         SDL_Window* win = NULL;
         SDL_Renderer* ren = NULL;
+        static String _18 = "1";
+        String *_18_ref = &_18;
+        char* _19 = String_cstr(_18_ref);
+        SDL_SetHint(SDL_HINT_RENDER_VSYNC, _19);
         SDL_CreateWindowAndRenderer(width, height, 0, &win, &ren);
-        char* _30 = String_cstr(title);
-        SDL_SetWindowTitle(win, _30);
-        SDLApp _36 = SDLApp_init(win, ren, 60);
-        SDLApp _37 = _36;
-        _38 = _37;
+        char* _36 = String_cstr(title);
+        SDL_SetWindowTitle(win, _36);
+        SDLApp _42 = SDLApp_init(win, ren, 60);
+        SDLApp _43 = _42;
+        _44 = _43;
     }
-    return _38;
+    return _44;
 }
 
 void SDLApp_delete(SDLApp p) {
@@ -3764,12 +4105,12 @@ void SDLApp_quit_MINUS_on_MINUS_esc(SDLApp* app) {
 
 SDL_Renderer** SDLApp_renderer(SDLApp* p) { return (&(p->renderer)); }
 
-void SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(SDLApp* app, Fn__SDLApp_MUL__void event_MINUS_fn, Fn__Array__Obj_Array__Obj update_MINUS_fn, Fn__SDLApp_MUL__SDL_Renderer_MUL__Array__Obj_MUL__void draw_MINUS_fn, Array__Obj initial_MINUS_state) {
+void SDLApp_run_MINUS_with_MINUS_callbacks__GameState(SDLApp* app, Fn__SDLApp_MUL__void event_MINUS_fn, Fn__GameState_GameState update_MINUS_fn, Fn__SDLApp_MUL__SDL_Renderer_MUL__GameState_MUL__void draw_MINUS_fn, GameState initial_MINUS_state) {
     /* let */ {
         SDL_Renderer** _13 = SDLApp_renderer(app);
         SDL_Renderer* _14 = Pointer_copy__SDL_Renderer(_13);
         SDL_Renderer* rend = _14;
-        Array__Obj state = initial_MINUS_state;
+        GameState state = initial_MINUS_state;
         int _19 = SDL_GetTicks();
         int last_MINUS_t = _19;
         int* _26 = SDLApp_fps(app);
@@ -3779,8 +4120,8 @@ void SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(SDLApp* app, Fn__SDLApp_M
         bool _88 = true;
         while (_88) {
             event_MINUS_fn(app);
-            Array__Obj _41 = update_MINUS_fn(state);
-            state = _41;  // (Array Obj) = (Array Obj)
+            GameState _41 = update_MINUS_fn(state);
+            state = _41;  // GameState = GameState
             /* let */ {
                 int _47 = SDL_GetTicks();
                 int _49 = Int__MINUS_(_47, last_MINUS_t);
@@ -3796,12 +4137,12 @@ void SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(SDLApp* app, Fn__SDLApp_M
             }
             int _75 = SDL_GetTicks();
             last_MINUS_t = _75;  // Int = Int
-            Array__Obj* _82 = &state; // ref
+            GameState* _82 = &state; // ref
             draw_MINUS_fn(app, rend, _82);
             SDL_RenderPresent(rend);
             _88 = true;
         }
-        Array_delete__Obj(state);
+        GameState_delete(state);
     }
 }
 
@@ -4965,6 +5306,20 @@ float* Vec2_x(Vec2* p) { return (&(p->x)); }
 
 float* Vec2_y(Vec2* p) { return (&(p->y)); }
 
+void ai__GameState_MUL_(GameState* state, Obj* obj) {
+    int _11 = Int_random_MINUS_between(0, 10);
+    bool _12 = Int__EQ_(0, _11);
+    if (_12) {
+        Vec2* _19 = Obj_pos(obj);
+        Vec2 _20 = Vec2_copy(_19);
+        float* _24 = Obj_dir(obj);
+        float _25 = Float_copy(_24);
+        shoot__GameState_MUL__Vec2_float(state, _20, _25);
+    } else {
+        /* () */
+    }
+}
+
 String append_MINUS_slash__String_MUL_(String* s) {
     String _7 = String_str(s);
     static String _9 = "/";
@@ -4976,6 +5331,12 @@ String append_MINUS_slash__String_MUL_(String* s) {
 
 Fn__Art_MUL__SDL_Texture_MUL__MUL_ copy__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_ (Fn__Art_MUL__SDL_Texture_MUL__MUL_* ref) {
     return *ref;
+}
+
+Obj dead_MINUS_shot() {
+    Vec2 _7 = Vec2_init(0.0f, 0.0f);
+    Obj _12 = Obj_init(_7, 10.0f, 0.0f, 0.0f, Art_shot);
+    return _12;
 }
 
 String dir_MINUS_from_MINUS_path(String* path) {
@@ -5006,7 +5367,7 @@ String dir_MINUS_from_MINUS_path(String* path) {
     return _39;
 }
 
-void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state) {
+void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, GameState* state) {
     SDL_Color _14 = SDL_rgb(30, 40, 50);
     SDL_Color* _15 = &_14; // ref
     SDL_bg(rend, _15);
@@ -5047,23 +5408,24 @@ void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, Array__Obj* state) {
         }
     }
     /* let */ {
-        Array__Obj* xs = state;
-        int _104 = Array_count__Obj(xs);
-        int len = _104;
+        Array__Obj* _102 = GameState_objs(state);
+        Array__Obj* xs = _102;
+        int _106 = Array_count__Obj(xs);
+        int len = _106;
         /* let */ {
             int i = 0;
-            bool _114 = Int__LT_(i, len);
-            bool _136 = _114;
-            while (_136) {
+            bool _116 = Int__LT_(i, len);
+            bool _138 = _116;
+            while (_138) {
                 /* let */ {
-                    Obj* _121 = Array_nth__Obj(xs, i);
-                    Obj* o = _121;
+                    Obj* _123 = Array_nth__Obj(xs, i);
+                    Obj* o = _123;
                     Obj_draw(rend, o);
                 }
-                int _133 = Int__PLUS_(i, 1);
-                i = _133;  // Int = Int
-                bool _114 = Int__LT_(i, len);
-                _136 = _114;
+                int _135 = Int__PLUS_(i, 1);
+                i = _135;  // Int = Int
+                bool _116 = Int__LT_(i, len);
+                _138 = _116;
             }
         }
     }
@@ -5076,18 +5438,21 @@ void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir) {
     static String _17 = "Slime.png";
     String *_17_ref = &_17;
     SDL_Texture* _18 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _17_ref);
-    static String _22 = "Smoke.png";
+    static String _22 = "Shot.png";
     String *_22_ref = &_22;
     SDL_Texture* _23 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _22_ref);
-    static String _27 = "Earth.png";
+    static String _27 = "Smoke.png";
     String *_27_ref = &_27;
     SDL_Texture* _28 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _27_ref);
-    static String _32 = "Mothership.png";
+    static String _32 = "Earth.png";
     String *_32_ref = &_32;
     SDL_Texture* _33 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _32_ref);
-    Art _34 = Art_init(_13, _18, _23, _28, _33);
+    static String _37 = "Mothership.png";
+    String *_37_ref = &_37;
+    SDL_Texture* _38 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _37_ref);
+    Art _39 = Art_init(_13, _18, _23, _28, _33, _38);
     Art_delete(art);
-    art = _34;  // Art = Art
+    art = _39;  // Art = Art
 }
 
 SDL_Texture* load_MINUS_img__String_MUL__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir, String* name) {
@@ -5108,8 +5473,8 @@ int main(int argc, char** argv) {
         String *_6_ref = &_6;
         SDLApp _9 = SDLApp_create(_6_ref, screen_MINUS_width, screen_MINUS_height);
         SDLApp app = _9;
-        Array__Obj _12 = make_MINUS_state();
-        Array__Obj state = _12;
+        GameState _12 = make_MINUS_state();
+        GameState state = _12;
         SDLApp* _18 = &app; // ref
         SDL_Renderer** _19 = SDLApp_renderer(_18);
         SDL_Renderer* _20 = Pointer_copy__SDL_Renderer(_19);
@@ -5127,23 +5492,26 @@ int main(int argc, char** argv) {
         load_MINUS_assets__String_MUL_(rend, _42);
         SDL_SetRenderDrawBlendMode(rend, SDL_BLENDMODE_BLEND);
         SDLApp* _51 = &app; // ref
-        SDLApp_run_MINUS_with_MINUS_callbacks__Array__Obj(_51, SDLApp_quit_MINUS_on_MINUS_esc, tick, draw__SDLApp_MUL_, state);
+        SDLApp_run_MINUS_with_MINUS_callbacks__GameState(_51, SDLApp_quit_MINUS_on_MINUS_esc, tick, draw__SDLApp_MUL_, state);
         SDLApp_delete(app);
         String_delete(_29);
         String_delete(img_MINUS_dir);
     }
 }
 
-Array__Obj make_MINUS_state() {
-    Array _13 = { .len = 2, .capacity = 2, .data = CARP_MALLOC(sizeof(Array__Obj) * 2) };
-    Array__Obj _8 = Array_repeat__Obj(20, random_MINUS_alien);
-    ((Array__Obj*)_13.data)[0] = _8;
-    Array__Obj _12 = Array_repeat__Obj(20, random_MINUS_human);
-    ((Array__Obj*)_13.data)[1] = _12;
-    Array__Array__Obj* _14 = &_13; // ref
-    Array__Obj _15 = Array_concat__Obj(_14);
-    Array_delete__Array__Obj(_13);
-    return _15;
+GameState make_MINUS_state() {
+    Array _18 = { .len = 3, .capacity = 3, .data = CARP_MALLOC(sizeof(Array__Obj) * 3) };
+    Array__Obj _9 = Array_repeat__Obj(20, random_MINUS_alien);
+    ((Array__Obj*)_18.data)[0] = _9;
+    Array__Obj _13 = Array_repeat__Obj(20, random_MINUS_human);
+    ((Array__Obj*)_18.data)[1] = _13;
+    Array__Obj _17 = Array_repeat__Obj(100, dead_MINUS_shot);
+    ((Array__Obj*)_18.data)[2] = _17;
+    Array__Array__Obj* _19 = &_18; // ref
+    Array__Obj _20 = Array_concat__Obj(_19);
+    GameState _21 = GameState_init(_20);
+    Array_delete__Array__Obj(_18);
+    return _21;
 }
 
 int max__int(int a, int b) {
@@ -5181,7 +5549,7 @@ Obj random_MINUS_human() {
 }
 
 Obj random_MINUS_ship(int side) {
-    Obj _98;
+    Obj _102;
     /* let */ {
         bool _9 = Int__EQ_(side, team_MINUS_alien);
         bool is_MINUS_alien = _9;
@@ -5241,10 +5609,11 @@ Obj random_MINUS_ship(int side) {
         float _89 = Float_random_MINUS_between(0.0f, _88);
         Vec2 _90 = Vec2_init(_83, _89);
         float _95 = Float_random_MINUS_between(dir_MINUS_low, dir_MINUS_high);
-        Obj _97 = Obj_init(_90, 10.0f, _95, sprite);
-        _98 = _97;
+        float _99 = Float_random_MINUS_between(1.0f, 2.0f);
+        Obj _101 = Obj_init(_90, 10.0f, _95, _99, sprite);
+        _102 = _101;
     }
-    return _98;
+    return _102;
 }
 
 void reuse_MINUS_smoke(Vec2 pos) {
@@ -5293,7 +5662,12 @@ void reuse_MINUS_smoke(Vec2 pos) {
     }
 }
 
-Array__Obj tick(Array__Obj state) {
+void shoot__GameState_MUL__Vec2_float(GameState* state, Vec2 pos, float dir) {
+    /* () */
+    Vec2_delete(pos);
+}
+
+GameState tick(GameState state) {
     /* let */ {
         Array__Smoke* _9 = &smokes; // ref
         Array__Smoke* xs = _9;
@@ -5317,37 +5691,61 @@ Array__Obj tick(Array__Obj state) {
         }
     }
     /* let */ {
-        Array__Obj* _51 = &state; // ref
-        Array__Obj* xs = _51;
-        int _55 = Array_count__Obj(xs);
-        int len = _55;
+        GameState* _52 = &state; // ref
+        Array__Obj* _53 = GameState_objs(_52);
+        Array__Obj* xs = _53;
+        int _57 = Array_count__Obj(xs);
+        int len = _57;
         /* let */ {
             int i = 0;
-            bool _65 = Int__LT_(i, len);
-            bool _104 = _65;
-            while (_104) {
+            bool _67 = Int__LT_(i, len);
+            bool _141 = _67;
+            while (_141) {
                 /* let */ {
-                    Obj* _72 = Array_nth__Obj(xs, i);
-                    Obj* o = _72;
-                    int _80 = Int_random_MINUS_between(0, 10);
-                    bool _81 = Int__EQ_(0, _80);
-                    if (_81) {
-                        Vec2* _87 = Obj_pos(o);
-                        Vec2 _88 = Vec2_copy(_87);
-                        reuse_MINUS_smoke(_88);
+                    Obj* _74 = Array_nth__Obj(xs, i);
+                    Obj* o = _74;
+                    int _83 = Int_random_MINUS_between(0, 10);
+                    bool _84 = Int__EQ_(0, _83);
+                    if (_84) {
+                        Vec2* _90 = Obj_pos(o);
+                        Vec2 _91 = Vec2_copy(_90);
+                        reuse_MINUS_smoke(_91);
                     } else {
                         /* () */
                     }
+                    /* let */ {
+                        float* _103 = Obj_dir(o);
+                        float _104 = Float_copy(_103);
+                        float dir = _104;
+                        int _117 = SDL_GetTicks();
+                        float _118 = Float_from_MINUS_int(_117);
+                        float _119 = Float__MUL_(5.0e-3f, _118);
+                        float _120 = Float_sin(_119);
+                        float _121 = Float__MUL_(2.5e-2f, _120);
+                        float _122 = Float__PLUS_(dir, _121);
+                        Obj_set_MINUS_dir_BANG_(o, _122);
+                    }
+                    GameState* _128 = &state; // ref
+                    ai__GameState_MUL_(_128, o);
                 }
-                int _101 = Int__PLUS_(i, 1);
-                i = _101;  // Int = Int
-                bool _65 = Int__LT_(i, len);
-                _104 = _65;
+                int _138 = Int__PLUS_(i, 1);
+                i = _138;  // Int = Int
+                bool _67 = Int__LT_(i, len);
+                _141 = _67;
             }
         }
     }
-    Array__Obj _110 = Array_endo_MINUS_map__Obj(Obj_tick, state);
-    Array__Obj _111 = _110;
-    return _111;
+    GameState _161;
+    /* let */ {
+        GameState* _152 = &state; // ref
+        Array__Obj* _153 = GameState_objs(_152);
+        Array__Obj _154 = Array_copy__Obj(_153);
+        Array__Obj _155 = Array_endo_MINUS_map__Obj(Obj_tick, _154);
+        Array__Obj new_MINUS_objs = _155;
+        GameState _160 = GameState_set_MINUS_objs(state, new_MINUS_objs);
+        _161 = _160;
+    }
+    GameState _162 = _161;
+    return _162;
 }
 
