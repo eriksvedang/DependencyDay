@@ -7,9 +7,11 @@
 (load "SDL_image.carp")
 (load "Geometry.carp")
 (load "Pattern.carp")
+(load "Filepath.carp")
 
 (use Array)
 (use SDL)
+(use Filepath)
 
 (def screen-width 2000)
 (def screen-height 1000)
@@ -154,11 +156,12 @@
 
 (defn pos-outside? [pos]
   (let [x @(Vec2.x pos)
-        y @(Vec2.y pos)]
-    (or* (< x 0.0f)
-         (< y 0.0f)
-         (< (Float.from-int screen-width) x)
-         (< (Float.from-int screen-height) y))))
+        y @(Vec2.y pos)
+        margin 0.0f]
+    (or* (< x margin)
+         (< y margin)
+         (< (- (Float.from-int screen-width) margin) x)
+         (< (- (Float.from-int screen-height) margin) y))))
 
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
@@ -203,9 +206,10 @@
 
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
-  (GameState.init
-   (concat &[(repeat 200 dead-shot-obj) (repeat 20 random-alien) (repeat 20 random-human)])
-   (copy-map dead-shot &(range 0 199 1))))
+  (let [shot-count 500]
+    (GameState.init
+     (concat &[(repeat shot-count dead-shot-obj) (repeat 20 random-alien) (repeat 20 random-human)])
+     (copy-map dead-shot &(range 0 (dec shot-count) 1)))))
 
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
@@ -218,23 +222,17 @@
                       (load-img rend img-dir "Earth.png")
                       (load-img rend img-dir "Mothership.png"))))
 
-(defn append-slash [s]
-  (str* s "/"))
-
-(doc dir-from-path "Removes the file-name part of a path to a file.")
-(defn dir-from-path [path]
-  (let [segments (split-by path &[\/])
-        n (dec (count &segments))
-        without-last (prefix-array &segments n)]
-    (join &(copy-map append-slash &without-last))))
+;;(defn turn-ship [objs index amount])
 
 (defn event-handler [app]
   (foreach [event &(SDL.Event.all)]
            (case (SDL.Event.type event)
              SDL.Event.quit (SDLApp.stop app)
              SDL.Event.key-down (let [key (SDL.Event.keycode event)]
-                                  (if (= key SDL.Keycode.escape)
-                                    (SDLApp.stop app)
+                                  (case key
+                                    SDL.Keycode.escape (SDLApp.stop app)
+                                    ;; SDL.Keycode.left-arrow (turn-ship objs 200 -0.1)
+                                    ;; SDL.Keycode.right-arrow (turn-ship 200 0.1)
                                     ()))
              ())))
 
