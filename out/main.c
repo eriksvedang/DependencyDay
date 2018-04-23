@@ -26,6 +26,9 @@ typedef Array Array__Obj;
 typedef Array Array__SDL_Event;
 
 // Depth 50
+typedef Array Array__Shot;
+
+// Depth 50
 typedef Array Array__Smoke;
 
 // Depth 50
@@ -203,6 +206,12 @@ typedef struct {
 
 // Depth 101
 typedef struct {
+    int obj_MINUS_index;
+    bool alive;
+} Shot;
+
+// Depth 101
+typedef struct {
     float x;
     float y;
 } Vec2;
@@ -246,6 +255,15 @@ typedef SDL_Event*(*Fn__Array__SDL_Event_MUL__int_SDL_Event_MUL_)(Array__SDL_Eve
 
 // Depth 102
 typedef Array__SDL_Event(*Fn__Array__SDL_Event_SDL_Event_Array__SDL_Event)(Array__SDL_Event, SDL_Event);
+
+// Depth 102
+typedef Array__Shot(*Fn__Array__Shot_Array__Shot)(Array__Shot);
+
+// Depth 102
+typedef String(*Fn__Array__Shot_MUL__String)(Array__Shot*);
+
+// Depth 102
+typedef int(*Fn__Array__Shot_MUL__int)(Array__Shot*);
 
 // Depth 102
 typedef int(*Fn__Array__Smoke_MUL__int)(Array__Smoke*);
@@ -297,6 +315,12 @@ typedef Array__char(*Fn__Array__char_MUL__int_int_Array__char)(Array__char*, int
 
 // Depth 102
 typedef Array__char(*Fn__Array__char_char_Array__char)(Array__char, char);
+
+// Depth 102
+typedef int(*Fn__Array__int_MUL__int)(Array__int*);
+
+// Depth 102
+typedef int*(*Fn__Array__int_MUL__int_int_MUL_)(Array__int*, int);
 
 // Depth 102
 typedef void(*Fn__Array__int_MUL__int_int_void)(Array__int*, int, int);
@@ -416,6 +440,9 @@ typedef SDL_Event(*Fn___SDL_Event)();
 typedef Array__Obj(*Fn__int_Array__Obj)(int);
 
 // Depth 102
+typedef Array__Shot(*Fn__int_Array__Shot)(int);
+
+// Depth 102
 typedef Array__Smoke(*Fn__int_Array__Smoke)(int);
 
 // Depth 102
@@ -437,6 +464,9 @@ typedef Array__char(*Fn__int_char_MUL__Array__char)(int, char*);
 typedef SDL_Point(*Fn__int_int_SDL_Point)(int, int);
 
 // Depth 102
+typedef Array__int(*Fn__int_int_int_Array__int)(int, int, int);
+
+// Depth 102
 typedef SDL_Color(*Fn__int_int_int_SDL_Color)(int, int, int);
 
 // Depth 102
@@ -448,6 +478,7 @@ typedef SDL_Rect(*Fn__int_int_int_int_SDL_Rect)(int, int, int, int);
 // Depth 102
 typedef struct {
     Array__Obj objs;
+    Array__Shot shots;
 } GameState;
 
 // Depth 102
@@ -456,6 +487,21 @@ typedef struct {
     SDL_Renderer* renderer;
     int fps;
 } SDLApp;
+
+// Depth 103
+typedef Shot*(*Fn__Array__Shot_MUL__int_Shot_MUL_)(Array__Shot*, int);
+
+// Depth 103
+typedef void(*Fn__Array__Shot_MUL__int_Shot_void)(Array__Shot*, int, Shot);
+
+// Depth 103
+typedef bool*(*Fn__Shot_MUL__bool_MUL_)(Shot*);
+
+// Depth 103
+typedef void(*Fn__Shot_MUL__bool_void)(Shot*, bool);
+
+// Depth 103
+typedef int*(*Fn__Shot_MUL__int_MUL_)(Shot*);
 
 // Depth 103
 typedef Vec2(*Fn__Vec2_MUL__Vec2)(Vec2*);
@@ -470,10 +516,13 @@ typedef float*(*Fn__Vec2_MUL__float_MUL_)(Vec2*);
 typedef Vec2(*Fn__Vec2_Vec2)(Vec2);
 
 // Depth 103
-typedef void(*Fn__Vec2_void)(Vec2);
+typedef Vec2(*Fn__float_float_Vec2)(float, float);
 
 // Depth 103
-typedef Vec2(*Fn__float_float_Vec2)(float, float);
+typedef Shot(*Fn__int_MUL__Shot)(int*);
+
+// Depth 103
+typedef Shot(*Fn__int_bool_Shot)(int, bool);
 
 // Depth 103
 typedef MouseState(*Fn__int_int_bool_bool_MouseState)(int, int, bool, bool);
@@ -485,10 +534,13 @@ typedef struct {
 } Smoke;
 
 // Depth 104
-typedef GameState(*Fn__Array__Obj_GameState)(Array__Obj);
+typedef GameState(*Fn__Array__Obj_Array__Shot_GameState)(Array__Obj, Array__Shot);
 
 // Depth 104
 typedef SDL_Texture**(*Fn__Art_MUL__SDL_Texture_MUL__MUL_)(Art*);
+
+// Depth 104
+typedef Array__Shot(*Fn__Fn__int_MUL__Shot_Array__int_MUL__Array__Shot)(Fn__int_MUL__Shot, Array__int*);
 
 // Depth 104
 typedef GameState(*Fn__GameState_Array__Obj_GameState)(GameState, Array__Obj);
@@ -498,6 +550,9 @@ typedef GameState(*Fn__GameState_GameState)(GameState);
 
 // Depth 104
 typedef Array__Obj*(*Fn__GameState_MUL__Array__Obj_MUL_)(GameState*);
+
+// Depth 104
+typedef Array__Shot*(*Fn__GameState_MUL__Array__Shot_MUL_)(GameState*);
 
 // Depth 104
 typedef void(*Fn__GameState_MUL__Vec2_float_void)(GameState*, Vec2, float);
@@ -602,6 +657,9 @@ typedef Obj(*Fn__Obj_MUL__Obj)(Obj*);
 typedef Vec2*(*Fn__Obj_MUL__Vec2_MUL_)(Obj*);
 
 // Depth 107
+typedef void(*Fn__Obj_MUL__Vec2_void)(Obj*, Vec2);
+
+// Depth 107
 typedef float*(*Fn__Obj_MUL__float_MUL_)(Obj*);
 
 // Depth 107
@@ -644,7 +702,7 @@ bool _LT__EQ___int(int a, int b);
 bool _GT__EQ___int(int a, int b);
 
 // Depth 500
-void ai__GameState_MUL_(GameState* state, Obj* obj);
+void ai(GameState* state, Obj* obj);
 
 // Depth 500
 String append_MINUS_slash__String_MUL_(String* s);
@@ -656,13 +714,19 @@ Art art;
 Fn__Art_MUL__SDL_Texture_MUL__MUL_ copy__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_ (Fn__Art_MUL__SDL_Texture_MUL__MUL_* ref);
 
 // Depth 500
-Obj dead_MINUS_shot();
+Shot dead_MINUS_shot(int* i);
+
+// Depth 500
+Obj dead_MINUS_shot_MINUS_obj();
 
 // Depth 500
 String dir_MINUS_from_MINUS_path(String* path);
 
 // Depth 500
 void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, GameState* state);
+
+// Depth 500
+int index_MINUS_of_MINUS_dead_MINUS_shot(Array__Shot* shots);
 
 // Depth 500
 void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir);
@@ -704,7 +768,7 @@ int screen_MINUS_height;
 int screen_MINUS_width;
 
 // Depth 500
-void shoot__GameState_MUL__Vec2_float(GameState* state, Vec2 pos, float dir);
+void shoot(GameState* state, Vec2 pos, float dir);
 
 // Depth 500
 Array__Smoke smokes;
@@ -722,6 +786,9 @@ GameState tick(GameState state);
 
 // Depth 500
 Array Array_allocate__Obj (int n);
+
+// Depth 500
+Array Array_allocate__Shot (int n);
 
 // Depth 500
 Array Array_allocate__Smoke (int n);
@@ -745,6 +812,9 @@ void Array_aset_BANG___int (Array *aRef, int n, int newValue);
 void Array_aset_MINUS_uninitialized_BANG___Obj (Array *aRef, int n, Obj newValue);
 
 // Depth 500
+void Array_aset_MINUS_uninitialized_BANG___Shot (Array *aRef, int n, Shot newValue);
+
+// Depth 500
 void Array_aset_MINUS_uninitialized_BANG___Smoke (Array *aRef, int n, Smoke newValue);
 
 // Depth 500
@@ -760,7 +830,13 @@ Array__Obj Array_concat__Obj(Array__Array__Obj* xs);
 Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Array__String* a);
 
 // Depth 500
+Array__Shot Array_copy_MINUS_map__int_Shot(Fn__int_MUL__Shot f, Array__int* a);
+
+// Depth 500
 Array Array_copy__Obj (Array* a);
+
+// Depth 500
+Array Array_copy__Shot (Array* a);
 
 // Depth 500
 int Array_count__Array__Obj (Array *a);
@@ -772,6 +848,9 @@ int Array_count__Obj (Array *a);
 int Array_count__SDL_Event (Array *a);
 
 // Depth 500
+int Array_count__Shot (Array *a);
+
+// Depth 500
 int Array_count__Smoke (Array *a);
 
 // Depth 500
@@ -781,6 +860,9 @@ int Array_count__String (Array *a);
 int Array_count__char (Array *a);
 
 // Depth 500
+int Array_count__int (Array *a);
+
+// Depth 500
 void Array_delete__Array__Obj (Array a);
 
 // Depth 500
@@ -788,6 +870,9 @@ void Array_delete__Obj (Array a);
 
 // Depth 500
 void Array_delete__SDL_Event (Array a);
+
+// Depth 500
+void Array_delete__Shot (Array a);
 
 // Depth 500
 void Array_delete__Smoke (Array a);
@@ -814,6 +899,9 @@ Obj* Array_nth__Obj (Array *aRef, int n);
 SDL_Event* Array_nth__SDL_Event (Array *aRef, int n);
 
 // Depth 500
+Shot* Array_nth__Shot (Array *aRef, int n);
+
+// Depth 500
 Smoke* Array_nth__Smoke (Array *aRef, int n);
 
 // Depth 500
@@ -823,6 +911,9 @@ String* Array_nth__String (Array *aRef, int n);
 char* Array_nth__char (Array *aRef, int n);
 
 // Depth 500
+int* Array_nth__int (Array *aRef, int n);
+
+// Depth 500
 Array__String Array_prefix_MINUS_array__String(Array__String* xs, int end_MINUS_index);
 
 // Depth 500
@@ -830,6 +921,9 @@ Array__char Array_prefix_MINUS_array__char(Array__char* xs, int end_MINUS_index)
 
 // Depth 500
 String Array_prn__Obj(Array__Obj* x);
+
+// Depth 500
+String Array_prn__Shot(Array__Shot* x);
 
 // Depth 500
 Array Array_push_MINUS_back__Obj(Array a, Obj value);
@@ -863,6 +957,9 @@ Array__char Array_reverse__char(Array__char a);
 
 // Depth 500
 String Array_str__Obj (Array* a);
+
+// Depth 500
+String Array_str__Shot (Array* a);
 
 // Depth 500
 Array__String Array_subarray__String(Array__String* xs, int start_MINUS_index, int end_MINUS_index);
@@ -1063,7 +1160,7 @@ GameState GameState_copy(GameState* pRef);
 void GameState_delete(GameState p);
 
 // Depth 500
-GameState GameState_init(Array__Obj objs);
+GameState GameState_init(Array__Obj objs, Array__Shot shots);
 
 // Depth 500
 Array__Obj* GameState_objs(GameState* p);
@@ -1078,10 +1175,22 @@ GameState GameState_set_MINUS_objs(GameState p, Array__Obj newValue);
 void GameState_set_MINUS_objs_BANG_(GameState* pRef, Array__Obj newValue);
 
 // Depth 500
+GameState GameState_set_MINUS_shots(GameState p, Array__Shot newValue);
+
+// Depth 500
+void GameState_set_MINUS_shots_BANG_(GameState* pRef, Array__Shot newValue);
+
+// Depth 500
+Array__Shot* GameState_shots(GameState* p);
+
+// Depth 500
 String GameState_str(GameState *p);
 
 // Depth 500
 GameState GameState_update_MINUS_objs(GameState p, Fn__Array__Obj_Array__Obj updater);
+
+// Depth 500
+GameState GameState_update_MINUS_shots(GameState p, Fn__Array__Shot_Array__Shot updater);
 
 // Depth 1000
 
@@ -1516,6 +1625,47 @@ int* SDL_Rect_y(SDL_Rect* p);
 // Depth 1000
 
 // Depth 500
+bool* Shot_alive(Shot* p);
+
+// Depth 500
+Shot Shot_copy(Shot* pRef);
+
+// Depth 500
+void Shot_delete(Shot p);
+
+// Depth 500
+Shot Shot_init(int obj_MINUS_index, bool alive);
+
+// Depth 500
+int* Shot_obj_MINUS_index(Shot* p);
+
+// Depth 500
+String Shot_prn(Shot *p);
+
+// Depth 500
+Shot Shot_set_MINUS_alive(Shot p, bool newValue);
+
+// Depth 500
+void Shot_set_MINUS_alive_BANG_(Shot* pRef, bool newValue);
+
+// Depth 500
+Shot Shot_set_MINUS_obj_MINUS_index(Shot p, int newValue);
+
+// Depth 500
+void Shot_set_MINUS_obj_MINUS_index_BANG_(Shot* pRef, int newValue);
+
+// Depth 500
+String Shot_str(Shot *p);
+
+// Depth 500
+Shot Shot_update_MINUS_alive(Shot p, Fn__bool_bool updater);
+
+// Depth 500
+Shot Shot_update_MINUS_obj_MINUS_index(Shot p, Fn__int_int updater);
+
+// Depth 1000
+
+// Depth 500
 float* Smoke_age(Smoke* p);
 
 // Depth 500
@@ -1815,6 +1965,14 @@ Array Array_allocate__Obj (int n) {
     return a;
 }
 
+Array Array_allocate__Shot (int n) {
+    Array a;
+    a.len = n;
+    a.capacity = n;
+    a.data = CARP_MALLOC(n*sizeof(Shot));
+    return a;
+}
+
 Array Array_allocate__Smoke (int n) {
     Array a;
     a.len = n;
@@ -1876,6 +2034,15 @@ void Array_aset_MINUS_uninitialized_BANG___Obj (Array *aRef, int n, Obj newValue
     assert(n < a.len);
     #endif
     ((Obj*)a.data)[n] = newValue;
+}
+
+void Array_aset_MINUS_uninitialized_BANG___Shot (Array *aRef, int n, Shot newValue) {
+    Array a = *aRef;
+    #ifndef OPTIMIZE
+    assert(n >= 0);
+    assert(n < a.len);
+    #endif
+    ((Shot*)a.data)[n] = newValue;
 }
 
 void Array_aset_MINUS_uninitialized_BANG___Smoke (Array *aRef, int n, Smoke newValue) {
@@ -1979,6 +2146,35 @@ Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Arra
     return _50;
 }
 
+Array__Shot Array_copy_MINUS_map__int_Shot(Fn__int_MUL__Shot f, Array__int* a) {
+    Array__Shot _50;
+    /* let */ {
+        int _10 = Array_count__int(a);
+        Array__Shot _11 = Array_allocate__Shot(_10);
+        Array__Shot na = _11;
+        /* let */ {
+            int i = 0;
+            int _23 = Array_count__int(a);
+            bool _24 = Int__LT_(i, _23);
+            bool _46 = _24;
+            while (_46) {
+                Array__Shot* _29 = &na; // ref
+                int* _35 = Array_nth__int(a, i);
+                Shot _36 = f(_35);
+                Array_aset_MINUS_uninitialized_BANG___Shot(_29, i, _36);
+                int _43 = Int__PLUS_(i, 1);
+                i = _43;  // Int = Int
+                int _23 = Array_count__int(a);
+                bool _24 = Int__LT_(i, _23);
+                _46 = _24;
+            }
+        }
+        Array__Shot _49 = na;
+        _50 = _49;
+    }
+    return _50;
+}
+
 Array Array_copy__Obj (Array* a){
     Array copy;
     copy.len = a->len;
@@ -1990,12 +2186,25 @@ Array Array_copy__Obj (Array* a){
     return copy;
 }
 
+Array Array_copy__Shot (Array* a){
+    Array copy;
+    copy.len = a->len;
+    copy.capacity = a->capacity;
+    copy.data = CARP_MALLOC(sizeof(Shot) * a->capacity);
+    for(int i = 0; i < a->len; i++) {
+        ((Shot*)(copy.data))[i] = Shot_copy(&(((Shot*)a->data)[i]));
+    }
+    return copy;
+}
+
 int Array_count__Array__Obj (Array *a) { return (*a).len; }
 int Array_count__Obj (Array *a) { return (*a).len; }
 int Array_count__SDL_Event (Array *a) { return (*a).len; }
+int Array_count__Shot (Array *a) { return (*a).len; }
 int Array_count__Smoke (Array *a) { return (*a).len; }
 int Array_count__String (Array *a) { return (*a).len; }
 int Array_count__char (Array *a) { return (*a).len; }
+int Array_count__int (Array *a) { return (*a).len; }
 void Array_delete__Array__Obj (Array a){
     for(int i = 0; i < a.len; i++) {
         Array_delete__Obj(((Array__Obj*)a.data)[i]);
@@ -2013,6 +2222,13 @@ void Array_delete__Obj (Array a){
 void Array_delete__SDL_Event (Array a){
     for(int i = 0; i < a.len; i++) {
         /* Ignore non-managed type inside Array: 'SDL_Event' */
+    }
+    CARP_FREE(a.data);
+}
+
+void Array_delete__Shot (Array a){
+    for(int i = 0; i < a.len; i++) {
+        Shot_delete(((Shot*)a.data)[i]);
     }
     CARP_FREE(a.data);
 }
@@ -2079,6 +2295,15 @@ SDL_Event* Array_nth__SDL_Event (Array *aRef, int n) {
     return &(((SDL_Event*)a.data)[n]);
 }
 
+Shot* Array_nth__Shot (Array *aRef, int n) {
+    Array a = *aRef;
+    #ifndef OPTIMIZE
+    assert(n >= 0);
+    assert(n < a.len);
+    #endif
+    return &(((Shot*)a.data)[n]);
+}
+
 Smoke* Array_nth__Smoke (Array *aRef, int n) {
     Array a = *aRef;
     #ifndef OPTIMIZE
@@ -2106,6 +2331,15 @@ char* Array_nth__char (Array *aRef, int n) {
     return &(((char*)a.data)[n]);
 }
 
+int* Array_nth__int (Array *aRef, int n) {
+    Array a = *aRef;
+    #ifndef OPTIMIZE
+    assert(n >= 0);
+    assert(n < a.len);
+    #endif
+    return &(((int*)a.data)[n]);
+}
+
 Array__String Array_prefix_MINUS_array__String(Array__String* xs, int end_MINUS_index) {
     Array__String _9 = Array_subarray__String(xs, 0, end_MINUS_index);
     return _9;
@@ -2118,6 +2352,11 @@ Array__char Array_prefix_MINUS_array__char(Array__char* xs, int end_MINUS_index)
 
 String Array_prn__Obj(Array__Obj* x) {
     String _6 = Array_str__Obj(x);
+    return _6;
+}
+
+String Array_prn__Shot(Array__Shot* x) {
+    String _6 = Array_str__Shot(x);
     return _6;
 }
 
@@ -2357,6 +2596,39 @@ String Array_str__Obj (Array* a) {
 
   for(int i = 0; i < a->len; i++) {
     temp = Obj_prn(&((Obj*)a->data)[i]);
+    snprintf(bufferPtr, size, "%s ", temp);
+    bufferPtr += strlen(temp) + 1;
+    if(temp) {
+      CARP_FREE(temp);
+      temp = NULL;
+    }
+  }
+
+  if(a->len > 0) { bufferPtr -= 1; }
+  snprintf(bufferPtr, size, "]");
+  return buffer;
+}
+
+String Array_str__Shot (Array* a) {
+  String temp = NULL;
+  int size = 3; // opening and closing brackets and terminator
+  for(int i = 0; i < a->len; i++) {
+    temp = Shot_prn(&((Shot*)a->data)[i]);
+    size += snprintf(NULL, 0, "%s ", temp);
+    if(temp) {
+      CARP_FREE(temp);
+      temp = NULL;
+    }
+  }
+
+  String buffer = CARP_MALLOC(size);
+  String bufferPtr = buffer;
+
+  snprintf(buffer, size, "[");
+  bufferPtr += 1;
+
+  for(int i = 0; i < a->len; i++) {
+    temp = Shot_prn(&((Shot*)a->data)[i]);
     snprintf(bufferPtr, size, "%s ", temp);
     bufferPtr += strlen(temp) + 1;
     if(temp) {
@@ -3000,16 +3272,19 @@ bool FloatRef__GT_(float* a, float* b) {
 GameState GameState_copy(GameState* pRef) {
     GameState copy = *pRef;
     copy.objs = Array_copy__Obj(&(pRef->objs));
+    copy.shots = Array_copy__Shot(&(pRef->shots));
     return copy;
 }
 
 void GameState_delete(GameState p) {
     Array_delete__Obj(p.objs);
+    Array_delete__Shot(p.shots);
 }
 
-GameState GameState_init(Array__Obj objs) {
+GameState GameState_init(Array__Obj objs, Array__Shot shots) {
     GameState instance;
     instance.objs = objs;
+    instance.shots = shots;
     return instance;
 }
 
@@ -3025,6 +3300,10 @@ String GameState_prn(GameState *p) {
   size += snprintf(NULL, 0, "%s ", temp);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  temp = Array_prn__Shot(&p->shots); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
 
   String buffer = CARP_MALLOC(size);
   String bufferPtr = buffer;
@@ -3033,6 +3312,11 @@ String GameState_prn(GameState *p) {
   bufferPtr += strlen("GameState") + 2;
 
   temp = Array_prn__Obj(&p->objs);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Array_prn__Shot(&p->shots);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -3054,6 +3338,20 @@ void GameState_set_MINUS_objs_BANG_(GameState* pRef, Array__Obj newValue) {
 }
 
 
+GameState GameState_set_MINUS_shots(GameState p, Array__Shot newValue) {
+    Array_delete__Shot(p.shots);
+    p.shots = newValue;
+    return p;
+}
+
+
+void GameState_set_MINUS_shots_BANG_(GameState* pRef, Array__Shot newValue) {
+    pRef->shots = newValue;
+}
+
+
+Array__Shot* GameState_shots(GameState* p) { return (&(p->shots)); }
+
 String GameState_str(GameState *p) {
   // convert members to String here:
   String temp = NULL;
@@ -3061,6 +3359,10 @@ String GameState_str(GameState *p) {
   (void)tempsize; // that way we remove the occasional unused warning 
   int size = snprintf(NULL, 0, "(%s )", "GameState");
   temp = Array_prn__Obj(&p->objs); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Array_prn__Shot(&p->shots); 
   size += snprintf(NULL, 0, "%s ", temp);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
@@ -3076,6 +3378,11 @@ String GameState_str(GameState *p) {
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  temp = Array_prn__Shot(&p->shots);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
   bufferPtr--;
   snprintf(bufferPtr, size, ")");
   return buffer;
@@ -3083,6 +3390,12 @@ String GameState_str(GameState *p) {
 
 GameState GameState_update_MINUS_objs(GameState p, Fn__Array__Obj_Array__Obj updater) {
     p.objs = updater(p.objs);
+    return p;
+}
+
+
+GameState GameState_update_MINUS_shots(GameState p, Fn__Array__Shot_Array__Shot updater) {
+    p.shots = updater(p.shots);
     return p;
 }
 
@@ -4573,6 +4886,137 @@ int* SDL_Rect_x(SDL_Rect* p) { return (&(p->x)); }
 
 int* SDL_Rect_y(SDL_Rect* p) { return (&(p->y)); }
 
+bool* Shot_alive(Shot* p) { return (&(p->alive)); }
+
+Shot Shot_copy(Shot* pRef) {
+    Shot copy = *pRef;
+    /* Ignore non-managed member 'obj_MINUS_index' */
+    /* Ignore non-managed member 'alive' */
+    return copy;
+}
+
+void Shot_delete(Shot p) {
+    /* Ignore non-managed member 'obj_MINUS_index' */
+    /* Ignore non-managed member 'alive' */
+}
+
+Shot Shot_init(int obj_MINUS_index, bool alive) {
+    Shot instance;
+    instance.obj_MINUS_index = obj_MINUS_index;
+    instance.alive = alive;
+    return instance;
+}
+
+int* Shot_obj_MINUS_index(Shot* p) { return (&(p->obj_MINUS_index)); }
+
+String Shot_prn(Shot *p) {
+  // convert members to String here:
+  String temp = NULL;
+  int tempsize = 0;
+  (void)tempsize; // that way we remove the occasional unused warning 
+  int size = snprintf(NULL, 0, "(%s )", "Shot");
+  temp = Int_prn(p->obj_MINUS_index); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Bool_prn(p->alive); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+
+  String buffer = CARP_MALLOC(size);
+  String bufferPtr = buffer;
+
+  snprintf(bufferPtr, size, "(%s ", "Shot");
+  bufferPtr += strlen("Shot") + 2;
+
+  temp = Int_prn(p->obj_MINUS_index);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Bool_prn(p->alive);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  bufferPtr--;
+  snprintf(bufferPtr, size, ")");
+  return buffer;
+}
+
+Shot Shot_set_MINUS_alive(Shot p, bool newValue) {
+    /* Ignore non-managed member 'alive' */
+    p.alive = newValue;
+    return p;
+}
+
+
+void Shot_set_MINUS_alive_BANG_(Shot* pRef, bool newValue) {
+    pRef->alive = newValue;
+}
+
+
+Shot Shot_set_MINUS_obj_MINUS_index(Shot p, int newValue) {
+    /* Ignore non-managed member 'obj_MINUS_index' */
+    p.obj_MINUS_index = newValue;
+    return p;
+}
+
+
+void Shot_set_MINUS_obj_MINUS_index_BANG_(Shot* pRef, int newValue) {
+    pRef->obj_MINUS_index = newValue;
+}
+
+
+String Shot_str(Shot *p) {
+  // convert members to String here:
+  String temp = NULL;
+  int tempsize = 0;
+  (void)tempsize; // that way we remove the occasional unused warning 
+  int size = snprintf(NULL, 0, "(%s )", "Shot");
+  temp = Int_prn(p->obj_MINUS_index); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Bool_prn(p->alive); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+
+  String buffer = CARP_MALLOC(size);
+  String bufferPtr = buffer;
+
+  snprintf(bufferPtr, size, "(%s ", "Shot");
+  bufferPtr += strlen("Shot") + 2;
+
+  temp = Int_prn(p->obj_MINUS_index);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = Bool_prn(p->alive);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  bufferPtr--;
+  snprintf(bufferPtr, size, ")");
+  return buffer;
+}
+
+Shot Shot_update_MINUS_alive(Shot p, Fn__bool_bool updater) {
+    p.alive = updater(p.alive);
+    return p;
+}
+
+
+Shot Shot_update_MINUS_obj_MINUS_index(Shot p, Fn__int_int updater) {
+    p.obj_MINUS_index = updater(p.obj_MINUS_index);
+    return p;
+}
+
+
 float* Smoke_age(Smoke* p) { return (&(p->age)); }
 
 Smoke Smoke_copy(Smoke* pRef) {
@@ -5306,15 +5750,15 @@ float* Vec2_x(Vec2* p) { return (&(p->x)); }
 
 float* Vec2_y(Vec2* p) { return (&(p->y)); }
 
-void ai__GameState_MUL_(GameState* state, Obj* obj) {
-    int _11 = Int_random_MINUS_between(0, 10);
+void ai(GameState* state, Obj* obj) {
+    int _11 = Int_random_MINUS_between(0, 100);
     bool _12 = Int__EQ_(0, _11);
     if (_12) {
         Vec2* _19 = Obj_pos(obj);
         Vec2 _20 = Vec2_copy(_19);
         float* _24 = Obj_dir(obj);
         float _25 = Float_copy(_24);
-        shoot__GameState_MUL__Vec2_float(state, _20, _25);
+        shoot(state, _20, _25);
     } else {
         /* () */
     }
@@ -5333,8 +5777,14 @@ Fn__Art_MUL__SDL_Texture_MUL__MUL_ copy__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_
     return *ref;
 }
 
-Obj dead_MINUS_shot() {
-    Vec2 _7 = Vec2_init(0.0f, 0.0f);
+Shot dead_MINUS_shot(int* i) {
+    int _7 = Int_copy(i);
+    Shot _9 = Shot_init(_7, false);
+    return _9;
+}
+
+Obj dead_MINUS_shot_MINUS_obj() {
+    Vec2 _7 = Vec2_init(0.0f, -100.0f);
     Obj _12 = Obj_init(_7, 10.0f, 0.0f, 0.0f, Art_shot);
     return _12;
 }
@@ -5431,6 +5881,39 @@ void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, GameState* state) {
     }
 }
 
+int index_MINUS_of_MINUS_dead_MINUS_shot(Array__Shot* shots) {
+    int _56;
+    /* let */ {
+        int found = -1;
+        /* let */ {
+            int i = 0;
+            int _18 = Array_count__Shot(shots);
+            bool _19 = Int__LT_(i, _18);
+            bool _52 = _19;
+            while (_52) {
+                Shot* _28 = Array_nth__Shot(shots, i);
+                bool* _29 = Shot_alive(_28);
+                bool _30 = Bool_copy(_29);
+                bool _31 = not(_30);
+                if (_31) {
+                    found = i;  // Int = Int
+                    break;
+                } else {
+                    /* () */
+                }
+                int _49 = Int__PLUS_(i, 1);
+                i = _49;  // Int = Int
+                int _18 = Array_count__Shot(shots);
+                bool _19 = Int__LT_(i, _18);
+                _52 = _19;
+            }
+        }
+        int _55 = found;
+        _56 = _55;
+    }
+    return _56;
+}
+
 void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir) {
     static String _12 = "Corvette.png";
     String *_12_ref = &_12;
@@ -5505,13 +5988,17 @@ GameState make_MINUS_state() {
     ((Array__Obj*)_18.data)[0] = _9;
     Array__Obj _13 = Array_repeat__Obj(20, random_MINUS_human);
     ((Array__Obj*)_18.data)[1] = _13;
-    Array__Obj _17 = Array_repeat__Obj(100, dead_MINUS_shot);
+    Array__Obj _17 = Array_repeat__Obj(100, dead_MINUS_shot_MINUS_obj);
     ((Array__Obj*)_18.data)[2] = _17;
     Array__Array__Obj* _19 = &_18; // ref
     Array__Obj _20 = Array_concat__Obj(_19);
-    GameState _21 = GameState_init(_20);
+    Array__int _28 = Array_range(40, 139, 1);
+    Array__int* _29 = &_28; // ref
+    Array__Shot _30 = Array_copy_MINUS_map__int_Shot(dead_MINUS_shot, _29);
+    GameState _31 = GameState_init(_20, _30);
     Array_delete__Array__Obj(_18);
-    return _21;
+    Array_delete__int(_28);
+    return _31;
 }
 
 int max__int(int a, int b) {
@@ -5662,9 +6149,38 @@ void reuse_MINUS_smoke(Vec2 pos) {
     }
 }
 
-void shoot__GameState_MUL__Vec2_float(GameState* state, Vec2 pos, float dir) {
-    /* () */
-    Vec2_delete(pos);
+void shoot(GameState* state, Vec2 pos, float dir) {
+    /* let */ {
+        Array__Shot* _10 = GameState_shots(state);
+        Array__Shot* shots = _10;
+        int _14 = index_MINUS_of_MINUS_dead_MINUS_shot(shots);
+        int found = _14;
+        bool _20 = Int__EQ_(-1, found);
+        if (_20) {
+            static String _25 = "Can't shoot, no dead shot found to recycle.";
+            String *_25_ref = &_25;
+            String _26 = String_str(_25_ref);
+            String* _27 = &_26; // ref
+            IO_println(_27);
+            String_delete(_26);
+            Vec2_delete(pos);
+        } else {
+            /* let */ {
+                Shot* _36 = Array_nth__Shot(shots, found);
+                Shot* shot = _36;
+                Array__Obj* _40 = GameState_objs(state);
+                Array__Obj* objs = _40;
+                int* _47 = Shot_obj_MINUS_index(shot);
+                int _48 = Int_copy(_47);
+                Obj* _49 = Array_nth__Obj(objs, _48);
+                Obj* obj = _49;
+                Shot_set_MINUS_alive_BANG_(shot, true);
+                Obj_set_MINUS_pos_BANG_(obj, pos);
+                Obj_set_MINUS_dir_BANG_(obj, dir);
+                Obj_set_MINUS_speed_BANG_(obj, 5.0f);
+            }
+        }
+    }
 }
 
 GameState tick(GameState state) {
@@ -5699,53 +6215,32 @@ GameState tick(GameState state) {
         /* let */ {
             int i = 0;
             bool _67 = Int__LT_(i, len);
-            bool _141 = _67;
-            while (_141) {
+            bool _93 = _67;
+            while (_93) {
                 /* let */ {
                     Obj* _74 = Array_nth__Obj(xs, i);
                     Obj* o = _74;
-                    int _83 = Int_random_MINUS_between(0, 10);
-                    bool _84 = Int__EQ_(0, _83);
-                    if (_84) {
-                        Vec2* _90 = Obj_pos(o);
-                        Vec2 _91 = Vec2_copy(_90);
-                        reuse_MINUS_smoke(_91);
-                    } else {
-                        /* () */
-                    }
-                    /* let */ {
-                        float* _103 = Obj_dir(o);
-                        float _104 = Float_copy(_103);
-                        float dir = _104;
-                        int _117 = SDL_GetTicks();
-                        float _118 = Float_from_MINUS_int(_117);
-                        float _119 = Float__MUL_(5.0e-3f, _118);
-                        float _120 = Float_sin(_119);
-                        float _121 = Float__MUL_(2.5e-2f, _120);
-                        float _122 = Float__PLUS_(dir, _121);
-                        Obj_set_MINUS_dir_BANG_(o, _122);
-                    }
-                    GameState* _128 = &state; // ref
-                    ai__GameState_MUL_(_128, o);
+                    GameState* _80 = &state; // ref
+                    ai(_80, o);
                 }
-                int _138 = Int__PLUS_(i, 1);
-                i = _138;  // Int = Int
+                int _90 = Int__PLUS_(i, 1);
+                i = _90;  // Int = Int
                 bool _67 = Int__LT_(i, len);
-                _141 = _67;
+                _93 = _67;
             }
         }
     }
-    GameState _161;
+    GameState _113;
     /* let */ {
-        GameState* _152 = &state; // ref
-        Array__Obj* _153 = GameState_objs(_152);
-        Array__Obj _154 = Array_copy__Obj(_153);
-        Array__Obj _155 = Array_endo_MINUS_map__Obj(Obj_tick, _154);
-        Array__Obj new_MINUS_objs = _155;
-        GameState _160 = GameState_set_MINUS_objs(state, new_MINUS_objs);
-        _161 = _160;
+        GameState* _104 = &state; // ref
+        Array__Obj* _105 = GameState_objs(_104);
+        Array__Obj _106 = Array_copy__Obj(_105);
+        Array__Obj _107 = Array_endo_MINUS_map__Obj(Obj_tick, _106);
+        Array__Obj new_MINUS_objs = _107;
+        GameState _112 = GameState_set_MINUS_objs(state, new_MINUS_objs);
+        _113 = _112;
     }
-    GameState _162 = _161;
-    return _162;
+    GameState _114 = _113;
+    return _114;
 }
 
