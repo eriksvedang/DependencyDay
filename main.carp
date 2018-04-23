@@ -9,13 +9,14 @@
 (load "Pattern.carp")
 (load "Filepath.carp")
 (load "Smoke.carp")
+(load "Explosion.carp")
 
 (use Array)
 (use SDL)
 (use Filepath)
 
-(def screen-width 2000)
-(def screen-height 1000)
+(def screen-width 1024)
+(def screen-height 768)
 
 (def team-alien 0)
 (def team-human 1)
@@ -28,10 +29,11 @@
      slime (Ptr (SDL_Texture))
      shot (Ptr (SDL_Texture))
      smoke (Ptr SDL_Texture)
+     explosion (Ptr SDL_Texture)
      earth (Ptr (SDL_Texture))
      mothership (Ptr (SDL_Texture))])
 
-(def art (Art.init NULL NULL NULL NULL NULL NULL))
+(def art (Art.init NULL NULL NULL NULL NULL NULL NULL))
 
 (deftype Obj
     [pos Vec2
@@ -42,6 +44,9 @@
      team Int
      alive Bool])
 
+(defn alive? [obj]
+  @(Obj.alive obj))
+
 (defmodule Obj
   (defn draw [rend o]
     (let [get-sprite-fn @(Obj.sprite o)
@@ -50,16 +55,17 @@
           dims (SDL.dimensions img)
           w @(SDL_Rect.w &dims)
           h @(SDL_Rect.h &dims)]
-      (SDL.render-copy-ex rend
-                          img
-                          (address dims)
-                          (address (SDL.rect (- (Float.to-int @(Vec2.x pos)) (/ w 2))
-                                             (- (Float.to-int @(Vec2.y pos)) (/ h 2))
-                                             w
-                                             h))
-                          (- 360.0 (Geometry.radians-to-degree (Double.from-float @(Obj.dir o))))
-                          (address (SDL.point (/ w 2) (/ h 2)))
-                          SDL.flip-none)))
+      (when (alive? o)
+        (SDL.render-copy-ex rend
+                            img
+                            (address dims)
+                            (address (SDL.rect (- (Float.to-int @(Vec2.x pos)) (/ w 2))
+                                               (- (Float.to-int @(Vec2.y pos)) (/ h 2))
+                                               w
+                                               h))
+                            (- 360.0 (Geometry.radians-to-degree (Double.from-float @(Obj.dir o))))
+                            (address (SDL.point (/ w 2) (/ h 2)))
+                            SDL.flip-none))))
   (defn tick [o]
     (let [pos @(Obj.pos &o)
           dir @(Obj.dir &o)
@@ -82,7 +88,9 @@
   (draw-texture rend @(Art.mothership &art) &(point 0 0))
   (let [smoke-img @(Art.smoke &art)]
     (foreach [s &smokes] (Smoke.draw rend s smoke-img)))
-  (foreach [o (GameState.objs state)] (Obj.draw rend o)))
+  (foreach [o (GameState.objs state)] (Obj.draw rend o))
+  (let [explosion-img @(Art.explosion &art)]
+    (foreach [e &explosions] (Explosion.draw rend e explosion-img))))
 
 (defn index-of-dead-shot [shots]
   (let-do [found -1]
@@ -110,9 +118,6 @@
         (Obj.set-speed! obj 5.0f)
         (Obj.set-team! obj team)))))
 
-(defn alive? [obj]
-  @(Obj.alive obj))
-
 (defn ai [state obj]
   (when (and (alive? obj) (= 0 (Int.random-between 0 100)))
     (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj))))
@@ -136,6 +141,8 @@
 
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
+  (let [explosion-img @(Art.explosion &art)]
+    (foreach [e &explosions] (Explosion.tick! e explosion-img)))
   (foreach [o (GameState.objs &state)]
            (do
              ;; (when (= 0 (Int.random-between 0 10))
@@ -156,11 +163,13 @@
                (let [ship (nth objs i)]
                  (when (and* (hit? ship shot-obj)
                              (alive? shot-obj)
+                             (alive? ship)
                              (/= @(Obj.team ship) @(Obj.team shot-obj)))
                    (do
                      (kill! ship)
                      (kill! shot-obj)
-                     (Shot.set-alive! shot false)))))))
+                     (Shot.set-alive! shot false)
+                     (reuse-explosion @(Obj.pos ship))))))))
   (let [new-objs (endo-map Obj.tick @(GameState.objs &state))]
     (GameState.set-objs state new-objs)))
 
@@ -192,7 +201,7 @@
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   (GameState.init
-   (concat &[(repeat shot-count dead-shot-obj) (repeat 20 random-alien) (repeat 20 random-human)])
+   (concat &[(repeat shot-count dead-shot-obj) (repeat 10 random-alien) (repeat 10 random-human)])
    (copy-map dead-shot &(range 0 (dec shot-count) 1))))
 
 (defn load-img [rend img-dir name]
@@ -203,6 +212,7 @@
                       (load-img rend img-dir "Slime.png")
                       (load-img rend img-dir "Shot.png")
                       (load-img rend img-dir "Smoke.png")
+                      (load-img rend img-dir "Explosion.png")
                       (load-img rend img-dir "Earth.png")
                       (load-img rend img-dir "Mothership.png"))))
 

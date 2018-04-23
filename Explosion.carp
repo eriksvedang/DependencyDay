@@ -1,0 +1,49 @@
+(load "Vec2.carp")
+
+(use Array)
+
+(deftype Explosion
+    [pos Vec2
+     frame Float
+     playing Bool])
+
+(defmodule Explosion
+  (defn draw [rend e img]
+    (let-do [pos (Explosion.pos e)
+             dims (SDL.dimensions img)
+             h @(SDL_Rect.h &dims)
+             w h
+             frame @(Explosion.frame e)
+             source (SDL.rect (* w (Float.to-int frame)) 0 w h)]
+      (when @(playing e)
+        (SDL.render-copy-ex rend
+                            img
+                            (address source)
+                            (address (SDL.rect (- (Float.to-int @(Vec2.x pos)) (/ w 2))
+                                               (- (Float.to-int @(Vec2.y pos)) (/ h 2))
+                                               w
+                                               h))
+                            0.0
+                            (address (SDL.point (/ w 2) (/ h 2)))
+                            SDL.flip-none))
+      ))
+  (defn tick! [e img]
+    (let [f @(Explosion.frame e)
+          dims (SDL.dimensions img)
+          w @(SDL_Rect.h &dims)]
+      (if (< (Float.to-int f) (/ @(SDL_Rect.w &dims) w))
+        (set-frame! e (+ f 0.08f))
+        (set-playing! e false)))))
+
+(def explosions (replicate 100 &(Explosion.init (Vec2.init 0.0f 0.0f) 0.0f false)))
+
+(defn-do reuse-explosion [pos]
+  (foreach [e &explosions]
+           (when (not @(Explosion.playing e))
+             (do (Explosion.set-playing! e true)
+                 (Explosion.set-pos! e @&pos)
+                 (break))))
+  (let [e (nth &explosions (random-between 0 (count &explosions)))]
+    (do (Explosion.set-playing! e true)
+        (Explosion.set-frame! e 0.0f)
+        (Explosion.set-pos! e @&pos))))
