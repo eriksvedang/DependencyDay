@@ -1,0 +1,13 @@
+(deftype Vec2
+  [x Float
+   y Float])
+
+(defmodule Vec2
+  (defn add [a b]
+    (Vec2.init (+ @(Vec2.x a) @(Vec2.x b))
+               (+ @(Vec2.y a) @(Vec2.y b))))
+  (defn within-distance? [a b dist]
+    (let [dx (- @(Vec2.x a) @(Vec2.x b))
+          dy (- @(Vec2.y a) @(Vec2.y b))]
+      (< (+ (* dx dx) (* dy dy))
+         (* dist dist)))))

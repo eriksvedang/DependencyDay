@@ -1,0 +1,42 @@
+(load "Vec2.carp")
+
+(use Array)
+
+(deftype Smoke
+    [pos Vec2
+     age Float]) ; this is the age left, should start at 1.0f
+
+(defmodule Smoke
+  (defn draw [rend s img]
+    (let-do [pos (Smoke.pos s)
+             dims (SDL.dimensions img)
+             sub (Float.to-int (* 32.0f (- 1.0f @(Smoke.age s))))
+             w (- @(SDL_Rect.w &dims) sub)
+             h (- @(SDL_Rect.h &dims) sub)]
+      (when (pos? w)
+        (SDL.render-copy-ex rend
+                            img
+                            (address dims)
+                            (address (SDL.rect (- (Float.to-int @(Vec2.x pos)) (/ w 2))
+                                               (- (Float.to-int @(Vec2.y pos)) (/ h 2))
+                                               w
+                                               h))
+                            0.0
+                            (address (SDL.point (/ w 2) (/ h 2)))
+                            SDL.flip-none))
+      ))
+  (defn tick! [s]
+    (let [a @(Smoke.age s)]
+      (Smoke.set-age! s (- a 0.01666f)))))
+
+(def smokes (replicate 1000 &(Smoke.init (Vec2.init 0.0f 0.0f) 1.0f)))
+
+(defn-do reuse-smoke [pos]
+  (foreach [s &smokes]
+           (when (<= @(Smoke.age s) 0.0f)
+             (do (Smoke.set-age! s 1.0f)
+                 (Smoke.set-pos! s @&pos)
+                 (break))))
+  (let [s (nth &smokes (random-between 0 (count &smokes)))]
+    (do (Smoke.set-age! s 1.0f)
+        (Smoke.set-pos! s pos))))

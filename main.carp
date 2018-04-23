@@ -8,6 +8,7 @@
 (load "Geometry.carp")
 (load "Pattern.carp")
 (load "Filepath.carp")
+(load "Smoke.carp")
 
 (use Array)
 (use SDL)
@@ -31,20 +32,6 @@
      mothership (Ptr (SDL_Texture))])
 
 (def art (Art.init NULL NULL NULL NULL NULL NULL))
-
-(deftype Vec2
-  [x Float
-   y Float])
-
-(defmodule Vec2
-  (defn add [a b]
-    (Vec2.init (+ @(Vec2.x a) @(Vec2.x b))
-               (+ @(Vec2.y a) @(Vec2.y b))))
-  (defn within-distance? [a b dist]
-    (let [dx (- @(Vec2.x a) @(Vec2.x b))
-          dy (- @(Vec2.y a) @(Vec2.y b))]
-      (< (+ (* dx dx) (* dy dy))
-         (* dist dist)))))
 
 (deftype Obj
     [pos Vec2
@@ -80,46 +67,6 @@
           new-pos (Vec2.add &pos &(Vec2.init (* speed (Float.cos dir)) (* speed (* -1.0f (Float.sin dir)))))]
       (Obj.set-pos o new-pos))))
 
-(deftype Smoke
-    [pos Vec2
-     age Float]) ; this is the age left, should start at 1.0f
-
-(defmodule Smoke
-  (defn draw [rend s]
-    (let-do [pos (Smoke.pos s)
-             img @(Art.smoke &art)
-             dims (SDL.dimensions img)
-             sub (Float.to-int (* 32.0f (- 1.0f @(Smoke.age s))))
-             w (- @(SDL_Rect.w &dims) sub)
-             h (- @(SDL_Rect.h &dims) sub)]
-      (when (pos? w)
-        (SDL.render-copy-ex rend
-                            img
-                            (address dims)
-                            (address (SDL.rect (- (Float.to-int @(Vec2.x pos)) (/ w 2))
-                                               (- (Float.to-int @(Vec2.y pos)) (/ h 2))
-                                               w
-                                               h))
-                            0.0
-                            (address (SDL.point (/ w 2) (/ h 2)))
-                            SDL.flip-none))
-      ))
-  (defn tick! [s]
-    (let [a @(Smoke.age s)]
-      (Smoke.set-age! s (- a 0.01666f)))))
-
-(def smokes (replicate 1000 &(Smoke.init (Vec2.init 0.0f 0.0f) 1.0f)))
-
-(defn-do reuse-smoke [pos]
-  (foreach [s &smokes]
-           (when (<= @(Smoke.age s) 0.0f)
-             (do (Smoke.set-age! s 1.0f)
-                 (Smoke.set-pos! s @&pos)
-                 (break))))
-  (let [s (nth &smokes (random-between 0 (count &smokes)))]
-    (do (Smoke.set-age! s 1.0f)
-        (Smoke.set-pos! s pos))))
-
 (deftype Shot
     [obj-index Int
      alive Bool])
@@ -133,7 +80,8 @@
   (render-clear rend)
   (draw-texture rend @(Art.earth &art) &(point (- screen-width 256) 0))
   (draw-texture rend @(Art.mothership &art) &(point 0 0))
-  (foreach [s &smokes] (Smoke.draw rend s))
+  (let [smoke-img @(Art.smoke &art)]
+    (foreach [s &smokes] (Smoke.draw rend s smoke-img)))
   (foreach [o (GameState.objs state)] (Obj.draw rend o)))
 
 (defn index-of-dead-shot [shots]
