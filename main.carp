@@ -19,6 +19,9 @@
 (def team-alien 0)
 (def team-human 1)
 
+(def shot-count 500)
+(def input-dir 0.0f)
+
 (deftype Art
     [corvette (Ptr SDL_Texture)
      slime (Ptr (SDL_Texture))
@@ -173,6 +176,9 @@
              ;;   (Obj.set-dir! o (+ dir (* 0.025f (Float.sin (* 0.005f (Float.from-int (SDL.get-ticks))))))))
              (ai &state o)
              ))
+  (let [player (nth (GameState.objs &state) shot-count)
+        new-dir (+ @(Obj.dir player) input-dir)]
+    (Obj.set-dir! player new-dir))
   (foreach [shot (GameState.shots &state)]
            (let [objs (GameState.objs &state)
                  obj (nth objs @(Shot.obj-index shot))]
@@ -206,10 +212,9 @@
 
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
-  (let [shot-count 500]
-    (GameState.init
-     (concat &[(repeat shot-count dead-shot-obj) (repeat 20 random-alien) (repeat 20 random-human)])
-     (copy-map dead-shot &(range 0 (dec shot-count) 1)))))
+  (GameState.init
+   (concat &[(repeat shot-count dead-shot-obj) (repeat 20 random-alien) (repeat 20 random-human)])
+   (copy-map dead-shot &(range 0 (dec shot-count) 1))))
 
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
@@ -222,8 +227,6 @@
                       (load-img rend img-dir "Earth.png")
                       (load-img rend img-dir "Mothership.png"))))
 
-;;(defn turn-ship [objs index amount])
-
 (defn event-handler [app]
   (foreach [event &(SDL.Event.all)]
            (case (SDL.Event.type event)
@@ -231,9 +234,10 @@
              SDL.Event.key-down (let [key (SDL.Event.keycode event)]
                                   (case key
                                     SDL.Keycode.escape (SDLApp.stop app)
-                                    ;; SDL.Keycode.left-arrow (turn-ship objs 200 -0.1)
-                                    ;; SDL.Keycode.right-arrow (turn-ship 200 0.1)
+                                    SDL.Keycode.left (set! input-dir 0.05f)
+                                    SDL.Keycode.right (set! input-dir -0.05f)
                                     ()))
+             SDL.Event.key-up (set! input-dir 0.0f)
              ())))
 
 (defn main []

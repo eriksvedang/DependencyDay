@@ -3,3 +3,4 @@
 */.DS_Store
 out/DependencyDay
 out/DependencyDay.dSYM/*
+/out/main.c
