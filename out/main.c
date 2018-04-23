@@ -510,6 +510,9 @@ typedef Vec2(*Fn__Vec2_MUL__Vec2)(Vec2*);
 typedef Vec2(*Fn__Vec2_MUL__Vec2_MUL__Vec2)(Vec2*, Vec2*);
 
 // Depth 103
+typedef bool(*Fn__Vec2_MUL__bool)(Vec2*);
+
+// Depth 103
 typedef float*(*Fn__Vec2_MUL__float_MUL_)(Vec2*);
 
 // Depth 103
@@ -726,6 +729,9 @@ String dir_MINUS_from_MINUS_path(String* path);
 void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, GameState* state);
 
 // Depth 500
+void event_MINUS_handler(SDLApp* app);
+
+// Depth 500
 int index_MINUS_of_MINUS_dead_MINUS_shot(Array__Shot* shots);
 
 // Depth 500
@@ -735,6 +741,9 @@ void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir);
 SDL_Texture* load_MINUS_img__String_MUL__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir, String* name);
 
 // Depth 500
+void log__String_MUL_(String* msg);
+
+// Depth 500
 int main(int argc, char** argv);
 
 // Depth 500
@@ -742,6 +751,9 @@ GameState make_MINUS_state();
 
 // Depth 500
 int max__int(int a, int b);
+
+// Depth 500
+bool pos_MINUS_outside_QMARK_(Vec2* pos);
 
 // Depth 500
 bool pos_QMARK___int(int x);
@@ -5881,6 +5893,54 @@ void draw__SDLApp_MUL_(SDLApp* app, SDL_Renderer* rend, GameState* state) {
     }
 }
 
+void event_MINUS_handler(SDLApp* app) {
+    /* let */ {
+        Array__SDL_Event _8 = SDL_Event_all();
+        Array__SDL_Event* _9 = &_8; // ref
+        Array__SDL_Event* xs = _9;
+        int _13 = Array_count__SDL_Event(xs);
+        int len = _13;
+        /* let */ {
+            int i = 0;
+            bool _23 = Int__LT_(i, len);
+            bool _90 = _23;
+            while (_90) {
+                /* let */ {
+                    SDL_Event* _30 = Array_nth__SDL_Event(xs, i);
+                    SDL_Event* event = _30;
+                    SDL_EventType _36 = SDL_Event_type(event);
+                    bool _38 = SDL_Event__EQ_(_36, SDL_QUIT);
+                    if (_38) {
+                        SDLApp_stop__void(app);
+                    } else {
+                        SDL_EventType _49 = SDL_Event_type(event);
+                        bool _51 = SDL_Event__EQ_(_49, SDL_KEYDOWN);
+                        if (_51) {
+                            /* let */ {
+                                SDL_Keycode _57 = SDL_Event_keycode(event);
+                                SDL_Keycode key = _57;
+                                bool _63 = SDL_Keycode__EQ_(key, SDLK_ESCAPE);
+                                if (_63) {
+                                    SDLApp_stop__void(app);
+                                } else {
+                                    /* () */
+                                }
+                            }
+                        } else {
+                            /* () */
+                        }
+                    }
+                }
+                int _87 = Int__PLUS_(i, 1);
+                i = _87;  // Int = Int
+                bool _23 = Int__LT_(i, len);
+                _90 = _23;
+            }
+        }
+        Array_delete__SDL_Event(_8);
+    }
+}
+
 int index_MINUS_of_MINUS_dead_MINUS_shot(Array__Shot* shots) {
     int _56;
     /* let */ {
@@ -5949,6 +6009,20 @@ SDL_Texture* load_MINUS_img__String_MUL__String_MUL_(SDL_Renderer* rend, String*
     return _20;
 }
 
+void log__String_MUL_(String* msg) {
+    int _9 = SDL_GetTicks();
+    String _10 = Int_str(_9);
+    static String _13 = ": ";
+    String *_13_ref = &_13;
+    String _14 = String_str(_13_ref);
+    String _17 = String_str(msg);
+    String _18 = String_append(_14, _17);
+    String _19 = String_append(_10, _18);
+    String* _20 = &_19; // ref
+    IO_println(_20);
+    String_delete(_19);
+}
+
 int main(int argc, char** argv) {
     carp_init_globals(argc, argv);
     /* let */ {
@@ -5975,7 +6049,7 @@ int main(int argc, char** argv) {
         load_MINUS_assets__String_MUL_(rend, _42);
         SDL_SetRenderDrawBlendMode(rend, SDL_BLENDMODE_BLEND);
         SDLApp* _51 = &app; // ref
-        SDLApp_run_MINUS_with_MINUS_callbacks__GameState(_51, SDLApp_quit_MINUS_on_MINUS_esc, tick, draw__SDLApp_MUL_, state);
+        SDLApp_run_MINUS_with_MINUS_callbacks__GameState(_51, event_MINUS_handler, tick, draw__SDLApp_MUL_, state);
         SDLApp_delete(app);
         String_delete(_29);
         String_delete(img_MINUS_dir);
@@ -5984,15 +6058,15 @@ int main(int argc, char** argv) {
 
 GameState make_MINUS_state() {
     Array _18 = { .len = 3, .capacity = 3, .data = CARP_MALLOC(sizeof(Array__Obj) * 3) };
-    Array__Obj _9 = Array_repeat__Obj(20, random_MINUS_alien);
+    Array__Obj _9 = Array_repeat__Obj(200, dead_MINUS_shot_MINUS_obj);
     ((Array__Obj*)_18.data)[0] = _9;
-    Array__Obj _13 = Array_repeat__Obj(20, random_MINUS_human);
+    Array__Obj _13 = Array_repeat__Obj(20, random_MINUS_alien);
     ((Array__Obj*)_18.data)[1] = _13;
-    Array__Obj _17 = Array_repeat__Obj(100, dead_MINUS_shot_MINUS_obj);
+    Array__Obj _17 = Array_repeat__Obj(20, random_MINUS_human);
     ((Array__Obj*)_18.data)[2] = _17;
     Array__Array__Obj* _19 = &_18; // ref
     Array__Obj _20 = Array_concat__Obj(_19);
-    Array__int _28 = Array_range(40, 139, 1);
+    Array__int _28 = Array_range(0, 199, 1);
     Array__int* _29 = &_28; // ref
     Array__Shot _30 = Array_copy_MINUS_map__int_Shot(dead_MINUS_shot, _29);
     GameState _31 = GameState_init(_20, _30);
@@ -6012,6 +6086,44 @@ int max__int(int a, int b) {
         _16 = _15;
     }
     return _16;
+}
+
+bool pos_MINUS_outside_QMARK_(Vec2* pos) {
+    bool _44;
+    /* let */ {
+        float* _9 = Vec2_x(pos);
+        float _10 = Float_copy(_9);
+        float x = _10;
+        float* _15 = Vec2_y(pos);
+        float _16 = Float_copy(_15);
+        float y = _16;
+        bool _43 = false;
+        bool _22 = Float__LT_(x, 0.0f);
+        if(_22) {
+            _43 = true;
+        } else {
+            bool _42 = false;
+            bool _27 = Float__LT_(y, 0.0f);
+            if(_27) {
+                _42 = true;
+            } else {
+                bool _41 = false;
+                float _32 = Float_from_MINUS_int(screen_MINUS_width);
+                bool _34 = Float__LT_(_32, x);
+                if(_34) {
+                    _41 = true;
+                } else {
+                    float _38 = Float_from_MINUS_int(screen_MINUS_height);
+                    bool _40 = Float__LT_(_38, y);
+                    _41 = _40;
+                }
+                _42 = _41;
+            }
+            _43 = _42;
+        }
+        _44 = _43;
+    }
+    return _44;
 }
 
 bool pos_QMARK___int(int x) {
@@ -6157,23 +6269,20 @@ void shoot(GameState* state, Vec2 pos, float dir) {
         int found = _14;
         bool _20 = Int__EQ_(-1, found);
         if (_20) {
-            static String _25 = "Can't shoot, no dead shot found to recycle.";
-            String *_25_ref = &_25;
-            String _26 = String_str(_25_ref);
-            String* _27 = &_26; // ref
-            IO_println(_27);
-            String_delete(_26);
+            static String _23 = "Can't shoot, no dead shot found to recycle.";
+            String *_23_ref = &_23;
+            log__String_MUL_(_23_ref);
             Vec2_delete(pos);
         } else {
             /* let */ {
-                Shot* _36 = Array_nth__Shot(shots, found);
-                Shot* shot = _36;
-                Array__Obj* _40 = GameState_objs(state);
-                Array__Obj* objs = _40;
-                int* _47 = Shot_obj_MINUS_index(shot);
-                int _48 = Int_copy(_47);
-                Obj* _49 = Array_nth__Obj(objs, _48);
-                Obj* obj = _49;
+                Shot* _32 = Array_nth__Shot(shots, found);
+                Shot* shot = _32;
+                Array__Obj* _36 = GameState_objs(state);
+                Array__Obj* objs = _36;
+                int* _43 = Shot_obj_MINUS_index(shot);
+                int _44 = Int_copy(_43);
+                Obj* _45 = Array_nth__Obj(objs, _44);
+                Obj* obj = _45;
                 Shot_set_MINUS_alive_BANG_(shot, true);
                 Obj_set_MINUS_pos_BANG_(obj, pos);
                 Obj_set_MINUS_dir_BANG_(obj, dir);
@@ -6230,17 +6339,55 @@ GameState tick(GameState state) {
             }
         }
     }
-    GameState _113;
     /* let */ {
-        GameState* _104 = &state; // ref
-        Array__Obj* _105 = GameState_objs(_104);
-        Array__Obj _106 = Array_copy__Obj(_105);
-        Array__Obj _107 = Array_endo_MINUS_map__Obj(Obj_tick, _106);
-        Array__Obj new_MINUS_objs = _107;
-        GameState _112 = GameState_set_MINUS_objs(state, new_MINUS_objs);
-        _113 = _112;
+        GameState* _101 = &state; // ref
+        Array__Shot* _102 = GameState_shots(_101);
+        Array__Shot* xs = _102;
+        int _106 = Array_count__Shot(xs);
+        int len = _106;
+        /* let */ {
+            int i = 0;
+            bool _116 = Int__LT_(i, len);
+            bool _168 = _116;
+            while (_168) {
+                /* let */ {
+                    Shot* _123 = Array_nth__Shot(xs, i);
+                    Shot* shot = _123;
+                    /* let */ {
+                        GameState* _130 = &state; // ref
+                        Array__Obj* _131 = GameState_objs(_130);
+                        Array__Obj* objs = _131;
+                        int* _138 = Shot_obj_MINUS_index(shot);
+                        int _139 = Int_copy(_138);
+                        Obj* _140 = Array_nth__Obj(objs, _139);
+                        Obj* obj = _140;
+                        Vec2* _146 = Obj_pos(obj);
+                        bool _147 = pos_MINUS_outside_QMARK_(_146);
+                        if (_147) {
+                            Shot_set_MINUS_alive_BANG_(shot, false);
+                        } else {
+                            /* () */
+                        }
+                    }
+                }
+                int _165 = Int__PLUS_(i, 1);
+                i = _165;  // Int = Int
+                bool _116 = Int__LT_(i, len);
+                _168 = _116;
+            }
+        }
     }
-    GameState _114 = _113;
-    return _114;
+    GameState _188;
+    /* let */ {
+        GameState* _179 = &state; // ref
+        Array__Obj* _180 = GameState_objs(_179);
+        Array__Obj _181 = Array_copy__Obj(_180);
+        Array__Obj _182 = Array_endo_MINUS_map__Obj(Obj_tick, _181);
+        Array__Obj new_MINUS_objs = _182;
+        GameState _187 = GameState_set_MINUS_objs(state, new_MINUS_objs);
+        _188 = _187;
+    }
+    GameState _189 = _188;
+    return _189;
 }
 

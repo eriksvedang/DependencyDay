@@ -132,11 +132,14 @@
             (break))))
     found))
 
+(defn log [msg]
+  (println* (get-ticks) ": " msg))
+
 (defn shoot [state pos dir]
   (let [shots (GameState.shots state)
         found (index-of-dead-shot shots)]
     (if (= -1 found)
-      (println* "Can't shoot, no dead shot found to recycle.")
+      (log "Can't shoot, no dead shot found to recycle.")
       (let-do [shot (nth shots found)
                objs (GameState.objs state)
                obj (nth objs @(Shot.obj-index shot))]
@@ -149,6 +152,14 @@
   (when (= 0 (Int.random-between 0 100))
     (shoot state @(Obj.pos obj) @(Obj.dir obj))))
 
+(defn pos-outside? [pos]
+  (let [x @(Vec2.x pos)
+        y @(Vec2.y pos)]
+    (or* (< x 0.0f)
+         (< y 0.0f)
+         (< (Float.from-int screen-width) x)
+         (< (Float.from-int screen-height) y))))
+
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
   (foreach [o (GameState.objs &state)]
@@ -159,6 +170,11 @@
              ;;   (Obj.set-dir! o (+ dir (* 0.025f (Float.sin (* 0.005f (Float.from-int (SDL.get-ticks))))))))
              (ai &state o)
              ))
+  (foreach [shot (GameState.shots &state)]
+           (let [objs (GameState.objs &state)
+                 obj (nth objs @(Shot.obj-index shot))]
+             (when (pos-outside? (Obj.pos obj))
+               (Shot.set-alive! shot false))))
   (let [new-objs (endo-map Obj.tick @(GameState.objs &state))]
     (GameState.set-objs state new-objs)))
 
@@ -188,9 +204,8 @@
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   (GameState.init
-   (concat &[(repeat 20 random-alien) (repeat 20 random-human) (repeat 100 dead-shot-obj)])
-   (copy-map dead-shot &(range 40 139 1))
-   ))
+   (concat &[(repeat 200 dead-shot-obj) (repeat 20 random-alien) (repeat 20 random-human)])
+   (copy-map dead-shot &(range 0 199 1))))
 
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
@@ -213,6 +228,16 @@
         without-last (prefix-array &segments n)]
     (join &(copy-map append-slash &without-last))))
 
+(defn event-handler [app]
+  (foreach [event &(SDL.Event.all)]
+           (case (SDL.Event.type event)
+             SDL.Event.quit (SDLApp.stop app)
+             SDL.Event.key-down (let [key (SDL.Event.keycode event)]
+                                  (if (= key SDL.Keycode.escape)
+                                    (SDLApp.stop app)
+                                    ()))
+             ())))
+
 (defn main []
   (let-do [app (SDLApp.create "Dependency Day" screen-width screen-height)
            state (make-state)
@@ -220,4 +245,4 @@
            img-dir (str* &(dir-from-path (System.get-arg 0)) "/img/")]
     (load-assets rend &img-dir)
     (SDL.set-render-draw-blend-mode rend SDL.blend-mode-blend)
-    (SDLApp.run-with-callbacks &app SDLApp.quit-on-esc tick draw state)))
+    (SDLApp.run-with-callbacks &app event-handler tick draw state)))
