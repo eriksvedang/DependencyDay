@@ -14,13 +14,17 @@
 (def screen-width 1024)
 (def screen-height 768)
 
+(def team-alien 0)
+(def team-human 1)
+
 (deftype Art
     [corvette (Ptr SDL_Texture)
+     slime (Ptr (SDL_Texture))
      smoke (Ptr SDL_Texture)
      earth (Ptr (SDL_Texture))
      mothership (Ptr (SDL_Texture))])
 
-(def art (Art.init NULL NULL NULL NULL))
+(def art (Art.init NULL NULL NULL NULL NULL))
 
 (deftype Vec2
   [x Float
@@ -34,11 +38,13 @@
 (deftype Obj
     [pos Vec2
      radius Float
-     dir Float])
+     dir Float
+     sprite (Fn [&Art] (Ref (Ptr SDL_Texture)))])
 
 (defmodule Obj
   (defn draw [rend o]
-    (let [img @(Art.corvette &art)
+    (let [get-sprite-fn @(Obj.sprite o)
+          img @(get-sprite-fn &art)
           pos (Obj.pos o)
           dims (SDL.dimensions img)
           w @(SDL_Rect.w &dims)
@@ -113,16 +119,26 @@
                         (reuse-smoke @(Obj.pos o))))
   (endo-map Obj.tick state))
 
-(defn random-ship []
-  (Obj.init (Vec2.init (Float.from-int (random-between (- screen-width 300) screen-width))
-                       (random-between 0.0f (Float.from-int screen-height)))
-            10.0f ;; radius
-            (random-between (* pi 0.75f) (* pi 1.25f))))
+(defn random-ship [side]
+  (let [is-alien (= side team-alien)
+        low (if is-alien 0 (- screen-width 300))
+        high (if is-alien 300 screen-width)
+        dir-low (if is-alien (* pi -0.25f) (* pi 0.75f))
+        dir-high (if is-alien (* pi 0.25f) (* pi 1.25f))
+        sprite (if is-alien Art.slime Art.corvette)]
+    (Obj.init (Vec2.init (Float.from-int (random-between low high))
+                         (random-between 0.0f (Float.from-int screen-height)))
+              10.0f ;; radius
+              (random-between dir-low dir-high)
+              sprite)))
+
+(defn random-alien [] (random-ship team-alien))
+(defn random-human [] (random-ship team-human))
 
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   ;;[(Obj.init (Vec2.init 0.0f 0.0f) 10.0f (* pi 1.75f))]
-  (repeat 20 random-ship)
+  (concat &[(repeat 20 random-alien) (repeat 20 random-human)])
   )
 
 (defn load-img [rend img-dir name]
@@ -130,6 +146,7 @@
 
 (defn-do load-assets [rend img-dir]
   (set! art (Art.init (load-img rend img-dir "Corvette.png")
+                      (load-img rend img-dir "Slime.png")
                       (load-img rend img-dir "Smoke.png")
                       (load-img rend img-dir "Earth.png")
                       (load-img rend img-dir "Mothership.png"))))

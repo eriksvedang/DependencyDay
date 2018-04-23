@@ -17,6 +17,9 @@
 //Types:
 
 // Depth 50
+typedef Array Array__Array__Obj;
+
+// Depth 50
 typedef Array Array__Obj;
 
 // Depth 50
@@ -204,10 +207,20 @@ typedef struct {
 // Depth 102
 typedef struct {
     SDL_Texture* corvette;
+    SDL_Texture* slime;
     SDL_Texture* smoke;
     SDL_Texture* earth;
     SDL_Texture* mothership;
 } Art;
+
+// Depth 102
+typedef Array__Obj(*Fn__Array__Array__Obj_MUL__Array__Obj)(Array__Array__Obj*);
+
+// Depth 102
+typedef int(*Fn__Array__Array__Obj_MUL__int)(Array__Array__Obj*);
+
+// Depth 102
+typedef Array__Obj*(*Fn__Array__Array__Obj_MUL__int_Array__Obj_MUL_)(Array__Array__Obj*, int);
 
 // Depth 102
 typedef Array__Obj(*Fn__Array__Obj_Array__Obj)(Array__Obj);
@@ -456,13 +469,6 @@ typedef MouseState(*Fn__int_int_bool_bool_MouseState)(int, int, bool, bool);
 // Depth 103
 typedef struct {
     Vec2 pos;
-    float radius;
-    float dir;
-} Obj;
-
-// Depth 103
-typedef struct {
-    Vec2 pos;
     float age;
 } Smoke;
 
@@ -485,7 +491,7 @@ typedef int*(*Fn__SDLApp_MUL__int_MUL_)(SDLApp*);
 typedef void(*Fn__SDLApp_MUL__void)(SDLApp*);
 
 // Depth 104
-typedef Art(*Fn__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__Art)(SDL_Texture*, SDL_Texture*, SDL_Texture*, SDL_Texture*);
+typedef Art(*Fn__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__SDL_Texture_MUL__Art)(SDL_Texture*, SDL_Texture*, SDL_Texture*, SDL_Texture*, SDL_Texture*);
 
 // Depth 104
 typedef SDLApp(*Fn__SDL_Window_MUL__SDL_Renderer_MUL__int_SDLApp)(SDL_Window*, SDL_Renderer*, int);
@@ -494,34 +500,19 @@ typedef SDLApp(*Fn__SDL_Window_MUL__SDL_Renderer_MUL__int_SDLApp)(SDL_Window*, S
 typedef SDLApp(*Fn__String_MUL__int_int_SDLApp)(String*, int, int);
 
 // Depth 105
-typedef Obj*(*Fn__Array__Obj_MUL__int_Obj_MUL_)(Array__Obj*, int);
-
-// Depth 105
-typedef void(*Fn__Array__Obj_MUL__int_Obj_void)(Array__Obj*, int, Obj);
-
-// Depth 105
 typedef Smoke*(*Fn__Array__Smoke_MUL__int_Smoke_MUL_)(Array__Smoke*, int);
 
 // Depth 105
 typedef void(*Fn__Array__Smoke_MUL__int_Smoke_void)(Array__Smoke*, int, Smoke);
 
 // Depth 105
-typedef Vec2*(*Fn__Obj_MUL__Vec2_MUL_)(Obj*);
+typedef Fn__Art_MUL__SDL_Texture_MUL__MUL_(*Fn__Fn__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_)(Fn__Art_MUL__SDL_Texture_MUL__MUL_);
 
 // Depth 105
-typedef float*(*Fn__Obj_MUL__float_MUL_)(Obj*);
-
-// Depth 105
-typedef Obj(*Fn__Obj_Obj)(Obj);
-
-// Depth 105
-typedef Obj(*Fn__Obj_Vec2_Obj)(Obj, Vec2);
+typedef Fn__Art_MUL__SDL_Texture_MUL__MUL_(*Fn__Fn__Art_MUL__SDL_Texture_MUL__MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_)(Fn__Art_MUL__SDL_Texture_MUL__MUL_*);
 
 // Depth 105
 typedef void(*Fn__SDLApp_MUL__Fn__SDLApp_MUL__void_Fn__Array__Obj_Array__Obj_Fn__SDLApp_MUL__SDL_Renderer_MUL__Array__Obj_MUL__void_Array__Obj_void)(SDLApp*, Fn__SDLApp_MUL__void, Fn__Array__Obj_Array__Obj, Fn__SDLApp_MUL__SDL_Renderer_MUL__Array__Obj_MUL__void, Array__Obj);
-
-// Depth 105
-typedef void(*Fn__SDL_Renderer_MUL__Obj_MUL__void)(SDL_Renderer*, Obj*);
 
 // Depth 105
 typedef void(*Fn__SDL_Renderer_MUL__Smoke_MUL__void)(SDL_Renderer*, Smoke*);
@@ -548,18 +539,59 @@ typedef void(*Fn__Smoke_MUL__void)(Smoke*);
 typedef Smoke(*Fn__Vec2_float_Smoke)(Vec2, float);
 
 // Depth 105
-typedef Obj(*Fn__Vec2_float_float_Obj)(Vec2, float, float);
-
-// Depth 105
-typedef Obj(*Fn___Obj)();
-
-// Depth 105
 typedef Array__Smoke(*Fn__int_Smoke_MUL__Array__Smoke)(int, Smoke*);
 
-// Depth 106
+// Depth 105
+typedef struct {
+    Vec2 pos;
+    float radius;
+    float dir;
+    void* sprite;
+} Obj;
+
+// Depth 107
+typedef Obj*(*Fn__Array__Obj_MUL__int_Obj_MUL_)(Array__Obj*, int);
+
+// Depth 107
+typedef void(*Fn__Array__Obj_MUL__int_Obj_void)(Array__Obj*, int, Obj);
+
+// Depth 107
+typedef Array__Obj(*Fn__Array__Obj_Obj_Array__Obj)(Array__Obj, Obj);
+
+// Depth 107
+typedef Fn__Art_MUL__SDL_Texture_MUL__MUL_*(*Fn__Obj_MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL__MUL_)(Obj*);
+
+// Depth 107
+typedef Obj(*Fn__Obj_MUL__Obj)(Obj*);
+
+// Depth 107
+typedef Vec2*(*Fn__Obj_MUL__Vec2_MUL_)(Obj*);
+
+// Depth 107
+typedef float*(*Fn__Obj_MUL__float_MUL_)(Obj*);
+
+// Depth 107
+typedef Obj(*Fn__Obj_Obj)(Obj);
+
+// Depth 107
+typedef Obj(*Fn__Obj_Vec2_Obj)(Obj, Vec2);
+
+// Depth 107
+typedef void(*Fn__SDL_Renderer_MUL__Obj_MUL__void)(SDL_Renderer*, Obj*);
+
+// Depth 107
+typedef Obj(*Fn__Vec2_float_float_Fn__Art_MUL__SDL_Texture_MUL__MUL__Obj)(Vec2, float, float, Fn__Art_MUL__SDL_Texture_MUL__MUL_);
+
+// Depth 107
+typedef Obj(*Fn___Obj)();
+
+// Depth 107
+typedef Obj(*Fn__int_Obj)(int);
+
+// Depth 108
 typedef Array__Obj(*Fn__Fn__Obj_Obj_Array__Obj_Array__Obj)(Fn__Obj_Obj, Array__Obj);
 
-// Depth 106
+// Depth 108
 typedef Array__Obj(*Fn__int_Fn___Obj_Array__Obj)(int, Fn___Obj);
 
 
@@ -579,6 +611,9 @@ String append_MINUS_slash__String_MUL_(String* s);
 
 // Depth 500
 Art art;
+
+// Depth 500
+Fn__Art_MUL__SDL_Texture_MUL__MUL_ copy__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_ (Fn__Art_MUL__SDL_Texture_MUL__MUL_* ref);
 
 // Depth 500
 String dir_MINUS_from_MINUS_path(String* path);
@@ -605,7 +640,16 @@ int max__int(int a, int b);
 bool pos_QMARK___int(int x);
 
 // Depth 500
-Obj random_MINUS_ship();
+String prn__Art_MUL__SDL_Texture_MUL__MUL_ (void *f);
+
+// Depth 500
+Obj random_MINUS_alien();
+
+// Depth 500
+Obj random_MINUS_human();
+
+// Depth 500
+Obj random_MINUS_ship(int side);
 
 // Depth 500
 void reuse_MINUS_smoke(Vec2 pos);
@@ -618,6 +662,12 @@ int screen_MINUS_width;
 
 // Depth 500
 Array__Smoke smokes;
+
+// Depth 500
+int team_MINUS_alien;
+
+// Depth 500
+int team_MINUS_human;
 
 // Depth 500
 Array__Obj tick(Array__Obj state);
@@ -658,7 +708,13 @@ void Array_aset_MINUS_uninitialized_BANG___String (Array *aRef, int n, String ne
 void Array_aset_MINUS_uninitialized_BANG___char (Array *aRef, int n, char newValue);
 
 // Depth 500
+Array__Obj Array_concat__Obj(Array__Array__Obj* xs);
+
+// Depth 500
 Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Array__String* a);
+
+// Depth 500
+int Array_count__Array__Obj (Array *a);
 
 // Depth 500
 int Array_count__Obj (Array *a);
@@ -674,6 +730,9 @@ int Array_count__String (Array *a);
 
 // Depth 500
 int Array_count__char (Array *a);
+
+// Depth 500
+void Array_delete__Array__Obj (Array a);
 
 // Depth 500
 void Array_delete__Obj (Array a);
@@ -697,6 +756,9 @@ void Array_delete__int (Array a);
 Array Array_endo_MINUS_map__Obj(Fn__Obj_Obj f, Array a);
 
 // Depth 500
+Array__Obj* Array_nth__Array__Obj (Array *aRef, int n);
+
+// Depth 500
 Obj* Array_nth__Obj (Array *aRef, int n);
 
 // Depth 500
@@ -716,6 +778,9 @@ Array__String Array_prefix_MINUS_array__String(Array__String* xs, int end_MINUS_
 
 // Depth 500
 Array__char Array_prefix_MINUS_array__char(Array__char* xs, int end_MINUS_index);
+
+// Depth 500
+Array Array_push_MINUS_back__Obj(Array a, Obj value);
 
 // Depth 500
 Array Array_push_MINUS_back__SDL_Event(Array a, SDL_Event value);
@@ -768,7 +833,7 @@ void Art_delete(Art p);
 SDL_Texture** Art_earth(Art* p);
 
 // Depth 500
-Art Art_init(SDL_Texture* corvette, SDL_Texture* smoke, SDL_Texture* earth, SDL_Texture* mothership);
+Art Art_init(SDL_Texture* corvette, SDL_Texture* slime, SDL_Texture* smoke, SDL_Texture* earth, SDL_Texture* mothership);
 
 // Depth 500
 SDL_Texture** Art_mothership(Art* p);
@@ -795,10 +860,19 @@ Art Art_set_MINUS_mothership(Art p, SDL_Texture* newValue);
 void Art_set_MINUS_mothership_BANG_(Art* pRef, SDL_Texture* newValue);
 
 // Depth 500
+Art Art_set_MINUS_slime(Art p, SDL_Texture* newValue);
+
+// Depth 500
+void Art_set_MINUS_slime_BANG_(Art* pRef, SDL_Texture* newValue);
+
+// Depth 500
 Art Art_set_MINUS_smoke(Art p, SDL_Texture* newValue);
 
 // Depth 500
 void Art_set_MINUS_smoke_BANG_(Art* pRef, SDL_Texture* newValue);
+
+// Depth 500
+SDL_Texture** Art_slime(Art* p);
 
 // Depth 500
 SDL_Texture** Art_smoke(Art* p);
@@ -814,6 +888,9 @@ Art Art_update_MINUS_earth(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater)
 
 // Depth 500
 Art Art_update_MINUS_mothership(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
+
+// Depth 500
+Art Art_update_MINUS_slime(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
 
 // Depth 500
 Art Art_update_MINUS_smoke(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater);
@@ -994,7 +1071,7 @@ float* Obj_dir(Obj* p);
 void Obj_draw(SDL_Renderer* rend, Obj* o);
 
 // Depth 500
-Obj Obj_init(Vec2 pos, float radius, float dir);
+Obj Obj_init(Vec2 pos, float radius, float dir, Fn__Art_MUL__SDL_Texture_MUL__MUL_ sprite);
 
 // Depth 500
 Vec2* Obj_pos(Obj* p);
@@ -1024,6 +1101,15 @@ Obj Obj_set_MINUS_radius(Obj p, float newValue);
 void Obj_set_MINUS_radius_BANG_(Obj* pRef, float newValue);
 
 // Depth 500
+Obj Obj_set_MINUS_sprite(Obj p, Fn__Art_MUL__SDL_Texture_MUL__MUL_ newValue);
+
+// Depth 500
+void Obj_set_MINUS_sprite_BANG_(Obj* pRef, Fn__Art_MUL__SDL_Texture_MUL__MUL_ newValue);
+
+// Depth 500
+Fn__Art_MUL__SDL_Texture_MUL__MUL_* Obj_sprite(Obj* p);
+
+// Depth 500
 String Obj_str(Obj *p);
 
 // Depth 500
@@ -1037,6 +1123,9 @@ Obj Obj_update_MINUS_pos(Obj p, Fn__Vec2_Vec2 updater);
 
 // Depth 500
 Obj Obj_update_MINUS_radius(Obj p, Fn__float_float updater);
+
+// Depth 500
+Obj Obj_update_MINUS_sprite(Obj p, Fn__Fn__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_ updater);
 
 // Depth 1000
 
@@ -1546,10 +1635,20 @@ void carp_init_globals(int argc, char** argv) {
         screen_MINUS_width = 1024;
     }
 
+    // Depth 0
+    {
+        team_MINUS_alien = 0;
+    }
+
+    // Depth 0
+    {
+        team_MINUS_human = 1;
+    }
+
     // Depth 1
     {
-        Art _7 = Art_init(NULL, NULL, NULL, NULL);
-        art = _7;
+        Art _8 = Art_init(NULL, NULL, NULL, NULL, NULL);
+        art = _8;
     }
 
     // Depth 2
@@ -1698,6 +1797,51 @@ void Array_aset_MINUS_uninitialized_BANG___char (Array *aRef, int n, char newVal
     ((char*)a.data)[n] = newValue;
 }
 
+Array__Obj Array_concat__Obj(Array__Array__Obj* xs) {
+    Array__Obj _79;
+    /* let */ {
+        Array _6 = { .len = 0, .capacity = 0, .data = CARP_MALLOC(sizeof(Obj) * 0) };
+        Array__Obj result = _6;
+        int _10 = Array_count__Array__Obj(xs);
+        int len = _10;
+        /* let */ {
+            int i = 0;
+            bool _21 = Int__LT_(i, len);
+            bool _75 = _21;
+            while (_75) {
+                /* let */ {
+                    Array__Obj* _28 = Array_nth__Array__Obj(xs, i);
+                    Array__Obj* ys = _28;
+                    int _32 = Array_count__Obj(ys);
+                    int inner_MINUS_len = _32;
+                    /* let */ {
+                        int j = 0;
+                        bool _42 = Int__LT_(j, inner_MINUS_len);
+                        bool _64 = _42;
+                        while (_64) {
+                            Obj* _52 = Array_nth__Obj(ys, j);
+                            Obj _53 = Obj_copy(_52);
+                            Array__Obj _54 = Array_push_MINUS_back__Obj(result, _53);
+                            result = _54;  // (Array Obj) = (Array Obj)
+                            int _61 = Int__PLUS_(j, 1);
+                            j = _61;  // Int = Int
+                            bool _42 = Int__LT_(j, inner_MINUS_len);
+                            _64 = _42;
+                        }
+                    }
+                }
+                int _72 = Int__PLUS_(i, 1);
+                i = _72;  // Int = Int
+                bool _21 = Int__LT_(i, len);
+                _75 = _21;
+            }
+        }
+        Array__Obj _78 = result;
+        _79 = _78;
+    }
+    return _79;
+}
+
 Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Array__String* a) {
     Array__String _50;
     /* let */ {
@@ -1727,11 +1871,19 @@ Array__String Array_copy_MINUS_map__String_String(Fn__String_MUL__String f, Arra
     return _50;
 }
 
+int Array_count__Array__Obj (Array *a) { return (*a).len; }
 int Array_count__Obj (Array *a) { return (*a).len; }
 int Array_count__SDL_Event (Array *a) { return (*a).len; }
 int Array_count__Smoke (Array *a) { return (*a).len; }
 int Array_count__String (Array *a) { return (*a).len; }
 int Array_count__char (Array *a) { return (*a).len; }
+void Array_delete__Array__Obj (Array a){
+    for(int i = 0; i < a.len; i++) {
+        Array_delete__Obj(((Array__Obj*)a.data)[i]);
+    }
+    CARP_FREE(a.data);
+}
+
 void Array_delete__Obj (Array a){
     for(int i = 0; i < a.len; i++) {
         Obj_delete(((Obj*)a.data)[i]);
@@ -1779,6 +1931,15 @@ Array Array_endo_MINUS_map__Obj(Fn__Obj_Obj f, Array a) {
         ((Obj*)a.data)[i] = f(((Obj*)a.data)[i]); 
     }
     return a;
+}
+
+Array__Obj* Array_nth__Array__Obj (Array *aRef, int n) {
+    Array a = *aRef;
+    #ifndef OPTIMIZE
+    assert(n >= 0);
+    assert(n < a.len);
+    #endif
+    return &(((Array__Obj*)a.data)[n]);
 }
 
 Obj* Array_nth__Obj (Array *aRef, int n) {
@@ -1834,6 +1995,16 @@ Array__String Array_prefix_MINUS_array__String(Array__String* xs, int end_MINUS_
 Array__char Array_prefix_MINUS_array__char(Array__char* xs, int end_MINUS_index) {
     Array__char _9 = Array_subarray__char(xs, 0, end_MINUS_index);
     return _9;
+}
+
+Array Array_push_MINUS_back__Obj(Array a, Obj value) { 
+    a.len++;
+    if(a.len > a.capacity) {
+        a.capacity = a.len * 2;
+        a.data = realloc(a.data, sizeof(Obj) * a.capacity);
+    }
+    ((Obj*)a.data)[a.len - 1] = value;
+    return a;
 }
 
 Array Array_push_MINUS_back__SDL_Event(Array a, SDL_Event value) { 
@@ -2103,6 +2274,7 @@ Array__char Array_suffix_MINUS_array__char(Array__char* xs, int start_MINUS_inde
 Art Art_copy(Art* pRef) {
     Art copy = *pRef;
     /* Ignore non-managed member 'corvette' */
+    /* Ignore non-managed member 'slime' */
     /* Ignore non-managed member 'smoke' */
     /* Ignore non-managed member 'earth' */
     /* Ignore non-managed member 'mothership' */
@@ -2113,6 +2285,7 @@ SDL_Texture** Art_corvette(Art* p) { return (&(p->corvette)); }
 
 void Art_delete(Art p) {
     /* Ignore non-managed member 'corvette' */
+    /* Ignore non-managed member 'slime' */
     /* Ignore non-managed member 'smoke' */
     /* Ignore non-managed member 'earth' */
     /* Ignore non-managed member 'mothership' */
@@ -2120,9 +2293,10 @@ void Art_delete(Art p) {
 
 SDL_Texture** Art_earth(Art* p) { return (&(p->earth)); }
 
-Art Art_init(SDL_Texture* corvette, SDL_Texture* smoke, SDL_Texture* earth, SDL_Texture* mothership) {
+Art Art_init(SDL_Texture* corvette, SDL_Texture* slime, SDL_Texture* smoke, SDL_Texture* earth, SDL_Texture* mothership) {
     Art instance;
     instance.corvette = corvette;
+    instance.slime = slime;
     instance.smoke = smoke;
     instance.earth = earth;
     instance.mothership = mothership;
@@ -2138,6 +2312,9 @@ String Art_prn(Art *p) {
   (void)tempsize; // that way we remove the occasional unused warning 
   int size = snprintf(NULL, 0, "(%s )", "Art");
   size +=  snprintf(NULL, 0, "%p ", p->corvette);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  size +=  snprintf(NULL, 0, "%p ", p->slime);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   size +=  snprintf(NULL, 0, "%p ", p->smoke);
@@ -2159,6 +2336,13 @@ String Art_prn(Art *p) {
   tempsize = snprintf(NULL, 0, "%p", p->corvette);
   temp = malloc(tempsize);
   snprintf(temp, tempsize, "%p", p->corvette);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  tempsize = snprintf(NULL, 0, "%p", p->slime);
+  temp = malloc(tempsize);
+  snprintf(temp, tempsize, "%p", p->slime);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -2225,6 +2409,18 @@ void Art_set_MINUS_mothership_BANG_(Art* pRef, SDL_Texture* newValue) {
 }
 
 
+Art Art_set_MINUS_slime(Art p, SDL_Texture* newValue) {
+    /* Ignore non-managed member 'slime' */
+    p.slime = newValue;
+    return p;
+}
+
+
+void Art_set_MINUS_slime_BANG_(Art* pRef, SDL_Texture* newValue) {
+    pRef->slime = newValue;
+}
+
+
 Art Art_set_MINUS_smoke(Art p, SDL_Texture* newValue) {
     /* Ignore non-managed member 'smoke' */
     p.smoke = newValue;
@@ -2237,6 +2433,8 @@ void Art_set_MINUS_smoke_BANG_(Art* pRef, SDL_Texture* newValue) {
 }
 
 
+SDL_Texture** Art_slime(Art* p) { return (&(p->slime)); }
+
 SDL_Texture** Art_smoke(Art* p) { return (&(p->smoke)); }
 
 String Art_str(Art *p) {
@@ -2246,6 +2444,9 @@ String Art_str(Art *p) {
   (void)tempsize; // that way we remove the occasional unused warning 
   int size = snprintf(NULL, 0, "(%s )", "Art");
   size +=  snprintf(NULL, 0, "%p ", p->corvette);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  size +=  snprintf(NULL, 0, "%p ", p->slime);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   size +=  snprintf(NULL, 0, "%p ", p->smoke);
@@ -2267,6 +2468,13 @@ String Art_str(Art *p) {
   tempsize = snprintf(NULL, 0, "%p", p->corvette);
   temp = malloc(tempsize);
   snprintf(temp, tempsize, "%p", p->corvette);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  tempsize = snprintf(NULL, 0, "%p", p->slime);
+  temp = malloc(tempsize);
+  snprintf(temp, tempsize, "%p", p->slime);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -2311,6 +2519,12 @@ Art Art_update_MINUS_earth(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater)
 
 Art Art_update_MINUS_mothership(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater) {
     p.mothership = updater(p.mothership);
+    return p;
+}
+
+
+Art Art_update_MINUS_slime(Art p, Fn__SDL_Texture_MUL__SDL_Texture_MUL_ updater) {
+    p.slime = updater(p.slime);
     return p;
 }
 
@@ -2756,6 +2970,7 @@ Obj Obj_copy(Obj* pRef) {
     copy.pos = Vec2_copy(&(pRef->pos));
     /* Ignore non-managed member 'radius' */
     /* Ignore non-managed member 'dir' */
+    /* Ignore non-managed member 'sprite' */
     return copy;
 }
 
@@ -2763,56 +2978,61 @@ void Obj_delete(Obj p) {
     Vec2_delete(p.pos);
     /* Ignore non-managed member 'radius' */
     /* Ignore non-managed member 'dir' */
+    /* Ignore non-managed member 'sprite' */
 }
 
 float* Obj_dir(Obj* p) { return (&(p->dir)); }
 
 void Obj_draw(SDL_Renderer* rend, Obj* o) {
     /* let */ {
-        Art* _11 = &art; // ref
-        SDL_Texture** _12 = Art_corvette(_11);
-        SDL_Texture* _13 = Pointer_copy__SDL_Texture(_12);
-        SDL_Texture* img = _13;
-        Vec2* _17 = Obj_pos(o);
-        Vec2* pos = _17;
-        SDL_Rect _21 = SDL_dimensions(img);
-        SDL_Rect dims = _21;
-        SDL_Rect* _27 = &dims; // ref
-        int* _28 = SDL_Rect_w(_27);
-        int _29 = Int_copy(_28);
-        int w = _29;
-        SDL_Rect* _35 = &dims; // ref
-        int* _36 = SDL_Rect_h(_35);
-        int _37 = Int_copy(_36);
-        int h = _37;
-        float* _52 = Vec2_x(pos);
-        float _53 = Float_copy(_52);
-        int _54 = Float_to_MINUS_int(_53);
-        int _58 = Int__DIV_(w, 2);
-        int _59 = Int__MINUS_(_54, _58);
-        float* _65 = Vec2_y(pos);
-        float _66 = Float_copy(_65);
-        int _67 = Float_to_MINUS_int(_66);
-        int _71 = Int__DIV_(h, 2);
-        int _72 = Int__MINUS_(_67, _71);
-        SDL_Rect _75 = SDL_rect(_59, _72, w, h);
-        float* _84 = Obj_dir(o);
-        float _85 = Float_copy(_84);
-        double _86 = Double_from_MINUS_float(_85);
-        double _87 = Geometry_radians_MINUS_to_MINUS_degree(_86);
-        double _88 = Double__MINUS_(360.0, _87);
-        int _94 = Int__DIV_(w, 2);
-        int _98 = Int__DIV_(h, 2);
-        SDL_Point _99 = SDL_point(_94, _98);
-        SDL_RenderCopyEx(rend, img, &dims, &_75, _88, &_99, SDL_FLIP_NONE);
+        Fn__Art_MUL__SDL_Texture_MUL__MUL_* _10 = Obj_sprite(o);
+        Fn__Art_MUL__SDL_Texture_MUL__MUL_ _11 = copy__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_(_10);
+        Fn__Art_MUL__SDL_Texture_MUL__MUL_ get_MINUS_sprite_MINUS_fn = _11;
+        Art* _17 = &art; // ref
+        SDL_Texture** _18 = get_MINUS_sprite_MINUS_fn(_17);
+        SDL_Texture* _19 = Pointer_copy__SDL_Texture(_18);
+        SDL_Texture* img = _19;
+        Vec2* _23 = Obj_pos(o);
+        Vec2* pos = _23;
+        SDL_Rect _27 = SDL_dimensions(img);
+        SDL_Rect dims = _27;
+        SDL_Rect* _33 = &dims; // ref
+        int* _34 = SDL_Rect_w(_33);
+        int _35 = Int_copy(_34);
+        int w = _35;
+        SDL_Rect* _41 = &dims; // ref
+        int* _42 = SDL_Rect_h(_41);
+        int _43 = Int_copy(_42);
+        int h = _43;
+        float* _58 = Vec2_x(pos);
+        float _59 = Float_copy(_58);
+        int _60 = Float_to_MINUS_int(_59);
+        int _64 = Int__DIV_(w, 2);
+        int _65 = Int__MINUS_(_60, _64);
+        float* _71 = Vec2_y(pos);
+        float _72 = Float_copy(_71);
+        int _73 = Float_to_MINUS_int(_72);
+        int _77 = Int__DIV_(h, 2);
+        int _78 = Int__MINUS_(_73, _77);
+        SDL_Rect _81 = SDL_rect(_65, _78, w, h);
+        float* _90 = Obj_dir(o);
+        float _91 = Float_copy(_90);
+        double _92 = Double_from_MINUS_float(_91);
+        double _93 = Geometry_radians_MINUS_to_MINUS_degree(_92);
+        double _94 = Double__MINUS_(360.0, _93);
+        int _100 = Int__DIV_(w, 2);
+        int _104 = Int__DIV_(h, 2);
+        SDL_Point _105 = SDL_point(_100, _104);
+        SDL_RenderCopyEx(rend, img, &dims, &_81, _94, &_105, SDL_FLIP_NONE);
     }
 }
 
-Obj Obj_init(Vec2 pos, float radius, float dir) {
+Obj Obj_init(Vec2 pos, float radius, float dir, Fn__Art_MUL__SDL_Texture_MUL__MUL_ sprite) {
     Obj instance;
     instance.pos = pos;
     instance.radius = radius;
     instance.dir = dir;
+    instance.sprite = sprite;
     return instance;
 }
 
@@ -2836,6 +3056,10 @@ String Obj_prn(Obj *p) {
   size += snprintf(NULL, 0, "%s ", temp);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
+  temp = prn__Art_MUL__SDL_Texture_MUL__MUL_(p->sprite); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
 
   String buffer = CARP_MALLOC(size);
   String bufferPtr = buffer;
@@ -2854,6 +3078,11 @@ String Obj_prn(Obj *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   temp = Float_prn(p->dir);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = prn__Art_MUL__SDL_Texture_MUL__MUL_(p->sprite);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -2901,6 +3130,20 @@ void Obj_set_MINUS_radius_BANG_(Obj* pRef, float newValue) {
 }
 
 
+Obj Obj_set_MINUS_sprite(Obj p, Fn__Art_MUL__SDL_Texture_MUL__MUL_ newValue) {
+    /* Ignore non-managed member 'sprite' */
+    p.sprite = newValue;
+    return p;
+}
+
+
+void Obj_set_MINUS_sprite_BANG_(Obj* pRef, Fn__Art_MUL__SDL_Texture_MUL__MUL_ newValue) {
+    pRef->sprite = newValue;
+}
+
+
+Fn__Art_MUL__SDL_Texture_MUL__MUL_* Obj_sprite(Obj* p) { return (Fn__Art_MUL__SDL_Texture_MUL__MUL_*)(&(p->sprite)); }
+
 String Obj_str(Obj *p) {
   // convert members to String here:
   String temp = NULL;
@@ -2916,6 +3159,10 @@ String Obj_str(Obj *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   temp = Float_prn(p->dir); 
+  size += snprintf(NULL, 0, "%s ", temp);
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = prn__Art_MUL__SDL_Texture_MUL__MUL_(p->sprite); 
   size += snprintf(NULL, 0, "%s ", temp);
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
@@ -2937,6 +3184,11 @@ String Obj_str(Obj *p) {
   if(temp) { CARP_FREE(temp); temp = NULL; }
 
   temp = Float_prn(p->dir);
+  snprintf(bufferPtr, size, "%s ", temp);
+  bufferPtr += strlen(temp) + 1;
+  if(temp) { CARP_FREE(temp); temp = NULL; }
+
+  temp = prn__Art_MUL__SDL_Texture_MUL__MUL_(p->sprite);
   snprintf(bufferPtr, size, "%s ", temp);
   bufferPtr += strlen(temp) + 1;
   if(temp) { CARP_FREE(temp); temp = NULL; }
@@ -2987,6 +3239,12 @@ Obj Obj_update_MINUS_pos(Obj p, Fn__Vec2_Vec2 updater) {
 
 Obj Obj_update_MINUS_radius(Obj p, Fn__float_float updater) {
     p.radius = updater(p.radius);
+    return p;
+}
+
+
+Obj Obj_update_MINUS_sprite(Obj p, Fn__Fn__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_ updater) {
+    p.sprite = updater(p.sprite);
     return p;
 }
 
@@ -4716,6 +4974,10 @@ String append_MINUS_slash__String_MUL_(String* s) {
     return _11;
 }
 
+Fn__Art_MUL__SDL_Texture_MUL__MUL_ copy__Art_MUL__SDL_Texture_MUL__MUL__Fn__Art_MUL__SDL_Texture_MUL__MUL_ (Fn__Art_MUL__SDL_Texture_MUL__MUL_* ref) {
+    return *ref;
+}
+
 String dir_MINUS_from_MINUS_path(String* path) {
     String _39;
     /* let */ {
@@ -4811,18 +5073,21 @@ void load_MINUS_assets__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir) {
     static String _12 = "Corvette.png";
     String *_12_ref = &_12;
     SDL_Texture* _13 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _12_ref);
-    static String _17 = "Smoke.png";
+    static String _17 = "Slime.png";
     String *_17_ref = &_17;
     SDL_Texture* _18 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _17_ref);
-    static String _22 = "Earth.png";
+    static String _22 = "Smoke.png";
     String *_22_ref = &_22;
     SDL_Texture* _23 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _22_ref);
-    static String _27 = "Mothership.png";
+    static String _27 = "Earth.png";
     String *_27_ref = &_27;
     SDL_Texture* _28 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _27_ref);
-    Art _29 = Art_init(_13, _18, _23, _28);
+    static String _32 = "Mothership.png";
+    String *_32_ref = &_32;
+    SDL_Texture* _33 = load_MINUS_img__String_MUL__String_MUL_(rend, img_MINUS_dir, _32_ref);
+    Art _34 = Art_init(_13, _18, _23, _28, _33);
     Art_delete(art);
-    art = _29;  // Art = Art
+    art = _34;  // Art = Art
 }
 
 SDL_Texture* load_MINUS_img__String_MUL__String_MUL_(SDL_Renderer* rend, String* img_MINUS_dir, String* name) {
@@ -4870,8 +5135,15 @@ int main(int argc, char** argv) {
 }
 
 Array__Obj make_MINUS_state() {
-    Array__Obj _6 = Array_repeat__Obj(20, random_MINUS_ship);
-    return _6;
+    Array _13 = { .len = 2, .capacity = 2, .data = CARP_MALLOC(sizeof(Array__Obj) * 2) };
+    Array__Obj _8 = Array_repeat__Obj(20, random_MINUS_alien);
+    ((Array__Obj*)_13.data)[0] = _8;
+    Array__Obj _12 = Array_repeat__Obj(20, random_MINUS_human);
+    ((Array__Obj*)_13.data)[1] = _12;
+    Array__Array__Obj* _14 = &_13; // ref
+    Array__Obj _15 = Array_concat__Obj(_14);
+    Array_delete__Array__Obj(_13);
+    return _15;
 }
 
 int max__int(int a, int b) {
@@ -4893,18 +5165,86 @@ bool pos_QMARK___int(int x) {
     return _8;
 }
 
-Obj random_MINUS_ship() {
-    int _10 = Int__MINUS_(screen_MINUS_width, 300);
-    int _12 = Int_random_MINUS_between(_10, screen_MINUS_width);
-    float _13 = Float_from_MINUS_int(_12);
-    float _18 = Float_from_MINUS_int(screen_MINUS_height);
-    float _19 = Float_random_MINUS_between(0.0f, _18);
-    Vec2 _20 = Vec2_init(_13, _19);
-    float _26 = Float__MUL_(Float_pi, 0.75f);
-    float _30 = Float__MUL_(Float_pi, 1.25f);
-    float _31 = Float_random_MINUS_between(_26, _30);
-    Obj _32 = Obj_init(_20, 10.0f, _31);
-    return _32;
+String prn__Art_MUL__SDL_Texture_MUL__MUL_ (void *f) {
+    static String lambda = "λ";
+    return String_copy(&lambda);
+}
+
+Obj random_MINUS_alien() {
+    Obj _5 = random_MINUS_ship(team_MINUS_alien);
+    return _5;
+}
+
+Obj random_MINUS_human() {
+    Obj _5 = random_MINUS_ship(team_MINUS_human);
+    return _5;
+}
+
+Obj random_MINUS_ship(int side) {
+    Obj _98;
+    /* let */ {
+        bool _9 = Int__EQ_(side, team_MINUS_alien);
+        bool is_MINUS_alien = _9;
+        int _22;
+        if (is_MINUS_alien) {
+            int _15 = 0;
+            _22 = _15;
+        } else {
+            int _20 = Int__MINUS_(screen_MINUS_width, 300);
+            int _21 = _20;
+            _22 = _21;
+        }
+        int low = _22;
+        int _32;
+        if (is_MINUS_alien) {
+            int _28 = 300;
+            _32 = _28;
+        } else {
+            int _31 = screen_MINUS_width;
+            _32 = _31;
+        }
+        int high = _32;
+        float _48;
+        if (is_MINUS_alien) {
+            float _40 = Float__MUL_(Float_pi, -0.25f);
+            float _41 = _40;
+            _48 = _41;
+        } else {
+            float _46 = Float__MUL_(Float_pi, 0.75f);
+            float _47 = _46;
+            _48 = _47;
+        }
+        float dir_MINUS_low = _48;
+        float _64;
+        if (is_MINUS_alien) {
+            float _56 = Float__MUL_(Float_pi, 0.25f);
+            float _57 = _56;
+            _64 = _57;
+        } else {
+            float _62 = Float__MUL_(Float_pi, 1.25f);
+            float _63 = _62;
+            _64 = _63;
+        }
+        float dir_MINUS_high = _64;
+        Fn__Art_MUL__SDL_Texture_MUL__MUL_ _74;
+        if (is_MINUS_alien) {
+            Fn__Art_MUL__SDL_Texture_MUL__MUL_ _70 = Art_slime;
+            _74 = _70;
+        } else {
+            Fn__Art_MUL__SDL_Texture_MUL__MUL_ _73 = Art_corvette;
+            _74 = _73;
+        }
+        Fn__Art_MUL__SDL_Texture_MUL__MUL_ sprite = _74;
+        int _82 = Int_random_MINUS_between(low, high);
+        float _83 = Float_from_MINUS_int(_82);
+        float _88 = Float_from_MINUS_int(screen_MINUS_height);
+        float _89 = Float_random_MINUS_between(0.0f, _88);
+        Vec2 _90 = Vec2_init(_83, _89);
+        float _95 = Float_random_MINUS_between(dir_MINUS_low, dir_MINUS_high);
+        Obj _97 = Obj_init(_90, 10.0f, _95, sprite);
+        _98 = _97;
+    }
+    return _98;
 }
 
 void reuse_MINUS_smoke(Vec2 pos) {
