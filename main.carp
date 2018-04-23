@@ -39,14 +39,21 @@
 (defmodule Vec2
   (defn add [a b]
     (Vec2.init (+ @(Vec2.x a) @(Vec2.x b))
-               (+ @(Vec2.y a) @(Vec2.y b)))))
+               (+ @(Vec2.y a) @(Vec2.y b))))
+  (defn within-distance? [a b dist]
+    (let [dx (- @(Vec2.x a) @(Vec2.x b))
+          dy (- @(Vec2.y a) @(Vec2.y b))]
+      (< (+ (* dx dx) (* dy dy))
+         (* dist dist)))))
 
 (deftype Obj
     [pos Vec2
      radius Float
      dir Float
      speed Float
-     sprite (Fn [&Art] (Ref (Ptr SDL_Texture)))])
+     sprite (Fn [&Art] (Ref (Ptr SDL_Texture)))
+     team Int
+     alive Bool])
 
 (defmodule Obj
   (defn draw [rend o]
@@ -140,7 +147,7 @@
 (defn log [msg]
   (println* (get-ticks) ": " msg))
 
-(defn shoot [state pos dir]
+(defn shoot [state pos dir team]
   (let [shots (GameState.shots state)
         found (index-of-dead-shot shots)]
     (if (= -1 found)
@@ -149,13 +156,18 @@
                objs (GameState.objs state)
                obj (nth objs @(Shot.obj-index shot))]
         (Shot.set-alive! shot true)
+        (Obj.set-alive! obj true)
         (Obj.set-pos! obj pos)
         (Obj.set-dir! obj dir)
-        (Obj.set-speed! obj 5.0f)))))
+        (Obj.set-speed! obj 5.0f)
+        (Obj.set-team! obj team)))))
+
+(defn alive? [obj]
+  @(Obj.alive obj))
 
 (defn ai [state obj]
-  (when (= 0 (Int.random-between 0 100))
-    (shoot state @(Obj.pos obj) @(Obj.dir obj))))
+  (when (and (alive? obj) (= 0 (Int.random-between 0 100)))
+    (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj))))
 
 (defn pos-outside? [pos]
   (let [x @(Vec2.x pos)
@@ -165,6 +177,14 @@
          (< y margin)
          (< (- (Float.from-int screen-width) margin) x)
          (< (- (Float.from-int screen-height) margin) y))))
+
+(defn hit? [a b]
+  (let [r (+ @(Obj.radius a) @(Obj.radius b))]
+    (Vec2.within-distance? (Obj.pos a) (Obj.pos b) r)))
+
+(defn-do kill! [ship]
+  (Obj.set-alive! ship false)
+  (Obj.set-speed! ship 0.0f))
 
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
@@ -180,10 +200,19 @@
         new-dir (+ @(Obj.dir player) input-dir)]
     (Obj.set-dir! player new-dir))
   (foreach [shot (GameState.shots &state)]
-           (let [objs (GameState.objs &state)
-                 obj (nth objs @(Shot.obj-index shot))]
-             (when (pos-outside? (Obj.pos obj))
-               (Shot.set-alive! shot false))))
+           (let-do [objs (GameState.objs &state)
+                    shot-obj (nth objs @(Shot.obj-index shot))]
+             (when (pos-outside? (Obj.pos shot-obj))
+               (Shot.set-alive! shot false))
+             (for [i shot-count (count objs)]
+               (let [ship (nth objs i)]
+                 (when (and* (hit? ship shot-obj)
+                             (alive? shot-obj)
+                             (/= @(Obj.team ship) @(Obj.team shot-obj)))
+                   (do
+                     (kill! ship)
+                     (kill! shot-obj)
+                     (Shot.set-alive! shot false)))))))
   (let [new-objs (endo-map Obj.tick @(GameState.objs &state))]
     (GameState.set-objs state new-objs)))
 
@@ -199,13 +228,15 @@
               10.0f ;; radius
               (random-between dir-low dir-high)
               (random-between 1.0f 2.0f) ;; speed
-              sprite)))
+              sprite
+              side
+              true)))
 
 (defn random-alien [] (random-ship team-alien))
 (defn random-human [] (random-ship team-human))
 
 (defn dead-shot-obj []
-  (Obj.init (Vec2.init 0.0f -100.0f) 10.0f 0.0f 0.0f Art.shot))
+  (Obj.init (Vec2.init 0.0f -100.0f) 10.0f 0.0f 0.0f Art.shot -1 false))
 
 (defn dead-shot [i]
   (Shot.init @i false))
