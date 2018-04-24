@@ -5,6 +5,7 @@
 
 (load "SDL.carp")
 (load "SDL_image.carp")
+(load "SDL_ttf.carp")
 (load "Geometry.carp")
 (load "Pattern.carp")
 (load "Filepath.carp")
@@ -17,9 +18,13 @@
 (use Filepath)
 
 (def reset false)
+(def playing false)
 
 (def screen-width 1024)
 (def screen-height 768)
+
+(def font (the (Ptr TTF_Font) NULL))
+(def title-texture (the (Ptr SDL_Texture) NULL))
 
 (def team-alien 0)
 (def team-human 1)
@@ -115,7 +120,9 @@
     (foreach [s &smokes] (Smoke.draw rend s smoke-img)))
   (foreach [o (GameState.objs state)] (Obj.draw rend o))
   (let [explosion-img @(Art.explosion &art)]
-    (foreach [e &explosions] (Explosion.draw rend e explosion-img))))
+    (foreach [e &explosions] (Explosion.draw rend e explosion-img)))
+  (when (not playing)
+    (draw-texture-centered rend title-texture &(point (/ screen-width 2) (/ screen-height 2)))))
 
 (defn index-of-dead-shot [shots]
   (let-do [found -1]
@@ -192,7 +199,7 @@
                (Ship.set-reload! ship (dec reload-counter))))))
 
 (defn tick-players [state]
-  (for [player-index 0 4]
+  (for [player-index 0 (count &player-inputs)]
     (let [input (nth &player-inputs player-index)
           input-dir (cond @(Input.left input) 0.05f
                           @(Input.right input) -0.05f
@@ -263,22 +270,28 @@
    (copy-map make-ai-helper &[2 3 4 5 6 7 8 9
                               12 13 14 15 16 17 18 19])))
 
+(defn make-empty-state []
+  (GameState.init [] [] [] []))
+
 (defn-do tick [state]
-  (foreach [s &smokes] (Smoke.tick! s))
-  (foreach [e &explosions] (Explosion.tick! e @(Art.explosion &art)))
-  (tick-ais &state)
-  (tick-ships &state)
-  (tick-players &state)
-  (tick-shots &state)
+  (when playing
+    (do
+      (foreach [s &smokes] (Smoke.tick! s))
+      (foreach [e &explosions] (Explosion.tick! e @(Art.explosion &art)))
+      (tick-ais &state)
+      (tick-ships &state)
+      (tick-players &state)
+      (tick-shots &state)))
   (if reset
     (do (set! reset false)
+        (set! playing true)
         (make-state))
     (GameState.update-objs state tick-all-objs)))
 
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
 
-(defn load-assets [rend img-dir]
+(defn-do load-assets [rend img-dir]
   (set! art (Art.init (load-img rend img-dir "Corvette.png")
                       (load-img rend img-dir "Slime.png")
                       (load-img rend img-dir "Shot.png")
@@ -286,7 +299,11 @@
                       (load-img rend img-dir "Smoke.png")
                       (load-img rend img-dir "Explosion.png")
                       (load-img rend img-dir "Earth.png")
-                      (load-img rend img-dir "Mothership.png"))))
+                      (load-img rend img-dir "Mothership.png")))
+  (if (TTF.ok? (TTF.init))
+    (do (set! font (TTF.open-font (cstr &(str* img-dir "Hasklig.otf")) 80))
+        (set! title-texture (TTF.render-text-to-texture rend font "DEPENDENCY DAY" (SDL.rgb 255 255 255))))
+    (println* "Failed to initialize SDL_ttf: " &(str (TTF.get-error)))))
 
 (defn input-left! [player on]
   (Input.set-left! (nth &player-inputs player) on))
@@ -347,7 +364,7 @@
 (defn-do main []
   (System.seed-random (System.time))
   (let-do [app (SDLApp.create "Dependency Day" screen-width screen-height)
-           state (make-state)
+           state (make-empty-state)
            rend @(SDLApp.renderer &app)
            img-dir (str* &(dir-from-path (System.get-arg 0)) "/img/")]
     ;;(Debug.log-memory-balance! true)
