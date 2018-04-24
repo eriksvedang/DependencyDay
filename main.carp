@@ -28,12 +28,13 @@
     [left Bool
      right Bool
      shoot Bool
-     obj-index Int])
+     obj-index Int
+     ship-index Int])
 
-(def player-inputs [(Input.init false false false (+ shot-count 0))
-                    (Input.init false false false (+ shot-count 1))
-                    (Input.init false false false (+ shot-count 10))
-                    (Input.init false false false (+ shot-count 11))])
+(def player-inputs [(Input.init false false false (+ shot-count 0) 0)
+                    (Input.init false false false (+ shot-count 1) 1)
+                    (Input.init false false false (+ shot-count 10) 10)
+                    (Input.init false false false (+ shot-count 11) 11)])
 
 (deftype Art
     [corvette (Ptr SDL_Texture)
@@ -89,7 +90,8 @@
      alive Bool])
 
 (deftype Ship
-    [obj-index Int])
+    [obj-index Int
+     reload Int])
 
 (deftype GameState
     [objs (Array Obj)
@@ -115,7 +117,7 @@
             (break))))
     found))
 
-(defn shoot [state pos dir team]
+(defn shoot [state pos dir team ship]
   (let [shots (GameState.shots state)
         found (index-of-dead-shot shots)]
     (if (= -1 found)
@@ -123,6 +125,7 @@
       (let-do [shot (nth shots found)
                objs (GameState.objs state)
                obj (nth objs @(Shot.obj-index shot))]
+        (Ship.set-reload! ship 60)
         (Shot.set-alive! shot true)
         (Obj.set-alive! obj true)
         (Obj.set-pos! obj pos)
@@ -168,20 +171,23 @@
                      (Shot.set-alive! shot false)
                      (reuse-explosion (Obj.pos ship)))))))))
 
-(defn ai [state obj]
+(defn ai [state obj ship]
   (when (and* false (alive? obj) (= 0 (Int.random-between 0 100)))
-    (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj))))
+    (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj) ship)))
 
 (defn tick-ships [state]
   (foreach [ship (GameState.ships state)]
            (let-do [objs (GameState.objs state)
-                    ship-obj (nth objs @(Ship.obj-index ship))]
+                    ship-obj (nth objs @(Ship.obj-index ship))
+                    reload-counter @(Ship.reload ship)]
              (when (and (alive? ship-obj)
                         (= 0 (Int.random-between 0 10)))
                (reuse-smoke (Obj.pos ship-obj)))
+             (when (pos? reload-counter)
+               (Ship.set-reload! ship (dec reload-counter)))
              ;;(let [dir @(Obj.dir ship-obj)]
              ;;  (Obj.set-dir! ship-obj (+ dir (* 0.01f (Float.sin (* 0.01f (Float.from-int (SDL.get-ticks))))))))
-             (ai state ship-obj))))
+             (ai state ship-obj ship))))
 
 (defn tick-players [state]
   (for [player-index 0 4]
@@ -194,8 +200,9 @@
           new-dir (+ @(Obj.dir player) input-dir)]
       (do
         (Obj.set-dir! player new-dir)
-        (when @(Input.shoot input)
-          (shoot state @(Obj.pos player) @(Obj.dir player) @(Obj.team player)))))))
+        (let [ship (nth (GameState.ships state) @(Input.ship-index input))]
+          (when (and @(Input.shoot input) (not (pos? @(Ship.reload ship))))
+            (shoot state @(Obj.pos player) @(Obj.dir player) @(Obj.team player) ship)))))))
 
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
@@ -231,7 +238,7 @@
   (Shot.init @i false))
 
 (defn make-ship [i]
-  (Ship.init @i))
+  (Ship.init @i 0))
 
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
