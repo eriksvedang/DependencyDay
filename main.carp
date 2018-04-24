@@ -42,12 +42,13 @@
     [corvette (Ptr SDL_Texture)
      slime (Ptr (SDL_Texture))
      shot (Ptr (SDL_Texture))
+     slime-shot (Ptr (SDL_Texture))
      smoke (Ptr SDL_Texture)
      explosion (Ptr SDL_Texture)
      earth (Ptr (SDL_Texture))
      mothership (Ptr (SDL_Texture))])
 
-(def art (Art.init NULL NULL NULL NULL NULL NULL NULL))
+(def art (Art.init NULL NULL NULL NULL NULL NULL NULL NULL))
 
 (deftype Obj
     [pos Vec2
@@ -132,6 +133,7 @@
         (Obj.set-alive! obj true)
         (Obj.set-pos! obj pos)
         (Obj.set-dir! obj dir)
+        (Obj.set-sprite! obj (if (= team team-human) Art.shot Art.slime-shot))
         (Obj.set-speed! obj 5.0f)
         (Obj.set-team! obj team)))))
 
@@ -259,6 +261,7 @@
   (set! art (Art.init (load-img rend img-dir "Corvette.png")
                       (load-img rend img-dir "Slime.png")
                       (load-img rend img-dir "Shot.png")
+                      (load-img rend img-dir "SlimeShot.png")
                       (load-img rend img-dir "Smoke.png")
                       (load-img rend img-dir "Explosion.png")
                       (load-img rend img-dir "Earth.png")
