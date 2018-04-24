@@ -146,23 +146,9 @@
 (defn tick-all-objs [objs]
   (endo-map Obj.tick objs))
 
-(defn-do tick [state]
-  (foreach [s &smokes] (Smoke.tick! s))
-  (let [explosion-img @(Art.explosion &art)]
-    (foreach [e &explosions] (Explosion.tick! e explosion-img)))
-  (foreach [ship (GameState.ships &state)]
-           (let-do [objs (GameState.objs &state)
-                    ship-obj (nth objs @(Ship.obj-index ship))]
-             (when (and (alive? ship-obj)
-                        (= 0 (Int.random-between 0 10)))
-               (reuse-smoke (Obj.pos ship-obj)))
-             ;;(let [dir @(Obj.dir ship-obj)] (Obj.set-dir! ship-obj (+ dir (* 0.01f (Float.sin (* 0.01f (Float.from-int (SDL.get-ticks))))))))
-             (ai &state ship-obj)))
-  (let [player (nth (GameState.objs &state) shot-count)
-        new-dir (+ @(Obj.dir player) input-dir)]
-    (Obj.set-dir! player new-dir))
-  (foreach [shot (GameState.shots &state)]
-           (let-do [objs (GameState.objs &state)
+(defn tick-shots [state]
+  (foreach [shot (GameState.shots state)]
+           (let-do [objs (GameState.objs state)
                     shot-obj (nth objs @(Shot.obj-index shot))]
              (when (pos-outside? (Obj.pos shot-obj))
                (Shot.set-alive! shot false))
@@ -176,7 +162,30 @@
                      (kill! ship)
                      (kill! shot-obj)
                      (Shot.set-alive! shot false)
-                     (reuse-explosion (Obj.pos ship))))))))
+                     (reuse-explosion (Obj.pos ship)))))))))
+
+(defn tick-ships [state]
+  (foreach [ship (GameState.ships state)]
+           (let-do [objs (GameState.objs state)
+                    ship-obj (nth objs @(Ship.obj-index ship))]
+             (when (and (alive? ship-obj)
+                        (= 0 (Int.random-between 0 10)))
+               (reuse-smoke (Obj.pos ship-obj)))
+             ;;(let [dir @(Obj.dir ship-obj)]
+             ;;  (Obj.set-dir! ship-obj (+ dir (* 0.01f (Float.sin (* 0.01f (Float.from-int (SDL.get-ticks))))))))
+             (ai state ship-obj))))
+
+(defn tick-players [state]
+  (let [player (nth (GameState.objs state) shot-count)
+        new-dir (+ @(Obj.dir player) input-dir)]
+    (Obj.set-dir! player new-dir)))
+
+(defn-do tick [state]
+  (foreach [s &smokes] (Smoke.tick! s))
+  (foreach [e &explosions] (Explosion.tick! e @(Art.explosion &art)))
+  (tick-ships &state)
+  (tick-players &state)
+  (tick-shots &state)
   (GameState.update-objs state tick-all-objs))
 
 (defn random-ship [side]
