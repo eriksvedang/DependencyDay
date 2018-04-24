@@ -41,9 +41,9 @@
   (foreach [e &explosions]
            (when (not @(Explosion.playing e))
              (do (Explosion.set-playing! e true)
-                 (Explosion.set-pos! e @&pos)
+                 (Explosion.set-pos! e @pos)
                  (break))))
   (let [e (nth &explosions (random-between 0 (count &explosions)))]
     (do (Explosion.set-playing! e true)
         (Explosion.set-frame! e 0.0f)
-        (Explosion.set-pos! e @&pos))))
+        (Explosion.set-pos! e @pos))))

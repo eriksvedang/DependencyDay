@@ -139,6 +139,9 @@
   (Obj.set-alive! ship false)
   (Obj.set-speed! ship 0.0f))
 
+(defn tick-all-objs [objs]
+  (endo-map Obj.tick objs))
+
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
   (let [explosion-img @(Art.explosion &art)]
@@ -164,14 +167,13 @@
                  (when (and* (hit? ship shot-obj)
                              (alive? shot-obj)
                              (alive? ship)
-                             (/= @(Obj.team ship) @(Obj.team shot-obj)))
+                             (/= (Obj.team ship) (Obj.team shot-obj)))
                    (do
                      (kill! ship)
                      (kill! shot-obj)
                      (Shot.set-alive! shot false)
-                     (reuse-explosion @(Obj.pos ship))))))))
-  (let [new-objs (endo-map Obj.tick @(GameState.objs &state))]
-    (GameState.set-objs state new-objs)))
+                     (reuse-explosion (Obj.pos ship))))))))
+  (GameState.update-objs state tick-all-objs))
 
 (defn random-ship [side]
   (let [is-alien (= side team-alien)
@@ -234,6 +236,7 @@
            state (make-state)
            rend @(SDLApp.renderer &app)
            img-dir (str* &(dir-from-path (System.get-arg 0)) "/img/")]
+    (Debug.log-memory-balance! true)
     (load-assets rend &img-dir)
     (SDL.set-render-draw-blend-mode rend SDL.blend-mode-blend)
     (SDLApp.run-with-callbacks &app event-handler tick draw state)))
