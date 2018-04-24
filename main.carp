@@ -77,9 +77,13 @@
     [obj-index Int
      alive Bool])
 
+(deftype Ship
+    [obj-index Int])
+
 (deftype GameState
     [objs (Array Obj)
-     shots (Array Shot)])
+     shots (Array Shot)
+     ships (Array Ship)])
 
 (defn-do draw [app rend state]
   (bg rend &(rgb 30 40 50))
@@ -146,14 +150,14 @@
   (foreach [s &smokes] (Smoke.tick! s))
   (let [explosion-img @(Art.explosion &art)]
     (foreach [e &explosions] (Explosion.tick! e explosion-img)))
-  (foreach [o (GameState.objs &state)]
-           (do
-             ;; (when (= 0 (Int.random-between 0 10))
-             ;;   (reuse-smoke @(Obj.pos o)))
-             ;; (let [dir @(Obj.dir o)]
-             ;;   (Obj.set-dir! o (+ dir (* 0.025f (Float.sin (* 0.005f (Float.from-int (SDL.get-ticks))))))))
-             (ai &state o)
-             ))
+  (foreach [ship (GameState.ships &state)]
+           (let-do [objs (GameState.objs &state)
+                    ship-obj (nth objs @(Ship.obj-index ship))]
+             (when (and (alive? ship-obj)
+                        (= 0 (Int.random-between 0 10)))
+               (reuse-smoke (Obj.pos ship-obj)))
+             ;;(let [dir @(Obj.dir ship-obj)] (Obj.set-dir! ship-obj (+ dir (* 0.01f (Float.sin (* 0.01f (Float.from-int (SDL.get-ticks))))))))
+             (ai &state ship-obj)))
   (let [player (nth (GameState.objs &state) shot-count)
         new-dir (+ @(Obj.dir player) input-dir)]
     (Obj.set-dir! player new-dir))
@@ -200,11 +204,15 @@
 (defn dead-shot [i]
   (Shot.init @i false))
 
+(defn make-ship [i]
+  (Ship.init @i))
+
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   (GameState.init
    (concat &[(repeat shot-count dead-shot-obj) (repeat 10 random-alien) (repeat 10 random-human)])
-   (copy-map dead-shot &(range 0 (dec shot-count) 1))))
+   (copy-map dead-shot &(range 0 (dec shot-count) 1))
+   (copy-map make-ship &(range shot-count (+ shot-count 19) 1))))
 
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
@@ -236,7 +244,7 @@
            state (make-state)
            rend @(SDLApp.renderer &app)
            img-dir (str* &(dir-from-path (System.get-arg 0)) "/img/")]
-    (Debug.log-memory-balance! true)
+    ;;(Debug.log-memory-balance! true)
     (load-assets rend &img-dir)
     (SDL.set-render-draw-blend-mode rend SDL.blend-mode-blend)
     (SDLApp.run-with-callbacks &app event-handler tick draw state)))
