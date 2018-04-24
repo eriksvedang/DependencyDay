@@ -16,6 +16,8 @@
 (use SDL)
 (use Filepath)
 
+(def reset false)
+
 (def screen-width 1024)
 (def screen-height 768)
 
@@ -204,14 +206,6 @@
           (when (and @(Input.shoot input) (not (pos? @(Ship.reload ship))))
             (shoot state @(Obj.pos player) @(Obj.dir player) @(Obj.team player) ship)))))))
 
-(defn-do tick [state]
-  (foreach [s &smokes] (Smoke.tick! s))
-  (foreach [e &explosions] (Explosion.tick! e @(Art.explosion &art)))
-  (tick-ships &state)
-  (tick-players &state)
-  (tick-shots &state)
-  (GameState.update-objs state tick-all-objs))
-
 (defn random-ship [side]
   (let [is-alien (= side team-alien)
         low (if is-alien 0 (- screen-width 300))
@@ -247,6 +241,17 @@
    (copy-map dead-shot &(range 0 (dec shot-count) 1))
    (copy-map make-ship &(range shot-count (+ shot-count 19) 1))))
 
+(defn-do tick [state]
+  (foreach [s &smokes] (Smoke.tick! s))
+  (foreach [e &explosions] (Explosion.tick! e @(Art.explosion &art)))
+  (tick-ships &state)
+  (tick-players &state)
+  (tick-shots &state)
+  (if reset
+    (do (set! reset false)
+        (make-state))
+    (GameState.update-objs state tick-all-objs)))
+
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
 
@@ -276,6 +281,7 @@
              SDL.Event.key-down (let [key (SDL.Event.keycode event)]
                                   (case key
                                     SDL.Keycode.escape (SDLApp.stop app)
+                                    SDL.Keycode.return (set! reset true)
 
                                     SDL.Keycode.q (input-left! 0 true)
                                     SDL.Keycode.w (input-shoot! 0 true)
@@ -314,7 +320,8 @@
                                   ()))
              ())))
 
-(defn main []
+(defn-do main []
+  (System.seed-random (System.time))
   (let-do [app (SDLApp.create "Dependency Day" screen-width screen-height)
            state (make-state)
            rend @(SDLApp.renderer &app)
@@ -322,4 +329,5 @@
     ;;(Debug.log-memory-balance! true)
     (load-assets rend &img-dir)
     (SDL.set-render-draw-blend-mode rend SDL.blend-mode-blend)
-    (SDLApp.run-with-callbacks &app event-handler tick draw state)))
+    (SDLApp.run-with-callbacks &app event-handler tick draw state))
+  0)
