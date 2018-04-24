@@ -96,10 +96,15 @@
     [obj-index Int
      reload Int])
 
+(deftype Ai
+    [obj-index Int
+     ship-index Int])
+
 (deftype GameState
     [objs (Array Obj)
      shots (Array Shot)
-     ships (Array Ship)])
+     ships (Array Ship)
+     ais (Array Ai)])
 
 (defn-do draw [app rend state]
   (bg rend &(rgb 30 40 (+ 50 (int-sin (get-ticks) 1000 10))))
@@ -150,9 +155,9 @@
   (let [r (+ @(Obj.radius a) @(Obj.radius b))]
     (Vec2.within-distance? (Obj.pos a) (Obj.pos b) r)))
 
-(defn-do kill! [ship]
-  (Obj.set-alive! ship false)
-  (Obj.set-speed! ship 0.0f))
+(defn-do kill! [obj]
+  (Obj.set-alive! obj false)
+  (Obj.set-speed! obj 0.0f))
 
 (defn tick-all-objs [objs]
   (endo-map Obj.tick objs))
@@ -175,10 +180,6 @@
                      (Shot.set-alive! shot false)
                      (reuse-explosion (Obj.pos ship)))))))))
 
-(defn ai [state obj ship]
-  (when (and* false (alive? obj) (= 0 (Int.random-between 0 100)))
-    (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj) ship)))
-
 (defn tick-ships [state]
   (foreach [ship (GameState.ships state)]
            (let-do [objs (GameState.objs state)
@@ -188,10 +189,7 @@
                         (= 0 (Int.random-between 0 10)))
                (reuse-smoke (Obj.pos ship-obj)))
              (when (pos? reload-counter)
-               (Ship.set-reload! ship (dec reload-counter)))
-             ;;(let [dir @(Obj.dir ship-obj)]
-             ;;  (Obj.set-dir! ship-obj (+ dir (* 0.01f (Float.sin (* 0.01f (Float.from-int (SDL.get-ticks))))))))
-             (ai state ship-obj ship))))
+               (Ship.set-reload! ship (dec reload-counter))))))
 
 (defn tick-players [state]
   (for [player-index 0 4]
@@ -208,15 +206,29 @@
           (when (and @(Input.shoot input) (not (pos? @(Ship.reload ship))))
             (shoot state @(Obj.pos player) @(Obj.dir player) @(Obj.team player) ship)))))))
 
+(defn tick-ais [state]
+  (foreach [ai (GameState.ais state)]
+           (let [obj (nth (GameState.objs state) @(Ai.obj-index ai))
+                    ship (nth (GameState.ships state) @(Ai.ship-index ai))]
+             (when (alive? obj)
+               (do
+                 ;;(println* "Ticking AI for " obj)
+                 (when (< (=> obj Obj.pos Vec2.x) &100.0f) (Obj.set-dir! obj 0.0f))
+                 (when (< (=> obj Obj.pos Vec2.y) &100.0f) (Obj.set-dir! obj (* 1.5f Float.pi)))
+                 (when (< &(- (Float.from-int screen-width) 100.0f) (=> obj Obj.pos Vec2.x)) (Obj.set-dir! obj Float.pi))
+                 (when (< &(- (Float.from-int screen-height) 100.0f) (=> obj Obj.pos Vec2.y)) (Obj.set-dir! obj (* 0.5f Float.pi)))
+                 (when (and* (alive? obj) (zero? @(Ship.reload ship)))
+                   (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj) ship)))))))
+
 (defn random-ship [side]
   (let [is-alien (= side team-alien)
-        low (if is-alien 0 (- screen-width 300))
-        high (if is-alien 300 screen-width)
+        low (if is-alien 100 (- screen-width 300))
+        high (if is-alien 300 (- screen-width 100))
         dir-low (if is-alien (* pi -0.25f) (* pi 0.75f))
         dir-high (if is-alien (* pi 0.25f) (* pi 1.25f))
         sprite (if is-alien Art.slime Art.corvette)]
     (Obj.init (Vec2.init (Float.from-int (random-between low high))
-                         (random-between 0.0f (Float.from-int screen-height)))
+                         (random-between 100.0f (Float.from-int (- screen-height 100))))
               10.0f ;; radius
               (random-between dir-low dir-high)
               (random-between 1.0f 2.0f) ;; speed
@@ -236,16 +248,25 @@
 (defn make-ship [i]
   (Ship.init @i 0))
 
+(defn make-ai [obj-index ship-index]
+  (Ai.init obj-index ship-index))
+
+(defn make-ai-helper [i]
+  (make-ai (+ shot-count @i) @i))
+
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   (GameState.init
    (concat &[(repeat shot-count dead-shot-obj) (repeat 10 random-alien) (repeat 10 random-human)])
    (copy-map dead-shot &(range 0 (dec shot-count) 1))
-   (copy-map make-ship &(range shot-count (+ shot-count 19) 1))))
+   (copy-map make-ship &(range shot-count (+ shot-count 19) 1))
+   (copy-map make-ai-helper &[2 3 4 5 6 7 8 9
+                              12 13 14 15 16 17 18 19])))
 
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
   (foreach [e &explosions] (Explosion.tick! e @(Art.explosion &art)))
+  (tick-ais &state)
   (tick-ships &state)
   (tick-players &state)
   (tick-shots &state)
