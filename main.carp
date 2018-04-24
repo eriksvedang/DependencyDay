@@ -22,7 +22,17 @@
 (def team-human 1)
 
 (def shot-count 500)
-(def input-dir 0.0f)
+
+(deftype Input
+    [left Bool
+     right Bool
+     shoot Bool
+     obj-index Int])
+
+(def player-inputs [(Input.init false false false (+ shot-count 0))
+                    (Input.init false false false (+ shot-count 1))
+                    (Input.init false false false (+ shot-count 10))
+                    (Input.init false false false (+ shot-count 11))])
 
 (deftype Art
     [corvette (Ptr SDL_Texture)
@@ -122,10 +132,6 @@
         (Obj.set-speed! obj 5.0f)
         (Obj.set-team! obj team)))))
 
-(defn ai [state obj]
-  (when (and (alive? obj) (= 0 (Int.random-between 0 100)))
-    (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj))))
-
 (defn pos-outside? [pos]
   (let [x @(Vec2.x pos)
         y @(Vec2.y pos)
@@ -164,6 +170,10 @@
                      (Shot.set-alive! shot false)
                      (reuse-explosion (Obj.pos ship)))))))))
 
+(defn ai [state obj]
+  (when (and* false (alive? obj) (= 0 (Int.random-between 0 100)))
+    (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj))))
+
 (defn tick-ships [state]
   (foreach [ship (GameState.ships state)]
            (let-do [objs (GameState.objs state)
@@ -176,9 +186,18 @@
              (ai state ship-obj))))
 
 (defn tick-players [state]
-  (let [player (nth (GameState.objs state) shot-count)
-        new-dir (+ @(Obj.dir player) input-dir)]
-    (Obj.set-dir! player new-dir)))
+  (for [player-index 0 4]
+    (let [input (nth &player-inputs player-index)
+          input-dir (cond @(Input.left input) 0.05f
+                          @(Input.right input) -0.05f
+                          0.0f)
+          obj-index @(Input.obj-index input)
+          player (nth (GameState.objs state) obj-index)
+          new-dir (+ @(Obj.dir player) input-dir)]
+      (do
+        (Obj.set-dir! player new-dir)
+        (when @(Input.shoot input)
+          (shoot state @(Obj.pos player) @(Obj.dir player) @(Obj.team player)))))))
 
 (defn-do tick [state]
   (foreach [s &smokes] (Smoke.tick! s))
@@ -235,6 +254,15 @@
                       (load-img rend img-dir "Earth.png")
                       (load-img rend img-dir "Mothership.png"))))
 
+(defn input-left! [player on]
+  (Input.set-left! (nth &player-inputs player) on))
+
+(defn input-right! [player on]
+  (Input.set-right! (nth &player-inputs player) on))
+
+(defn input-shoot! [player on]
+  (Input.set-shoot! (nth &player-inputs player) on))
+
 (defn event-handler [app]
   (foreach [event &(SDL.Event.all)]
            (case (SDL.Event.type event)
@@ -242,10 +270,41 @@
              SDL.Event.key-down (let [key (SDL.Event.keycode event)]
                                   (case key
                                     SDL.Keycode.escape (SDLApp.stop app)
-                                    SDL.Keycode.left (set! input-dir 0.05f)
-                                    SDL.Keycode.right (set! input-dir -0.05f)
+
+                                    SDL.Keycode.q (input-left! 0 true)
+                                    SDL.Keycode.w (input-shoot! 0 true)
+                                    SDL.Keycode.e (input-right! 0 true)
+
+                                    SDL.Keycode.z (input-left! 1 true)
+                                    SDL.Keycode.x (input-shoot! 1 true)
+                                    SDL.Keycode.c (input-right! 1 true)
+
+                                    SDL.Keycode.t (input-left! 2 true)
+                                    SDL.Keycode.y (input-shoot! 2 true)
+                                    SDL.Keycode.u (input-right! 2 true)
+
+                                    SDL.Keycode.b (input-left! 3 true)
+                                    SDL.Keycode.n (input-shoot! 3 true)
+                                    SDL.Keycode.m (input-right! 3 true)
                                     ()))
-             SDL.Event.key-up (set! input-dir 0.0f)
+             SDL.Event.key-up (let [key (SDL.Event.keycode event)]
+                                (case key
+                                  SDL.Keycode.q (input-left! 0 false)
+                                  SDL.Keycode.w (input-shoot! 0 false)
+                                  SDL.Keycode.e (input-right! 0 false)
+
+                                  SDL.Keycode.z (input-left! 1 false)
+                                  SDL.Keycode.x (input-shoot! 1 false)
+                                  SDL.Keycode.c (input-right! 1 false)
+
+                                  SDL.Keycode.t (input-left! 2 false)
+                                  SDL.Keycode.y (input-shoot! 2 false)
+                                  SDL.Keycode.u (input-right! 2 false)
+
+                                  SDL.Keycode.b (input-left! 3 false)
+                                  SDL.Keycode.n (input-shoot! 3 false)
+                                  SDL.Keycode.m (input-right! 3 false)
+                                  ()))
              ())))
 
 (defn main []
