@@ -10,6 +10,7 @@
 (load "Filepath.carp")
 (load "Smoke.carp")
 (load "Explosion.carp")
+(load "Toolkit.carp")
 
 (use Array)
 (use SDL)
@@ -96,7 +97,7 @@
      ships (Array Ship)])
 
 (defn-do draw [app rend state]
-  (bg rend &(rgb 30 40 50))
+  (bg rend &(rgb 30 40 (+ 50 (int-sin (get-ticks) 1000 10))))
   (render-clear rend)
   (draw-texture rend @(Art.earth &art) &(point (- screen-width 256) 0))
   (draw-texture rend @(Art.mothership &art) &(point 0 0))
@@ -113,9 +114,6 @@
         (do (set! found i)
             (break))))
     found))
-
-(defn log [msg]
-  (println* (get-ticks) ": " msg))
 
 (defn shoot [state pos dir team]
   (let [shots (GameState.shots state)
@@ -245,7 +243,7 @@
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
 
-(defn-do load-assets [rend img-dir]
+(defn load-assets [rend img-dir]
   (set! art (Art.init (load-img rend img-dir "Corvette.png")
                       (load-img rend img-dir "Slime.png")
                       (load-img rend img-dir "Shot.png")
@@ -267,6 +265,7 @@
   (foreach [event &(SDL.Event.all)]
            (case (SDL.Event.type event)
              SDL.Event.quit (SDLApp.stop app)
+
              SDL.Event.key-down (let [key (SDL.Event.keycode event)]
                                   (case key
                                     SDL.Keycode.escape (SDLApp.stop app)
@@ -287,6 +286,7 @@
                                     SDL.Keycode.n (input-shoot! 3 true)
                                     SDL.Keycode.m (input-right! 3 true)
                                     ()))
+
              SDL.Event.key-up (let [key (SDL.Event.keycode event)]
                                 (case key
                                   SDL.Keycode.q (input-left! 0 false)

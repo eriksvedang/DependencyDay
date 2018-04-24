@@ -1,0 +1,11 @@
+;; Gamedev toolkit
+
+(load "SDL.carp")
+
+(defn int-sin [x scale amplitude]
+  (Double.to-int (* (Double.from-int amplitude)
+                    (Double.sin (/ (Double.from-int x)
+                                   (Double.from-int scale))))))
+
+(defn log [msg]
+  (println* (SDL.get-ticks) ": " msg))
