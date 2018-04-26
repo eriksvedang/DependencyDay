@@ -33,9 +33,14 @@
 (def team-human 1)
 
 (def shot-count 500)
-(def ships-per-team 4)
+(def ships-per-team 7)
 (def ship-count (* ships-per-team 2))
-(def ships-with-ai [2 3 6 7])
+(def ships-with-ai [2 3 4 5 6
+                    (+ ships-per-team 2)
+                    (+ ships-per-team 3)
+                    (+ ships-per-team 4)
+                    (+ ships-per-team 5)
+                    (+ ships-per-team 6)])
 
 (deftype Input
     [left Bool
@@ -48,7 +53,8 @@
 (defn make-input [index name]
   (Input.init false false false index index @name))
 
-(def player-inputs [(make-input 0 "P1") (make-input 1 "P2") (make-input 4 "P3") (make-input 5 "P4")])
+(def player-inputs [(make-input 0 "P1") (make-input 1 "P2")
+                    (make-input (+ ships-per-team 0) "P3") (make-input (+ ships-per-team 1) "P4")])
 
 (deftype Art
     [corvette (Ptr SDL_Texture)
@@ -159,7 +165,7 @@
       (let-do [shot (nth shots found)
                objs (GameState.objs state)
                obj (nth objs @(Shot.obj-index shot))]
-        (Ship.set-reload! ship 60)
+        (Ship.set-reload! ship 120)
         (Shot.set-age! shot 0)
         (Shot.set-alive! shot true)
         (Obj.set-alive! obj true)
@@ -252,15 +258,16 @@
                  (when (and* (alive? obj) (zero? @(Ship.reload ship)))
                    (shoot state @(Obj.pos obj) @(Obj.dir obj) @(Obj.team obj) ship)))))))
 
-(defn random-ship-obj [side]
+(defn make-ship-obj [side y]
   (let [is-alien (= side team-alien)
-        low (if is-alien 100 (- screen-width 300))
-        high (if is-alien 300 (- screen-width 100))
-        dir-low (if is-alien (* pi -0.25f) (* pi 0.75f))
-        dir-high (if is-alien (* pi 0.25f) (* pi 1.25f))
-        sprite (if is-alien Art.slime Art.corvette)]
+        low (if is-alien 100 (- screen-width 200))
+        high (if is-alien 200 (- screen-width 100))
+        dir-low (if is-alien (* pi -0.05f) (* pi 0.95f))
+        dir-high (if is-alien (* pi 0.05f) (* pi 1.05f))
+        sprite (if is-alien Art.slime Art.corvette)
+        spacing (/ screen-height (inc ships-per-team))]
     (Obj.init (Vec2.init (Float.from-int (random-between low high))
-                         (random-between 100.0f (Float.from-int (- screen-height 100))))
+                         (Float.from-int (* spacing @y))) ;;(random-between 100.0f (Float.from-int (- screen-height 100))))
               10.0f ;; radius
               (random-between dir-low dir-high)
               0.1f ;; speed
@@ -268,8 +275,8 @@
               side
               true)))
 
-(defn random-alien [] (random-ship-obj team-alien))
-(defn random-human [] (random-ship-obj team-human))
+(defn random-alien [y] (make-ship-obj team-alien y))
+(defn random-human [y] (make-ship-obj team-human y))
 
 (defn dead-shot-obj []
   (Obj.init (Vec2.init 0.0f -100.0f) 10.0f 0.0f 0.0f Art.shot -1 false))
@@ -278,7 +285,7 @@
   (Shot.init @i 0 false))
 
 (defn make-ship [i]
-  (Ship.init @i 0))
+  (Ship.init @i (random-between 0 120)))
 
 (defn make-ai [obj-index ship-index]
   (Ai.init obj-index ship-index))
@@ -289,7 +296,9 @@
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   (GameState.init
-   (concat &[(repeat ships-per-team random-alien) (repeat ships-per-team random-human) (repeat shot-count dead-shot-obj)])
+   (concat &[(copy-map random-alien &(endo-map id (range 1 7 1)))
+             (copy-map random-human &(endo-map id (range 1 7 1)))
+             (repeat shot-count dead-shot-obj)])
    (copy-map dead-shot &(range ship-count (dec (+ ship-count shot-count)) 1))
    (copy-map make-ship &(range 0 (dec ship-count) 1))
    (copy-map make-ai-helper &ships-with-ai)))
