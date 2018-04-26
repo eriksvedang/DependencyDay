@@ -20,8 +20,8 @@
 (def reset false)
 (def playing false)
 
-(def screen-width 1024)
-(def screen-height 768)
+(def screen-width 1600)
+(def screen-height 900)
 
 (def font (the (Ptr TTF_Font) NULL))
 (def title-texture (the (Ptr SDL_Texture) NULL))
@@ -30,6 +30,7 @@
 (def team-human 1)
 
 (def shot-count 500)
+(def ships-per-team 4)
 
 (deftype Input
     [left Bool
