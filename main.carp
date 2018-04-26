@@ -97,6 +97,7 @@
 
 (deftype Shot
     [obj-index Int
+     age Int
      alive Bool])
 
 (deftype Ship
@@ -143,6 +144,7 @@
                objs (GameState.objs state)
                obj (nth objs @(Shot.obj-index shot))]
         (Ship.set-reload! ship 60)
+        (Shot.set-age! shot 0)
         (Shot.set-alive! shot true)
         (Obj.set-alive! obj true)
         (Obj.set-pos! obj pos)
@@ -175,7 +177,9 @@
   (foreach [shot (GameState.shots state)]
            (let-do [objs (GameState.objs state)
                     shot-obj (nth objs @(Shot.obj-index shot))]
-             (when (pos-outside? (Obj.pos shot-obj))
+             (Shot.set-age! shot (inc @(Shot.age shot)))
+             (when (or (pos-outside? (Obj.pos shot-obj))
+                       (< 200 @(Shot.age shot)))
                (Shot.set-alive! shot false))
              (for [i 0 ship-count]
                (let [ship (nth objs i)]
@@ -240,7 +244,7 @@
                          (random-between 100.0f (Float.from-int (- screen-height 100))))
               10.0f ;; radius
               (random-between dir-low dir-high)
-              1.5f ;; speed
+              0.1f ;; speed
               sprite
               side
               true)))
@@ -252,7 +256,7 @@
   (Obj.init (Vec2.init 0.0f -100.0f) 10.0f 0.0f 0.0f Art.shot -1 false))
 
 (defn dead-shot [i]
-  (Shot.init @i false))
+  (Shot.init @i 0 false))
 
 (defn make-ship [i]
   (Ship.init @i 0))
