@@ -26,6 +26,9 @@
 (def font (the (Ptr TTF_Font) NULL))
 (def title-texture (the (Ptr SDL_Texture) NULL))
 
+(def small-font (the (Ptr TTF_Font) NULL))
+(def player-numbers (the (Array (Ptr SDL_Texture)) []))
+
 (def team-alien 0)
 (def team-human 1)
 
@@ -39,12 +42,13 @@
      right Bool
      shoot Bool
      obj-index Int
-     ship-index Int])
+     ship-index Int
+     name String])
 
-(defn make-input [obj-index]
-  (Input.init false false false obj-index obj-index))
+(defn make-input [index name]
+  (Input.init false false false index index @name))
 
-(def player-inputs [(make-input 0) (make-input 1) (make-input 4) (make-input 5)])
+(def player-inputs [(make-input 0 "P1") (make-input 1 "P2") (make-input 4 "P3") (make-input 5 "P4")])
 
 (deftype Art
     [corvette (Ptr SDL_Texture)
@@ -125,6 +129,17 @@
   (foreach [o (GameState.objs state)] (Obj.draw rend o))
   (let [explosion-img @(Art.explosion &art)]
     (foreach [e &explosions] (Explosion.draw rend e explosion-img)))
+  (when playing
+    (for [i 0 (count &player-inputs)]
+      (let [tex @(nth &player-numbers i)
+            input (nth &player-inputs i)
+            obj-index @(Input.obj-index input)
+            player-obj (nth (GameState.objs state) obj-index)
+            pos (Obj.pos player-obj)
+            x (Float.to-int @(Vec2.x pos))
+            y (Float.to-int @(Vec2.y pos))]
+        (when (alive? player-obj)
+          (draw-texture-centered rend tex &(point x (+ y 32)))))))
   (when (not playing)
     (draw-texture-centered rend title-texture &(point (/ screen-width 2) (/ screen-height 2)))))
 
@@ -300,6 +315,9 @@
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
 
+(defn create-player-number-texture [rend input]
+  (TTF.render-text-to-texture rend small-font (Input.name input) (SDL.rgb 255 255 255)))
+
 (defn-do load-assets [rend img-dir]
   (set! art (Art.init (load-img rend img-dir "Corvette.png")
                       (load-img rend img-dir "Slime.png")
@@ -311,7 +329,11 @@
                       (load-img rend img-dir "Mothership.png")))
   (if (TTF.ok? (TTF.init))
     (do (set! font (TTF.open-font (cstr &(str* img-dir "Hasklig.otf")) 80))
-        (set! title-texture (TTF.render-text-to-texture rend font "DEPENDENCY DAY" (SDL.rgb 255 255 255))))
+        (set! small-font (TTF.open-font (cstr &(str* img-dir "Hasklig.otf")) 16))
+        (set! title-texture (TTF.render-text-to-texture rend font "DEPENDENCY DAY" (SDL.rgb 255 255 255)))
+        (foreach [input &player-inputs]
+                 ;; TODO: make sure this is memory safe
+                 (set! player-numbers (push-back @&player-numbers (create-player-number-texture rend input)))))
     (println* "Failed to initialize SDL_ttf: " &(str (TTF.get-error)))))
 
 (defn input-left! [player on]
