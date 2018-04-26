@@ -30,8 +30,9 @@
 (def team-human 1)
 
 (def shot-count 500)
-(def ships-per-team 10)
+(def ships-per-team 4)
 (def ship-count (* ships-per-team 2))
+(def ships-with-ai [2 3 6 7])
 
 (deftype Input
     [left Bool
@@ -43,7 +44,7 @@
 (defn make-input [obj-index]
   (Input.init false false false obj-index obj-index))
 
-(def player-inputs [(make-input 0) (make-input 1) (make-input 10) (make-input 11)])
+(def player-inputs [(make-input 0) (make-input 1) (make-input 4) (make-input 5)])
 
 (deftype Art
     [corvette (Ptr SDL_Texture)
@@ -197,10 +198,13 @@
   (foreach [ship (GameState.ships state)]
            (let-do [objs (GameState.objs state)
                     ship-obj (nth objs @(Ship.obj-index ship))
-                    reload-counter @(Ship.reload ship)]
+                    reload-counter @(Ship.reload ship)
+                    speed @(Obj.speed ship-obj)]
              (when (and (alive? ship-obj)
                         (= 0 (Int.random-between 0 10)))
                (reuse-smoke (Obj.pos ship-obj)))
+             (when (< speed 3.0f)
+               (Obj.set-speed! ship-obj (+ speed 0.01f)))
              (when (pos? reload-counter)
                (Ship.set-reload! ship (dec reload-counter))))))
 
@@ -273,8 +277,7 @@
    (concat &[(repeat ships-per-team random-alien) (repeat ships-per-team random-human) (repeat shot-count dead-shot-obj)])
    (copy-map dead-shot &(range ship-count (dec (+ ship-count shot-count)) 1))
    (copy-map make-ship &(range 0 (dec ship-count) 1))
-   (copy-map make-ai-helper &[2 3 4 5 6 7 8 9
-                              12 13 14 15 16 17 18 19])))
+   (copy-map make-ai-helper &ships-with-ai)))
 
 (defn make-empty-state []
   (GameState.init [] [] [] []))
@@ -338,9 +341,9 @@
                                     SDL.Keycode.x (input-shoot! 1 true)
                                     SDL.Keycode.c (input-right! 1 true)
 
-                                    SDL.Keycode.t (input-left! 2 true)
-                                    SDL.Keycode.y (input-shoot! 2 true)
-                                    SDL.Keycode.u (input-right! 2 true)
+                                    SDL.Keycode.i (input-left! 2 true)
+                                    SDL.Keycode.o (input-shoot! 2 true)
+                                    SDL.Keycode.p (input-right! 2 true)
 
                                     SDL.Keycode.b (input-left! 3 true)
                                     SDL.Keycode.n (input-shoot! 3 true)
@@ -357,9 +360,9 @@
                                   SDL.Keycode.x (input-shoot! 1 false)
                                   SDL.Keycode.c (input-right! 1 false)
 
-                                  SDL.Keycode.t (input-left! 2 false)
-                                  SDL.Keycode.y (input-shoot! 2 false)
-                                  SDL.Keycode.u (input-right! 2 false)
+                                  SDL.Keycode.i (input-left! 2 false)
+                                  SDL.Keycode.o (input-shoot! 2 false)
+                                  SDL.Keycode.p (input-right! 2 false)
 
                                   SDL.Keycode.b (input-left! 3 false)
                                   SDL.Keycode.n (input-shoot! 3 false)
