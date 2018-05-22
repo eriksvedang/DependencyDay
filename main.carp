@@ -3,6 +3,7 @@
 (Project.config "title" "DependencyDay")
 (Project.config "output-directory" "./out")
 
+(load "Random.carp")
 (load "SDL.carp")
 (load "SDL_image.carp")
 (load "SDL_ttf.carp")
@@ -402,7 +403,7 @@
              ())))
 
 (defn-do main []
-  (System.seed-random (System.time))
+  (Random.seed (Double.from-int (System.time)))
   (let-do [app (SDLApp.create "Dependency Day" screen-width screen-height)
            state (make-empty-state)
            rend @(SDLApp.renderer &app)
