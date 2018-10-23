@@ -403,7 +403,7 @@
              ())))
 
 (defn-do main []
-  (Random.seed (Double.from-int (System.time)))
+  (Random.seed)
   (let-do [app (SDLApp.create "Dependency Day" screen-width screen-height)
            state (make-empty-state)
            rend @(SDLApp.renderer &app)
