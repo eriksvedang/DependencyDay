@@ -194,7 +194,7 @@
   (Obj.set-speed! obj 0.0f))
 
 (defn tick-all-objs [objs]
-  (endo-map Obj.tick objs))
+  (endo-map &Obj.tick objs))
 
 (defn tick-shots [state]
   (foreach [shot (GameState.shots state)]
@@ -297,12 +297,12 @@
 ;; (sig make-state (Fn [] (Array Obj)))
 (defn make-state []
   (GameState.init
-   (concat &[(copy-map random-alien &(endo-map id (range 1 7 1)))
-             (copy-map random-human &(endo-map id (range 1 7 1)))
-             (repeat shot-count dead-shot-obj)])
-   (copy-map dead-shot &(range ship-count (dec (+ ship-count shot-count)) 1))
-   (copy-map make-ship &(range 0 (dec ship-count) 1))
-   (copy-map make-ai-helper &ships-with-ai)))
+   (concat &[(copy-map &random-alien &(endo-map &id (range 1 7 1)))
+             (copy-map &random-human &(endo-map &id (range 1 7 1)))
+             (repeat shot-count &dead-shot-obj)])
+   (copy-map &dead-shot &(range ship-count (dec (+ ship-count shot-count)) 1))
+   (copy-map &make-ship &(range 0 (dec ship-count) 1))
+   (copy-map &make-ai-helper &ships-with-ai)))
 
 (defn make-empty-state []
   (GameState.init [] [] [] []))
@@ -320,7 +320,7 @@
     (do (set! reset false)
         (set! playing true)
         (make-state))
-    (GameState.update-objs state tick-all-objs)))
+    (GameState.update-objs state &tick-all-objs)))
 
 (defn load-img [rend img-dir name]
   (IMG.load-texture rend (cstr &(str* img-dir name))))
