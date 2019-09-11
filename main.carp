@@ -162,7 +162,7 @@
   (let [shots (GameState.shots state)
         found (index-of-dead-shot shots)]
     (if (= -1 found)
-      (log "Can't shoot, no dead shot found to recycle.")
+      (println* "Can't shoot, no dead shot found to recycle.")
       (let-do [shot (nth shots found)
                objs (GameState.objs state)
                obj (nth objs @(Shot.obj-index shot))]
