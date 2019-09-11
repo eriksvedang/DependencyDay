@@ -7,5 +7,5 @@
                     (Double.sin (/ (Double.from-int x)
                                    (Double.from-int scale))))))
 
-(defn log [msg]
+(defn logg [msg]
   (println* (SDL.get-ticks) ": " msg))
