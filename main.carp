@@ -138,10 +138,10 @@
     (foreach [e &explosions] (Explosion.draw rend e explosion-img)))
   (when playing
     (for [i 0 (length &player-inputs)]
-      (let [tex @(nth &player-numbers i)
-            input (nth &player-inputs i)
+      (let [tex @(unsafe-nth &player-numbers i)
+            input (unsafe-nth &player-inputs i)
             obj-index @(Input.obj-index input)
-            player-obj (nth (GameState.objs state) obj-index)
+            player-obj (unsafe-nth (GameState.objs state) obj-index)
             pos (Obj.pos player-obj)
             x (Float.to-int @(Vec2.x pos))
             y (Float.to-int @(Vec2.y pos))]
@@ -153,7 +153,7 @@
 (defn index-of-dead-shot [shots]
   (let-do [found -1]
     (for [i 0 (length shots)]
-      (when (not @(Shot.alive (nth shots i)))
+      (when (not @(Shot.alive (unsafe-nth shots i)))
         (do (set! found i)
             (break))))
     found))
@@ -163,9 +163,9 @@
         found (index-of-dead-shot shots)]
     (if (= -1 found)
       (logg "Can't shoot, no dead shot found to recycle.")
-      (let-do [shot (nth shots found)
+      (let-do [shot (unsafe-nth shots found)
                objs (GameState.objs state)
-               obj (nth objs @(Shot.obj-index shot))]
+               obj (unsafe-nth objs @(Shot.obj-index shot))]
         (Ship.set-reload! ship 120)
         (Shot.set-age! shot 0)
         (Shot.set-alive! shot true)
@@ -199,13 +199,13 @@
 (defn tick-shots [state]
   (foreach [shot (GameState.shots state)]
            (let-do [objs (GameState.objs state)
-                    shot-obj (nth objs @(Shot.obj-index shot))]
+                    shot-obj (unsafe-nth objs @(Shot.obj-index shot))]
              (Shot.set-age! shot (inc @(Shot.age shot)))
              (when (or (pos-outside? (Obj.pos shot-obj))
                        (< 200 @(Shot.age shot)))
                (Shot.set-alive! shot false))
              (for [i 0 ship-count]
-               (let [ship (nth objs i)]
+               (let [ship (unsafe-nth objs i)]
                  (when (and* (hit? ship shot-obj)
                              (alive? shot-obj)
                              (alive? ship)
@@ -219,7 +219,7 @@
 (defn tick-ships [state]
   (foreach [ship (GameState.ships state)]
            (let-do [objs (GameState.objs state)
-                    ship-obj (nth objs @(Ship.obj-index ship))
+                    ship-obj (unsafe-nth objs @(Ship.obj-index ship))
                     reload-counter @(Ship.reload ship)
                     speed @(Obj.speed ship-obj)]
              (when (and (alive? ship-obj)
@@ -232,23 +232,23 @@
 
 (defn tick-players [state]
   (for [player-index 0 (length &player-inputs)]
-    (let [input (nth &player-inputs player-index)
+    (let [input (unsafe-nth &player-inputs player-index)
           input-dir (cond @(Input.left input) 0.05f
                           @(Input.right input) -0.05f
                           0.0f)
           obj-index @(Input.obj-index input)
-          player (nth (GameState.objs state) obj-index)
+          player (unsafe-nth (GameState.objs state) obj-index)
           new-dir (+ @(Obj.dir player) input-dir)]
       (do
         (Obj.set-dir! player new-dir)
-        (let [ship (nth (GameState.ships state) @(Input.ship-index input))]
+        (let [ship (unsafe-nth (GameState.ships state) @(Input.ship-index input))]
           (when (and @(Input.shoot input) (not (pos? @(Ship.reload ship))))
             (shoot state @(Obj.pos player) @(Obj.dir player) @(Obj.team player) ship)))))))
 
 (defn tick-ais [state]
   (foreach [ai (GameState.ais state)]
-           (let [obj (nth (GameState.objs state) @(Ai.obj-index ai))
-                    ship (nth (GameState.ships state) @(Ai.ship-index ai))]
+           (let [obj (unsafe-nth (GameState.objs state) @(Ai.obj-index ai))
+                    ship (unsafe-nth (GameState.ships state) @(Ai.ship-index ai))]
              (when (alive? obj)
                (do
                  ;;(println* "Ticking AI for " obj)
@@ -347,60 +347,71 @@
     (println* "Failed to initialize SDL_ttf: " &(str (TTF.get-error)))))
 
 (defn input-left! [player on]
-  (Input.set-left! (nth &player-inputs player) on))
+  (Input.set-left! (unsafe-nth &player-inputs player) on))
 
 (defn input-right! [player on]
-  (Input.set-right! (nth &player-inputs player) on))
+  (Input.set-right! (unsafe-nth &player-inputs player) on))
 
 (defn input-shoot! [player on]
-  (Input.set-shoot! (nth &player-inputs player) on))
+  (Input.set-shoot! (unsafe-nth &player-inputs player) on))
 
-(defn event-handler [app]
-  (foreach [event &(SDL.Event.all)]
-           (case (SDL.Event.type event)
-             SDL.Event.quit (SDLApp.stop app)
+(defn event-handler [app state event]
+  (case (SDL.Event.type event)
+    SDL.Event.quit (SDLApp.stop app)
 
-             SDL.Event.key-down (let [key (SDL.Event.keycode event)]
-                                  (case key
-                                    SDL.Keycode.escape (SDLApp.stop app)
-                                    SDL.Keycode.return (set! reset true)
 
-                                    SDL.Keycode.q (input-left! 0 true)
-                                    SDL.Keycode.w (input-shoot! 0 true)
-                                    SDL.Keycode.e (input-right! 0 true)
+    SDL.Event.key-down (let-do [key (SDL.Event.keycode event)]
+                         (case key
+                           SDL.Keycode.escape (SDLApp.stop app)
+                           SDL.Keycode.return (set! reset true)
 
-                                    SDL.Keycode.z (input-left! 1 true)
-                                    SDL.Keycode.x (input-shoot! 1 true)
-                                    SDL.Keycode.c (input-right! 1 true)
+                           SDL.Keycode.q (input-left! 0 true)
+                           SDL.Keycode.w (input-shoot! 0 true)
+                           SDL.Keycode.e (input-right! 0 true)
 
-                                    SDL.Keycode.i (input-left! 2 true)
-                                    SDL.Keycode.o (input-shoot! 2 true)
-                                    SDL.Keycode.p (input-right! 2 true)
+                           SDL.Keycode.z (input-left! 1 true)
+                           SDL.Keycode.x (input-shoot! 1 true)
+                           SDL.Keycode.c (input-right! 1 true)
 
-                                    SDL.Keycode.b (input-left! 3 true)
-                                    SDL.Keycode.n (input-shoot! 3 true)
-                                    SDL.Keycode.m (input-right! 3 true)
-                                    ()))
+                           SDL.Keycode.i (input-left! 2 true)
+                           SDL.Keycode.o (input-shoot! 2 true)
+                           SDL.Keycode.p (input-right! 2 true)
 
-             SDL.Event.key-up (let [key (SDL.Event.keycode event)]
-                                (case key
-                                  SDL.Keycode.q (input-left! 0 false)
-                                  SDL.Keycode.w (input-shoot! 0 false)
-                                  SDL.Keycode.e (input-right! 0 false)
+                           SDL.Keycode.b (input-left! 3 true)
+                           SDL.Keycode.n (input-shoot! 3 true)
+                           SDL.Keycode.m (input-right! 3 true)
+                           ())
+                         state)
 
-                                  SDL.Keycode.z (input-left! 1 false)
-                                  SDL.Keycode.x (input-shoot! 1 false)
-                                  SDL.Keycode.c (input-right! 1 false)
+    SDL.Event.key-up (let-do [key (SDL.Event.keycode event)]
+                       (case key
+                         SDL.Keycode.q (input-left! 0 false)
+                         SDL.Keycode.w (input-shoot! 0 false)
+                         SDL.Keycode.e (input-right! 0 false)
 
-                                  SDL.Keycode.i (input-left! 2 false)
-                                  SDL.Keycode.o (input-shoot! 2 false)
-                                  SDL.Keycode.p (input-right! 2 false)
+                         SDL.Keycode.z (input-left! 1 false)
+                         SDL.Keycode.x (input-shoot! 1 false)
+                         SDL.Keycode.c (input-right! 1 false)
 
-                                  SDL.Keycode.b (input-left! 3 false)
-                                  SDL.Keycode.n (input-shoot! 3 false)
-                                  SDL.Keycode.m (input-right! 3 false)
-                                  ()))
-             ())))
+                         SDL.Keycode.i (input-left! 2 false)
+                         SDL.Keycode.o (input-shoot! 2 false)
+                         SDL.Keycode.p (input-right! 2 false)
+
+                         SDL.Keycode.b (input-left! 3 false)
+                         SDL.Keycode.n (input-shoot! 3 false)
+                         SDL.Keycode.m (input-right! 3 false)
+                         ())
+                       state)
+
+    state))
+
+;; (case (SDL.Event.type event)
+;;       SDL.Event.quit (SDLApp.stop app)
+;;       SDL.Event.key-down (let [key (SDL.Event.keycode event)]
+;;                            (if (= key SDL.Keycode.escape)
+;;                              (SDLApp.stop app)
+;;                              state))
+;;       state)
 
 (defn-do main []
   (Random.seed)

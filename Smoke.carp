@@ -32,6 +32,6 @@
 (def smokes (replicate 1000 &(Smoke.init (Vec2.init 0.0f 0.0f) 1.0f)))
 
 (defn-do reuse-smoke [pos]
-  (let [s (nth &smokes (random-between 0 (length &smokes)))]
+  (let [s (unsafe-nth &smokes (random-between 0 (length &smokes)))]
     (do (Smoke.set-age! s 1.0f)
         (Smoke.set-pos! s @pos))))
